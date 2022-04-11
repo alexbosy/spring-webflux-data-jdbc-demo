@@ -1,0 +1,11 @@
+databaseChangeLog:
+  - changeSet:
+      id: abo.0
+      author: abo
+      changes:
+        - addColumn:
+            tableName: person
+            columns:
+              - column:
+                  name: username
+                  type: varchar(8)

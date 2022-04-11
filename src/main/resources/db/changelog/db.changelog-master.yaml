@@ -1,0 +1,5 @@
+databaseChangeLog:
+  - include:
+      file: db/changelog/migrations/init/init.sql
+  - include:
+      file: db/changelog/migrations/2022.04.11/abo.0.yaml
