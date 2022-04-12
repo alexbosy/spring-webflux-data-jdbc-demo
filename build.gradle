@@ -2,6 +2,7 @@ plugins {
 	id 'org.springframework.boot' version '2.6.6'
 	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
 	id 'java'
+	id 'groovy'
 }
 
 group = 'io.cryptorush'
@@ -20,10 +21,23 @@ dependencies {
 
 	runtimeOnly 'org.postgresql:postgresql'
 
+	testImplementation 'org.codehaus.groovy:groovy-all:3.0.10'
+	testImplementation 'org.spockframework:spock-core:2.1-groovy-3.0'
+	testImplementation 'org.spockframework:spock-spring:2.1-groovy-3.0'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'io.projectreactor:reactor-test'
+
+	compileOnly 'org.projectlombok:lombok:1.18.22'
+	annotationProcessor 'org.projectlombok:lombok:1.18.22'
+	annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
 }
 
 tasks.named('test') {
 	useJUnitPlatform()
 }
+
+tasks.withType(Test) {
+	systemProperties System.properties
+}
+
+task t(dependsOn: test)
