@@ -3,6 +3,7 @@ plugins {
 	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
 	id 'java'
 	id 'groovy'
+	id 'org.unbroken-dome.test-sets' version '4.0.0'
 }
 
 repositories {
@@ -35,6 +36,23 @@ springBoot {
 	}
 }
 
+testSets {
+	integrationTest { dirName = 'test-integration' }
+	acceptanceTest { dirName = 'test-acceptance' }
+}
+
+tasks.withType(Test) {
+	systemProperties System.properties
+}
+
+tasks.withType(Test) {
+	useJUnitPlatform()
+}
+
+task t(dependsOn: test)
+task it(dependsOn: integrationTest)
+task at(dependsOn: acceptanceTest)
+
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-actuator'
 	implementation 'org.springframework.boot:spring-boot-starter-data-jdbc'
@@ -54,6 +72,8 @@ dependencies {
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'io.projectreactor:reactor-test'
 
+	acceptanceTestImplementation 'org.codehaus.groovy.modules.http-builder:http-builder:0.7.1'
+
 	compileOnly 'org.projectlombok:lombok:1.18.22'
 	annotationProcessor 'org.projectlombok:lombok:1.18.22'
 	annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
@@ -63,12 +83,3 @@ configurations {
 	all*.exclude module: 'spring-boot-starter-logging'
 }
 
-tasks.named('test') {
-	useJUnitPlatform()
-}
-
-tasks.withType(Test) {
-	systemProperties System.properties
-}
-
-task t(dependsOn: test)

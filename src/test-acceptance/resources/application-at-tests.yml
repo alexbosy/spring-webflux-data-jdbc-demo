@@ -1,0 +1,20 @@
+#Actuator setup
+#Enabling only the info endpoint
+management.endpoints.enabled-by-default: false
+management.endpoint.info.enabled: true
+management.endpoints.jmx.exposure.exclude: "*"
+
+server.port: 8072
+
+scheduler.rest.core.pool.size: 1
+scheduler.rest.max.pool.size: 1
+scheduler.rest.keep.alive.time.secs: 120
+scheduler.rest.queue.max.size: 5
+
+spring:
+  sql.init.platform: "postgres"
+  datasource:
+    driverClassName: "org.postgresql.Driver"
+    url: "jdbc:postgresql://localhost:5432/db"
+    username: "user"
+    password: "password"
