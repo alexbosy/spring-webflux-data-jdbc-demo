@@ -1,0 +1,18 @@
+Configuration:
+  Appenders:
+    Console:
+      PatternLayout:
+        pattern: '%d{dd MMM yyyy HH:mm:ss,SSS} %5p [%t] (%F:%L) - %m%n'
+      name: Console
+      target: SYSTEM_OUT
+  Loggers:
+    Root:
+      level: INFO
+      AppenderRef:
+        - ref: Console
+    Logger:
+      - name: io.cryptorush
+        level: DEBUG
+        additivity: false
+        AppenderRef:
+          - ref: Console

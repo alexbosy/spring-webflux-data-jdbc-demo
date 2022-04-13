@@ -5,19 +5,46 @@ plugins {
 	id 'groovy'
 }
 
-group = 'io.cryptorush'
-version = '0.0.1-SNAPSHOT'
-sourceCompatibility = '17'
-
 repositories {
 	mavenCentral()
+	maven {
+		url "https://plugins.gradle.org/m2/"
+	}
+}
+
+group = 'io.cryptorush'
+version = '0.0.1-SNAPSHOT'
+
+java {
+	sourceCompatibility = '17'
+}
+
+jar {
+	archivesBaseName = 'user-service'
+}
+
+springBoot {
+	buildInfo {
+		properties {
+			additional = [
+					time: new Date().format('dd-MM-yyyy:HH:mm:ss zzz'),
+					OS  : "${System.properties['os.name']} (${System.properties['os.version']})",
+					JVM : "Vendor: ${System.properties['java.specification.vendor']}, Version: ${System.properties['java.version']}"
+			]
+		}
+	}
 }
 
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-actuator'
 	implementation 'org.springframework.boot:spring-boot-starter-data-jdbc'
 	implementation 'org.springframework.boot:spring-boot-starter-webflux'
+	implementation 'org.springframework.boot:spring-boot-starter-log4j2'
 	implementation 'org.liquibase:liquibase-core'
+
+	implementation 'com.google.guava:guava:31.1-jre'
+	implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-yaml'
+	implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jdk8'
 
 	runtimeOnly 'org.postgresql:postgresql'
 
@@ -30,6 +57,10 @@ dependencies {
 	compileOnly 'org.projectlombok:lombok:1.18.22'
 	annotationProcessor 'org.projectlombok:lombok:1.18.22'
 	annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
+}
+
+configurations {
+	all*.exclude module: 'spring-boot-starter-logging'
 }
 
 tasks.named('test') {

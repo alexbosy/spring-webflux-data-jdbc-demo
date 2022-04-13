@@ -1,0 +1,29 @@
+Configuration:
+  Appenders:
+    RollingFile:
+      name: RollingFile
+      fileName: /opt/user-service-app/logs/user-service-stage.log
+      filePattern: "/opt/user-service-app/logs/archive-stage/user-service-stage.%d{yyyy-MM-dd-hh-mm}.log.gz"
+      PatternLayout:
+        pattern: "%d{dd MMM yyyy HH:mm:ss,SSS} %5p [%t] (%F:%L) - %m%n"
+      Policies:
+        SizeBasedTriggeringPolicy:
+          size: 1 MB
+      DefaultRollOverStrategy:
+        max: 100
+    Console:
+      name: Console
+      PatternLayout:
+        pattern: "%d{dd MMM yyyy HH:mm:ss,SSS} %5p [%t] (%F:%L) - %m%n"
+      target: SYSTEM_OUT
+  Loggers:
+    Root:
+      level: INFO
+      AppenderRef:
+        - ref: RollingFile
+    Logger:
+      - name: io.cryptorush
+        level: DEBUG
+        additivity: false
+        AppenderRef:
+          - ref: RollingFile
