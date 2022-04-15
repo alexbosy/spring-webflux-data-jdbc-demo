@@ -83,3 +83,11 @@ configurations {
 	all*.exclude module: 'spring-boot-starter-logging'
 }
 
+tasks.named("bootBuildImage") {
+	environment = ["BP_JVM_VERSION" : "17.*"]
+	imageName = "${project.name}:${version}"
+	buildpacks = ["gcr.io/paketo-buildpacks/azul-zulu", "urn:cnb:builder:paketo-buildpacks/java"]
+}
+
+
+
