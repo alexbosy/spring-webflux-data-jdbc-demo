@@ -14,7 +14,7 @@ repositories {
 }
 
 group = 'io.cryptorush'
-version = '0.0.1-SNAPSHOT'
+version = (findProperty('version') == 'unspecified') ? 'latest' : version
 
 java {
 	sourceCompatibility = '17'
@@ -54,6 +54,7 @@ task it(dependsOn: integrationTest)
 task at(dependsOn: acceptanceTest)
 
 dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-jetty'
 	implementation 'org.springframework.boot:spring-boot-starter-actuator'
 	implementation 'org.springframework.boot:spring-boot-starter-data-jdbc'
 	implementation 'org.springframework.boot:spring-boot-starter-webflux'
@@ -87,6 +88,7 @@ tasks.named("bootBuildImage") {
 	environment = ["BP_JVM_VERSION" : "17.*"]
 	imageName = "${project.name}:${version}"
 	buildpacks = ["gcr.io/paketo-buildpacks/azul-zulu", "urn:cnb:builder:paketo-buildpacks/java"]
+	tags = ["${project.name}:latest"]
 }
 
 
