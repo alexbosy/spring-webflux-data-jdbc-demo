@@ -1,7 +1,7 @@
 spring.profiles.active: ${DEV_PROFILE}
 spring.jmx.enabled: false
 
-info.app.name: Binance Data Collector
-info.app.description: Service to collect all market data from Binance crypto exchange
+info.app.name: User Service
+info.app.description: Service to register and manage users
 info.app.active-profile: ${spring.profiles.active}
 
