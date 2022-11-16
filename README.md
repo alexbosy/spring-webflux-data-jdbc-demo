@@ -40,6 +40,10 @@ The service will have the 2 main entities:
 - registration IP address (not exposed to customer)
 - registration country (not exposed to customer)
 
+### Common REST endpoints (will be used in all client apps):
+
+1. POST /auth - JWT authentication. Returns JWT token.
+
 ### Private REST endpoints (will be used ony in internal administration application):
 
 1. POST /user - create new user.
@@ -58,4 +62,3 @@ The service will have the 2 main entities:
    and
    password.
 4. PUT /customer/my/profile - update current (authenticated) customer's profile by id (JWT auth).
-5. POST /auth - JWT authentication. Returns JWT token.
