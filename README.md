@@ -7,6 +7,7 @@ This is a demo app to test the following technical stack:
 - Spring Web Flux
 - Spring Data JDBC
 - Reactor
+- PostgreSQL
 - Spock
 
 ## Application requirements
@@ -36,6 +37,8 @@ The service will have the 2 main entities:
 - country of residence
 - identity number
 - passport number
+- registration IP address (not exposed to customer)
+- registration country (not exposed to customer)
 
 ### Private REST endpoints (will be used ony in internal administration application):
 
@@ -50,7 +53,7 @@ The service will have the 2 main entities:
 
 1. POST /registration - register a new customer (no auth)
 2. GET /customer/profile/{:login} - get any customer public profile by login (no auth). Show only
-   login/name/surname/date of birth and country.
+   login/name/surname/date of birth and country of residence.
 3. GET /customer/my/profile - get current (authenticated) customer's profile (JWT auth). Show all data except id
    and
    password.
