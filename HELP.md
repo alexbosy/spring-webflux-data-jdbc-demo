@@ -48,7 +48,7 @@ You need to start the local PostgreSQL container with your database in a separat
 docker-compose up 
 ```
 
-Then in another terminal run the test using gradle wrapper:
+Then in another terminal run the tests using gradle wrapper:
 
 ```
 ./gradlew t it at
