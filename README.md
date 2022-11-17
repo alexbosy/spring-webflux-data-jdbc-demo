@@ -42,23 +42,48 @@ The service will have the 2 main entities:
 
 ### Common REST endpoints (will be used in all client apps):
 
-1. POST /auth - JWT authentication. Returns JWT token.
+### 1. POST /auth - JWT authentication. Returns JWT token.
 
 ### Private REST endpoints (will be used ony in internal administration application):
 
-1. POST /user - create new user.
-2. GET /user/{:id} - get user data by id.
-3. PUT /user/{:id} - update user data by id.
-4. DELETE /user/{:id} - delete user by id.
-5. GET /users?offset={:offset}&limit={:limit} - get a pageable list of users with specified offset and limit.
-6. GET /me - get current(authenticated) user.
+All private endpoints require JWT auth.
+
+#### 1. POST /user - create new user.
+
+Supported types are only ADMIN/MANAGER.
+
+#### 2. GET /user/{:id} - get user data by id.
+
+Return the User or Customer object data.
+
+#### 3. PUT /user/{:id} - update user data by id.
+
+Supported types are only ADMIN/MANAGER.
+
+#### 4. DELETE /user/{:id} - delete user by id.
+
+#### 5. GET /users?offset={:offset}&limit={:limit}
+
+Return a pageable list of users (user type is ADMIN/MANAGER) with specified offset and limit.
+
+#### 6. GET /customers?offset={:offset}&limit={:limit}
+
+Return a pageable list of customers (customer type is CUSTOMER) with specified offset and limit.
+
+#### 7. GET /me - get current(authenticated) user.
 
 ### Public REST endpoints (will be used in public web/mobile apps):
 
-1. POST /registration - register a new customer (no auth)
-2. GET /customer/profile/{:login} - get any customer public profile by login (no auth). Show only
-   login/name/surname/date of birth and country of residence.
-3. GET /customer/my/profile - get current (authenticated) customer's profile (JWT auth). Show all data except id
-   and
-   password.
-4. PUT /customer/my/profile - update current (authenticated) customer's profile by id (JWT auth).
+All customer object responses must not contain "id" field.
+
+#### 1. POST /registration - register a new customer (no auth)
+
+#### 2. GET /customer/profile/{:login} - get any customer public profile by login (no auth).
+
+Show only login/name/surname/date of birth and country of residence.
+
+#### 3. GET /customer/my/profile - get current (authenticated) customer's profile (JWT auth).
+
+Show all data except id and password.
+
+#### 4. PUT /customer/my/profile - update current (authenticated) customer's profile by id (JWT auth).
