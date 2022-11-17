@@ -9,6 +9,7 @@ This is a demo app to test the following technical stack:
 - Reactor
 - PostgreSQL
 - Spock
+- Springdoc OpenAPI
 
 ## Application requirements
 
