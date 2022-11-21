@@ -2,48 +2,47 @@
 
 This is a demo app to test the following technical stack:
 
-- Java 17+
-- Spring Boot
-- Spring Web Flux
-- Spring Data JDBC
-- Reactor
-- PostgreSQL
-- Spock
-- Springdoc OpenAPI
+-   Java 17+
+-   Spring Boot
+-   Spring Web Flux
+-   Spring Data JDBC
+-   Reactor
+-   PostgreSQL
+-   Spock
+-   Springdoc OpenAPI
 
 ## Application requirements
 
-We must develop the user management service, that allows us to manage basic operations with User and Customer domain
-objects, as well as authentication and customer registration.
+We must develop the user management service, that allows us to manage basic operations with User and Customer domain objects, as well as authentication and customer registration.
 
 The service will have the 2 main entities:
 
-- User - represents the identity that is used for authentication and contains the user type (ADMIN,MANAGER,CUSTOMER).
-- Customer - user extension, the "application end customer" or "public system user", that includes
-  additional data.
+-   User - represents the identity that is used for authentication and contains the user type (ADMIN,MANAGER,CUSTOMER).
+-   Customer - user extension, the "application end customer" or "public system user", that includes
+    additional data.
 
 ### User data:
 
-- id
-- login
-- name
-- surname
-- email
-- password
-- type - ADMIN/MANAGER/CUSTOMER
+-   id
+-   login
+-   name
+-   surname
+-   email
+-   password
+-   type - ADMIN/MANAGER/CUSTOMER
 
 ### Additional Customer data:
 
-- date of birth
-- country of residence
-- identity number
-- passport number
-- registration IP address (not exposed to customer)
-- registration country (not exposed to customer)
+-   date of birth
+-   country of residence
+-   identity number
+-   passport number
+-   registration IP address (not exposed to customer)
+-   registration country (not exposed to customer)
 
 ### Common REST endpoints (will be used in all client apps):
 
-### 1. POST /auth - JWT authentication. Returns JWT token.
+#### 1. POST /auth - JWT authentication. Returns JWT token.
 
 ### Private REST endpoints (will be used ony in internal administration application):
 
