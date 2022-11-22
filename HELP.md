@@ -14,7 +14,7 @@ You need to start the local PostgreSQL container with your database in a separat
 docker-compose up 
 ```
 
-Then in another shell run the application using gradle wrapper:
+Then in another terminal run the application using gradle wrapper:
 
 ```
 ./gradlew bootRun
