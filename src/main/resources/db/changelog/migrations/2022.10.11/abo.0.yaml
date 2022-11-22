@@ -4,8 +4,8 @@ databaseChangeLog:
       author: abo
       changes:
         - addColumn:
-            tableName: person
+            tableName: users
             columns:
               - column:
-                  name: username
-                  type: varchar(8)
+                  name: type
+                  type: varchar(20)

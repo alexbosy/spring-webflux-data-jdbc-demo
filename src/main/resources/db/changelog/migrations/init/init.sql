@@ -1,6 +1,10 @@
 --changeset alexbo:init
-create table person
+CREATE TABLE users
 (
-    id   int primary key,
-    name varchar(255)
+    id       SERIAL PRIMARY KEY,
+    login    VARCHAR(20),
+    name     VARCHAR(20),
+    surname  VARCHAR(30),
+    email    VARCHAR(25),
+    password VARCHAR(100)
 );
