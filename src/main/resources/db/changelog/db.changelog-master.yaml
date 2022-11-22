@@ -3,3 +3,5 @@ databaseChangeLog:
       file: db/changelog/migrations/init/init.sql
   - include:
       file: db/changelog/migrations/2022.10.11/abo.0.yaml
+  - include:
+      file: db/changelog/migrations/2022.10.11/abo.1.yaml

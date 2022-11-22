@@ -1,0 +1,7 @@
+databaseChangeLog:
+  - changeSet:
+      id: 2022.10.11.abo.1
+      author: abo
+      changes:
+        - sqlFile:
+            path: db/changelog/migrations/2022.10.11/abo.1.sql
