@@ -1,4 +1,4 @@
-package io.cryptorush.userservice.rest.dto;
+package io.cryptorush.userservice.rest.user.dto;
 
 import lombok.Builder;
 import lombok.Data;

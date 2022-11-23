@@ -1,9 +1,9 @@
-package io.cryptorush.userservice.rest;
+package io.cryptorush.userservice.rest.user;
 
 import io.cryptorush.userservice.domain.user.User;
 import io.cryptorush.userservice.domain.user.UserService;
-import io.cryptorush.userservice.rest.dto.UserCreatedResponseDTO;
-import io.cryptorush.userservice.rest.dto.UserRequestDTO;
+import io.cryptorush.userservice.rest.user.dto.UserCreatedResponseDTO;
+import io.cryptorush.userservice.rest.user.dto.UserRequestDTO;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Mono;
 import reactor.core.scheduler.Scheduler;
+
+import javax.validation.Valid;
 
 @RestController
 @RequestMapping("user")
@@ -25,7 +27,7 @@ public class UserController {
     }
 
     @PostMapping
-    public Mono<UserCreatedResponseDTO> createUser(@RequestBody UserRequestDTO userRequestDTO) {
+    public Mono<UserCreatedResponseDTO> createUser(@Valid @RequestBody UserRequestDTO userRequestDTO) {
         return Mono.fromCallable(() -> {
             User user = User.builder()
                     .login(userRequestDTO.getLogin())

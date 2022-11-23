@@ -75,7 +75,8 @@ All private endpoints require JWT auth.
 
 ##### Request data validation:
 
-All request data fields must be not empty and have some max length limits (on your choice).
+All request data fields must be not empty and have some min/max length limits (on your choice). Email address must be of
+a valid form (use corresponding RegEx pattern).
 
 ##### Business validation:
 
