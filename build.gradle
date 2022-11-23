@@ -1,5 +1,5 @@
 plugins {
-	id 'org.springframework.boot' version '2.6.6'
+	id 'org.springframework.boot' version '2.7.5'
 	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
 	id 'java'
 	id 'groovy'
@@ -67,16 +67,16 @@ dependencies {
 
 	runtimeOnly 'org.postgresql:postgresql'
 
-	testImplementation 'org.codehaus.groovy:groovy-all:3.0.10'
-	testImplementation 'org.spockframework:spock-core:2.1-groovy-3.0'
-	testImplementation 'org.spockframework:spock-spring:2.1-groovy-3.0'
+	testImplementation 'org.codehaus.groovy:groovy-all:3.0.13'
+	testImplementation 'org.spockframework:spock-core:2.3-groovy-3.0'
+	testImplementation 'org.spockframework:spock-spring:2.3-groovy-3.0'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'io.projectreactor:reactor-test'
 
 	acceptanceTestImplementation 'org.codehaus.groovy.modules.http-builder:http-builder:0.7.1'
 
-	compileOnly 'org.projectlombok:lombok:1.18.22'
-	annotationProcessor 'org.projectlombok:lombok:1.18.22'
+	compileOnly 'org.projectlombok:lombok:1.18.24'
+	annotationProcessor 'org.projectlombok:lombok:1.18.24'
 	annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
 }
 
