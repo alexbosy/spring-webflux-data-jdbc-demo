@@ -2,43 +2,44 @@
 
 This is a demo app to test the following technical stack:
 
--   Java 17+
--   Spring Boot
--   Spring Web Flux
--   Spring Data JDBC
--   Reactor
--   PostgreSQL
--   Spock
--   Springdoc OpenAPI
+- Java 17+
+- Spring Boot
+- Spring Web Flux
+- Spring Data JDBC
+- Reactor
+- PostgreSQL
+- Spock
+- Springdoc OpenAPI
 
 ## Application requirements
 
-We must develop the user management service, that allows us to manage basic operations with User and Customer domain objects, as well as authentication and customer registration.
+We must develop the user management service, that allows us to manage basic operations with User and Customer domain
+objects, as well as authentication and customer registration.
 
 The service will have the 2 main entities:
 
--   User - represents the identity that is used for authentication and contains the user type (ADMIN,MANAGER,CUSTOMER).
--   Customer - user extension, the "application end customer" or "public system user", that includes
-    additional data.
+- User - represents the identity that is used for authentication and contains the user type (ADMIN,MANAGER,CUSTOMER).
+- Customer - user extension, the "application end customer" or "public system user", that includes
+  additional data.
 
 ### User data:
 
--   id
--   login
--   name
--   surname
--   email
--   password
--   type - ADMIN/MANAGER/CUSTOMER
+- id
+- login
+- name
+- surname
+- email
+- password
+- type - ADMIN/MANAGER/CUSTOMER
 
 ### Additional Customer data:
 
--   date of birth
--   country of residence
--   identity number
--   passport number
--   registration IP address (not exposed to customer)
--   registration country (not exposed to customer)
+- date of birth
+- country of residence
+- identity number
+- passport number
+- registration IP address (not exposed to customer)
+- registration country (not exposed to customer)
 
 ### Common REST endpoints (will be used in all client apps):
 
@@ -50,7 +51,37 @@ All private endpoints require JWT auth.
 
 #### 1. POST /user - create new user.
 
-Supported types are only ADMIN/MANAGER.
+##### Request example:
+
+```json
+{
+  "login": "some login",
+  "name": "some name",
+  "surname": "some surname",
+  "email": "some email",
+  "password": "some password",
+  "type": "ADMIN"
+}
+```
+
+##### Response example:
+
+```json
+{
+  "id": "some id",
+  "login": "some login"
+}
+```
+
+##### Request data validation:
+
+All request data fields must be not empty and have some max length limits (on your choice).
+
+##### Business validation:
+
+* Supported types are only ADMIN/MANAGER.
+* Login must be unique.
+* Email must be unique.
 
 #### 2. GET /user/{:id} - get user data by id.
 
