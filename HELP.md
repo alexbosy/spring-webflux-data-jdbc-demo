@@ -57,3 +57,14 @@ Then in another terminal run the tests using gradle wrapper:
 - **t** - run unit tests
 - **it** - run integration tests
 - **at** - run acceptance tests
+
+# Sample API requests via curl
+
+```
+curl --header "Content-Type: application/json" \
+  --request POST \
+  --data '{"login":"some login","name":"some name",
+  "surname":"some surname","email": "some email",
+  "password":"some password","type":"ADMIN"}' \
+  http://localhost:8080/user
+```
