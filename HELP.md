@@ -68,3 +68,13 @@ curl --header "Content-Type: application/json" \
   "password":"some password","type":"ADMIN"}' \
   http://localhost:8080/user
 ```
+
+```shell
+http POST http://localhost:8080/user \
+login="some login" \
+name="some name" \
+surname="some surname" \
+email="skdjsk" \
+password="some password" \
+type="ADMIN"
+```
