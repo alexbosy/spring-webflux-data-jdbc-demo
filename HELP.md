@@ -10,19 +10,19 @@
 
 You need to start the local PostgreSQL container with your database in a separate shell:
 
-```
+```shell
 docker-compose up 
 ```
 
 Then in another terminal run the application using gradle wrapper:
 
-```
+```shell
 ./gradlew bootRun
 ```
 
 ## Building the local docker image
 
-```
+```shell
 ./gradlew bootBuildImage
 ```
 
@@ -30,13 +30,13 @@ Then in another terminal run the application using gradle wrapper:
 
 You need to start the local PostgreSQL container with your database:
 
-```
+```shell
 docker-compose up 
 ```
 
 And then run container with our application:
 
-```
+```shell
 ./run-local-docker-image.sh
 ```
 
@@ -44,13 +44,13 @@ And then run container with our application:
 
 You need to start the local PostgreSQL container with your database in a separate shell:
 
-```
+```shell
 docker-compose up 
 ```
 
 Then in another terminal run the tests using gradle wrapper:
 
-```
+```shell
 ./gradlew t it at
 ```
 
@@ -60,7 +60,7 @@ Then in another terminal run the tests using gradle wrapper:
 
 # Sample API requests via curl
 
-```
+```shell
 curl --header "Content-Type: application/json" \
   --request POST \
   --data '{"login":"some login","name":"some name",
