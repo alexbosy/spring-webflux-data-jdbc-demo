@@ -1,7 +1,7 @@
 package io.cryptorush.userservice.domain.user;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.crypto.scrypt.SCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -11,12 +11,14 @@ public class DefaultUserService implements UserService {
 
     private final UserRepository userRepository;
     private final UserValidator userValidator;
-    private final SCryptPasswordEncoder sCryptPasswordEncoder;
+    private final PasswordEncoder passwordEncoder;
 
-    public DefaultUserService(UserRepository userRepository, UserValidator userValidator) {
+    public DefaultUserService(UserRepository userRepository,
+                              UserValidator userValidator,
+                              PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.userValidator = userValidator;
-        this.sCryptPasswordEncoder = new SCryptPasswordEncoder();
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Transactional(timeout = 1)
@@ -25,7 +27,7 @@ public class DefaultUserService implements UserService {
         log.debug("Creating new system user=[{}]", user);
         userValidator.validate(user);
         log.debug("Encoding password for user with login={}", user.getLogin());
-        user.setPassword(sCryptPasswordEncoder.encode(user.getPassword()));
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         log.debug("Finished password encoding for user with login={}", user.getLogin());
         User createdUser = userRepository.save(user);
         log.debug("System user was created successfully, id=[{}]", createdUser.getId());
