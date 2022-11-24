@@ -24,7 +24,7 @@ public class ValidationHandler {
     }
 
     @ExceptionHandler(WebExchangeBindException.class)
-    public Mono<ResponseEntity<Map<String, String>>> handleException(WebExchangeBindException e) {
+    public Mono<ResponseEntity<Map<String, String>>> handleRequestValidationException(WebExchangeBindException e) {
         return Mono.fromCallable(() -> {
             var errors = e.getBindingResult()
                     .getAllErrors()
@@ -38,7 +38,7 @@ public class ValidationHandler {
     }
 
     @ExceptionHandler({BusinessValidationException.class})
-    public Mono<ResponseEntity<Map<String, String>>> handleMaliciousMediaException(BusinessValidationException e) {
+    public Mono<ResponseEntity<Map<String, String>>> handleBusinessValidationException(BusinessValidationException e) {
         return Mono.just(ResponseEntity.status(HttpStatus.FORBIDDEN).body(Map.of(e.getFieldName(), e.getMessage())))
                 .publishOn(scheduler);
     }
