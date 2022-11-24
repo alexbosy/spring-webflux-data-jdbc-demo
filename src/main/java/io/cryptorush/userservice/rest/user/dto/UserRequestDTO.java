@@ -11,6 +11,7 @@ import javax.validation.constraints.Size;
 @Data
 public class UserRequestDTO {
 
+    @NotBlank(message = "Login can not be empty")
     @Size.List({
             @Size(min = 6, message = "Login min length is {min} chars"),
             @Size(max = 20, message = "Login max length is {max} chars")
@@ -25,11 +26,13 @@ public class UserRequestDTO {
 
     @NotBlank(message = "Email can not be empty")
     @Pattern(regexp = "^\\w+([.-]?\\w+)*@\\w+([.-]?\\w+)*(.\\w{2,3})+$", message = "Email is not valid")
+    @Size(max = 25, message = "Email max length is {max} chars")
     private String email;
 
+    @NotBlank(message = "Password can not be empty")
     @Size(min = 8, message = "Password min length is {min} chars")
     private String password;
 
-    @NotNull(message = "Type can not be null")
+    @NotNull(message = "Type can not be empty")
     private UserType type;
 }
