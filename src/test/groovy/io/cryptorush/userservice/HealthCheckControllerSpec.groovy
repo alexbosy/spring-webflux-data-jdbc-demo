@@ -9,7 +9,7 @@ class HealthCheckControllerSpec extends Specification {
     def scheduler = Schedulers.immediate()
     def controller = new HealthCheckController(scheduler)
 
-    def "check handler"() {
+    def "GET /check - health check handler"() {
         when:
         def result = controller.check()
 
