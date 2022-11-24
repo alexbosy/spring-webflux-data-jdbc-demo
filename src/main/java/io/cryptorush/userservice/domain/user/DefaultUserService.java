@@ -3,6 +3,7 @@ package io.cryptorush.userservice.domain.user;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.scrypt.SCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @Service
@@ -18,6 +19,7 @@ public class DefaultUserService implements UserService {
         this.sCryptPasswordEncoder = new SCryptPasswordEncoder();
     }
 
+    @Transactional(timeout = 1)
     @Override
     public User createSystemUser(User user) {
         log.debug("Creating new system user=[{}]", user);
