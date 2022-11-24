@@ -1,8 +1,8 @@
 package io.cryptorush.userservice.domain.user;
 
-import io.cryptorush.userservice.domain.validation.EmailIsTakenException;
-import io.cryptorush.userservice.domain.validation.InvalidUserTypeException;
-import io.cryptorush.userservice.domain.validation.LoginIsTakenException;
+import io.cryptorush.userservice.domain.user.validation.EmailIsTakenException;
+import io.cryptorush.userservice.domain.user.validation.InvalidUserTypeException;
+import io.cryptorush.userservice.domain.user.validation.LoginIsTakenException;
 import org.springframework.stereotype.Component;
 
 import java.util.Objects;
