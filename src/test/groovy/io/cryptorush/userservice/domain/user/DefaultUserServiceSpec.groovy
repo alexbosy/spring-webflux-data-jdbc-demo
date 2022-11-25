@@ -92,4 +92,24 @@ class DefaultUserServiceSpec extends Specification {
         e.message == "Supplied email is already taken"
         e.fieldName == "email"
     }
+
+    def "get user by id"() {
+        given:
+        def id = 1000L
+        def user = new User(id: id, login: "login", email: "email", type: UserType.MANAGER, password: "encrypted", name:
+                "name", surname: "surname")
+        userRepository.findById(id) >> Optional.of(user)
+
+        when:
+        def foundUser = userService.getById(id)
+
+        then:
+        foundUser.id == id
+        foundUser.login == "login"
+        foundUser.email == "email"
+        foundUser.name == "name"
+        foundUser.surname == "surname"
+        foundUser.type == UserType.MANAGER
+        foundUser.password == "encrypted"
+    }
 }

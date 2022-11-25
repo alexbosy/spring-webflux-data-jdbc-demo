@@ -2,6 +2,7 @@ package io.cryptorush.userservice.rest.validation
 
 import io.cryptorush.userservice.domain.user.validation.EmailIsTakenExceptionField
 import io.cryptorush.userservice.domain.user.validation.LoginIsTakenExceptionField
+import io.cryptorush.userservice.domain.user.validation.UserNotFoundException
 import org.springframework.core.annotation.SynthesizingMethodParameter
 import org.springframework.validation.BeanPropertyBindingResult
 import org.springframework.validation.FieldError
@@ -33,7 +34,7 @@ class ValidationHandlerSpec extends Specification {
         result.body["field2"] == "error message2"
     }
 
-    def "handle business validation exceptions"() {
+    def "handle business field validation exceptions"() {
         when:
         def result = validationHandler.handleBusinessFieldValidationException(businessValidationException).block()
 
@@ -42,5 +43,16 @@ class ValidationHandlerSpec extends Specification {
 
         where:
         businessValidationException << [new LoginIsTakenExceptionField(), new EmailIsTakenExceptionField()]
+    }
+
+    def "handle not found exceptions"() {
+        when:
+        def result = validationHandler.handleNotFoundException(notFoundException).block()
+
+        then:
+        result.body["error"] == notFoundException.message
+
+        where:
+        notFoundException << [new UserNotFoundException()]
     }
 }
