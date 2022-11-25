@@ -78,3 +78,7 @@ email="skdjsk" \
 password="some password" \
 type="ADMIN"
 ```
+
+```shell
+http GET http://localhost:8080/user/35
+```
