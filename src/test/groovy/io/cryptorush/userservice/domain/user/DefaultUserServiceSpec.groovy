@@ -3,6 +3,7 @@ package io.cryptorush.userservice.domain.user
 import io.cryptorush.userservice.domain.user.validation.EmailIsTakenExceptionField
 import io.cryptorush.userservice.domain.user.validation.InvalidUserTypeExceptionField
 import io.cryptorush.userservice.domain.user.validation.LoginIsTakenExceptionField
+import io.cryptorush.userservice.domain.user.validation.UserNotFoundException
 import org.springframework.security.crypto.password.PasswordEncoder
 import spock.lang.Specification
 
@@ -111,5 +112,19 @@ class DefaultUserServiceSpec extends Specification {
         foundUser.surname == "surname"
         foundUser.type == UserType.MANAGER
         foundUser.password == "encrypted"
+    }
+
+    def "get user by id, not found case"() {
+        given:
+        def id = 1000L
+        userRepository.findById(id) >> Optional.empty()
+
+        when:
+        userService.getById(id)
+
+        then:
+        def e = thrown(UserNotFoundException)
+        e.message == "User not found"
+
     }
 }
