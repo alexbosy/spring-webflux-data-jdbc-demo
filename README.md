@@ -51,6 +51,8 @@ All private endpoints require JWT auth.
 
 #### 1. POST /user - create new user.
 
+Creates a new user by supplied data, password must be stored in DB in encrypted form.
+
 ##### Request example:
 
 ```json
@@ -86,7 +88,20 @@ a valid form (use corresponding RegEx pattern).
 
 #### 2. GET /user/{:id} - get user data by id.
 
-Return the User or Customer object data.
+Return the User object data except password.
+
+##### Response example:
+
+```json
+{
+  "id": 35,
+  "login": "some-login",
+  "name": "some name",
+  "surname": "some surname",
+  "email": "some@email.lv",
+  "type": "ADMIN"
+}
+```
 
 #### 3. PUT /user/{:id} - update user data by id.
 
