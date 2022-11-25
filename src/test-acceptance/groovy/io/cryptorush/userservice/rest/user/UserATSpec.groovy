@@ -1,5 +1,6 @@
 package io.cryptorush.userservice.rest.user
 
+
 import io.cryptorush.userservice.domain.user.UserType
 import io.cryptorush.userservice.rest.client.TestRESTClient
 import org.springframework.boot.test.context.SpringBootTest
@@ -12,12 +13,13 @@ class UserATSpec extends Specification {
 
     def testClient = new TestRESTClient()
 
+    def uniqueLogin = "at-" + System.currentTimeMillis()
+    def uniqueEmail = System.currentTimeMillis() + "@at-tests.lv"
+    def payload = ["login": uniqueLogin, "name": "some name", "surname": "some surname",
+                   "email": uniqueEmail, "password": "some password", "type": UserType.ADMIN.name()]
+
     def "POST /user"() {
         when: "creating a new user"
-        def uniqueLogin = "at-" + System.currentTimeMillis()
-        def uniqueEmail = System.currentTimeMillis() + "@at-tests.lv"
-        def payload = ["login": uniqueLogin, "name": "some name", "surname": "some surname",
-                       "email": uniqueEmail, "password": "some password", "type": UserType.ADMIN.name()]
         def res = testClient.post('/user', payload)
 
         then:
@@ -48,5 +50,34 @@ class UserATSpec extends Specification {
         res.data["email"] == "Email can not be empty"
         res.data["password"] == "Password can not be empty"
         res.data["type"] == "Type can not be empty"
+    }
+
+    def "GET /user/{id}"() {
+        when: "creating a new user"
+        def res = testClient.post('/user', payload)
+
+        then:
+        res.status == 200
+
+        and: "find user by id"
+        def createdUserId = res.data["id"]
+        def res2 = testClient.get("/user/${createdUserId}")
+        res2.status == 200
+        res2.data["id"] == createdUserId
+        res2.data["login"] == payload.login
+        res2.data["name"] == payload.name
+        res2.data["surname"] == payload.surname
+        res2.data["email"] == payload.email
+        res2.data["type"] == payload.type
+    }
+
+    def "GET /user/{id}, user not found case"() {
+        when:
+        def notExistingId = 0L
+        def res = testClient.get("/user/${notExistingId}")
+
+        then:
+        res.status == 404
+        res.data["error"] == "User not found"
     }
 }
