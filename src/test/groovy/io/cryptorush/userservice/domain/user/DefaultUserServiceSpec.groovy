@@ -125,6 +125,30 @@ class DefaultUserServiceSpec extends Specification {
         then:
         def e = thrown(UserNotFoundException)
         e.message == "User not found"
+    }
 
+    def "delete user by id"() {
+        given:
+        def id = 1000L
+        userRepository.hardDeleteById(id) >> 1
+
+        when:
+        userService.deleteById(id)
+
+        then:
+        noExceptionThrown()
+    }
+
+    def "delete user by id, not found case"() {
+        given:
+        def id = 1000L
+        userRepository.hardDeleteById(id) >> 0
+
+        when:
+        userService.deleteById(id)
+
+        then:
+        def e = thrown(UserNotFoundException)
+        e.message == "User not found"
     }
 }

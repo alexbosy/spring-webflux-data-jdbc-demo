@@ -4,6 +4,7 @@ import io.cryptorush.userservice.domain.user.User
 import io.cryptorush.userservice.domain.user.UserService
 import io.cryptorush.userservice.domain.user.UserType
 import io.cryptorush.userservice.rest.user.dto.UserRequestDTO
+import org.springframework.http.HttpStatus
 import reactor.core.scheduler.Schedulers
 import spock.lang.Specification
 
@@ -57,5 +58,17 @@ class UserControllerSpec extends Specification {
         result.surname == surname
         result.email == email
         result.type == UserType.MANAGER
+    }
+
+    def "DELETE /user/{id} - hard delete user by id"() {
+        given:
+        def id = 100L
+
+        when:
+        def result = controller.deleteUser(id).block()
+
+        then:
+        1 * userService.deleteById(id)
+        result.statusCode == HttpStatus.NO_CONTENT
     }
 }

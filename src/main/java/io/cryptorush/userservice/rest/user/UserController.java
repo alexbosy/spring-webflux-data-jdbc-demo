@@ -6,6 +6,7 @@ import io.cryptorush.userservice.rest.user.dto.UserCreatedResponseDTO;
 import io.cryptorush.userservice.rest.user.dto.UserFullResponseDTO;
 import io.cryptorush.userservice.rest.user.dto.UserRequestDTO;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
 import reactor.core.scheduler.Scheduler;
@@ -56,6 +57,14 @@ public class UserController {
                     .surname(user.getSurname())
                     .email(user.getEmail())
                     .type(user.getType()).build();
+        }).publishOn(scheduler);
+    }
+
+    @DeleteMapping(path = "/{id}")
+    Mono<ResponseEntity<Object>> deleteUser(@PathVariable("id") long id) {
+        return Mono.fromCallable(() -> {
+            userService.deleteById(id);
+            return ResponseEntity.noContent().build();
         }).publishOn(scheduler);
     }
 }

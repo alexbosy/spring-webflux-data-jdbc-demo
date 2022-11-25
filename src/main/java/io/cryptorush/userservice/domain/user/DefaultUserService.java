@@ -40,4 +40,12 @@ public class DefaultUserService implements UserService {
         return userRepository.findById(id)
                 .orElseThrow(UserNotFoundException::new);
     }
+
+    @Override
+    public void deleteById(long id) {
+        long count = userRepository.hardDeleteById(id);
+        if (count == 0) {
+            throw new UserNotFoundException();
+        }
+    }
 }

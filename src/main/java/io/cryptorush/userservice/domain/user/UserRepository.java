@@ -1,5 +1,6 @@
 package io.cryptorush.userservice.domain.user;
 
+import org.springframework.data.jdbc.repository.query.Modifying;
 import org.springframework.data.jdbc.repository.query.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
@@ -14,4 +15,8 @@ public interface UserRepository extends CrudRepository<User, Long> {
 
     @Query("SELECT * FROM users WHERE id=:pId")
     Optional<User> findById(@Param("pId") long id);
+
+    @Modifying
+    @Query("DELETE FROM users WHERE id=:pId")
+    long hardDeleteById(@Param("pId") long id);
 }

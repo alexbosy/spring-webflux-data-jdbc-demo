@@ -4,4 +4,6 @@ public interface UserService {
     User createSystemUser(User user);
 
     User getById(long id);
+
+    void deleteById(long id);
 }

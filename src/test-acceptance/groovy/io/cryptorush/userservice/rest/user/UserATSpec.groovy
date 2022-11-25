@@ -24,7 +24,8 @@ class UserATSpec extends Specification {
 
         then:
         res.status == 200
-        res.data["id"] >= 1
+        def createdUserId = res.data["id"]
+        createdUserId >= 1
         res.data["login"] == uniqueLogin
 
         and: "trying to create a new user with existing login"
@@ -37,6 +38,9 @@ class UserATSpec extends Specification {
         def res3 = testClient.post('/user', payload)
         res3.status == 403
         res3.data["email"] == "Supplied email is already taken"
+
+        cleanup:
+        testClient.delete("/user/${createdUserId}")
     }
 
     def "POST /user, error case with empty payload"() {
@@ -53,7 +57,7 @@ class UserATSpec extends Specification {
     }
 
     def "GET /user/{id}"() {
-        when: "creating a new user"
+        when: "create a new user"
         def res = testClient.post('/user', payload)
 
         then:
@@ -69,12 +73,42 @@ class UserATSpec extends Specification {
         res2.data["surname"] == payload.surname
         res2.data["email"] == payload.email
         res2.data["type"] == payload.type
+
+        cleanup:
+        testClient.delete("/user/${createdUserId}")
     }
 
     def "GET /user/{id}, user not found case"() {
         when:
         def notExistingId = 0L
         def res = testClient.get("/user/${notExistingId}")
+
+        then:
+        res.status == 404
+        res.data["error"] == "User not found"
+    }
+
+    def "DELETE /user/{id}"() {
+        when: "creat a new user"
+        def res = testClient.post('/user', payload)
+
+        then:
+        res.status == 200
+
+        and: "delete this created user"
+        def createdUserId = res.data["id"]
+        def res2 = testClient.delete("/user/${createdUserId}")
+        res2.status == 204
+
+        and: "check this user was deleted"
+        def res3 = testClient.get("/user/${createdUserId}")
+        res3.status == 404
+    }
+
+    def "DELETE /user/{id}, user not found case"() {
+        when:
+        def notExistingId = 0L
+        def res = testClient.delete("/user/${notExistingId}")
 
         then:
         res.status == 404
