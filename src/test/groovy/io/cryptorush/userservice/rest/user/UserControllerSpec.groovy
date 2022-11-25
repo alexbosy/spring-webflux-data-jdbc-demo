@@ -3,7 +3,7 @@ package io.cryptorush.userservice.rest.user
 import io.cryptorush.userservice.domain.user.User
 import io.cryptorush.userservice.domain.user.UserService
 import io.cryptorush.userservice.domain.user.UserType
-import io.cryptorush.userservice.rest.user.dto.UserRequestDTO
+import io.cryptorush.userservice.rest.user.dto.UserCreationRequestDTO
 import org.springframework.http.HttpStatus
 import reactor.core.scheduler.Schedulers
 import spock.lang.Specification
@@ -23,7 +23,7 @@ class UserControllerSpec extends Specification {
 
     def "POST /user - create user handler"() {
         given:
-        def userRequestDTO = new UserRequestDTO(login: login, name: name, surname: surname, email: email, password:
+        def userRequestDTO = new UserCreationRequestDTO(login: login, name: name, surname: surname, email: email, password:
                 password, type: type)
 
         when:

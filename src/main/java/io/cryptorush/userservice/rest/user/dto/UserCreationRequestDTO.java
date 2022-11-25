@@ -9,7 +9,7 @@ import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 @Data
-public class UserRequestDTO {
+public class UserCreationRequestDTO {
 
     @NotBlank(message = "Login can not be empty")
     @Size.List({

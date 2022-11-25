@@ -82,3 +82,12 @@ type="ADMIN"
 ```shell
 http GET http://localhost:8080/user/35
 ```
+
+```shell
+http PUT http://localhost:8080/user/26 \
+login="some login" \
+name="some name" \
+surname="some surname" \
+email="new@new.com"  \
+type="ADMIN"
+```

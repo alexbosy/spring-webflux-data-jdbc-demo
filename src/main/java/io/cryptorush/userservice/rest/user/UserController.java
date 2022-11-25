@@ -3,8 +3,9 @@ package io.cryptorush.userservice.rest.user;
 import io.cryptorush.userservice.domain.user.User;
 import io.cryptorush.userservice.domain.user.UserService;
 import io.cryptorush.userservice.rest.user.dto.UserCreatedResponseDTO;
+import io.cryptorush.userservice.rest.user.dto.UserCreationRequestDTO;
 import io.cryptorush.userservice.rest.user.dto.UserFullResponseDTO;
-import io.cryptorush.userservice.rest.user.dto.UserRequestDTO;
+import io.cryptorush.userservice.rest.user.dto.UserUpdateRequestDTO;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -26,15 +27,15 @@ public class UserController {
     }
 
     @PostMapping
-    public Mono<UserCreatedResponseDTO> createUser(@Valid @RequestBody UserRequestDTO userRequestDTO) {
+    public Mono<UserCreatedResponseDTO> createUser(@Valid @RequestBody UserCreationRequestDTO userCreationRequestDTO) {
         return Mono.fromCallable(() -> {
             User user = User.builder()
-                    .login(userRequestDTO.getLogin())
-                    .name(userRequestDTO.getName())
-                    .surname(userRequestDTO.getSurname())
-                    .email(userRequestDTO.getEmail())
-                    .password(userRequestDTO.getPassword())
-                    .type(userRequestDTO.getType())
+                    .login(userCreationRequestDTO.getLogin())
+                    .name(userCreationRequestDTO.getName())
+                    .surname(userCreationRequestDTO.getSurname())
+                    .email(userCreationRequestDTO.getEmail())
+                    .password(userCreationRequestDTO.getPassword())
+                    .type(userCreationRequestDTO.getType())
                     .build();
 
             User createdUser = userService.createSystemUser(user);
@@ -43,6 +44,29 @@ public class UserController {
                     .id(createdUser.getId())
                     .login(createdUser.getLogin())
                     .build();
+        }).publishOn(scheduler);
+    }
+
+    @PutMapping("/{id}")
+    public Mono<UserFullResponseDTO> updateUser(@PathVariable("id") long id,
+                                                @Valid @RequestBody UserUpdateRequestDTO userUpdateRequestDTO) {
+        return Mono.fromCallable(() -> {
+            User user = User.builder()
+                    .id(id)
+                    .login(userUpdateRequestDTO.getLogin())
+                    .name(userUpdateRequestDTO.getName())
+                    .surname(userUpdateRequestDTO.getSurname())
+                    .email(userUpdateRequestDTO.getEmail())
+                    .type(userUpdateRequestDTO.getType())
+                    .build();
+            User updatedUser = userService.updateUser(user);
+            return UserFullResponseDTO.builder()
+                    .id(updatedUser.getId())
+                    .login(updatedUser.getLogin())
+                    .name(updatedUser.getName())
+                    .surname(updatedUser.getSurname())
+                    .email(updatedUser.getEmail())
+                    .type(updatedUser.getType()).build();
         }).publishOn(scheduler);
     }
 

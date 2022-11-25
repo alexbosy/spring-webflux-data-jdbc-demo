@@ -6,6 +6,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 @Slf4j
 @Service
 public class DefaultUserService implements UserService {
@@ -45,6 +47,22 @@ public class DefaultUserService implements UserService {
     public void deleteById(long id) {
         long count = userRepository.hardDeleteById(id);
         if (count == 0) {
+            throw new UserNotFoundException();
+        }
+    }
+
+    @Override
+    public User updateUser(User user) {
+        Optional<User> optionalUser = userRepository.findById(user.getId());
+        if (optionalUser.isPresent()) {
+            User foundUser = optionalUser.get();
+            foundUser.setLogin(user.getLogin());
+            foundUser.setName(user.getName());
+            foundUser.setSurname(user.getSurname());
+            foundUser.setEmail(user.getEmail());
+            foundUser.setType(user.getType());
+            return userRepository.save(foundUser);
+        } else {
             throw new UserNotFoundException();
         }
     }
