@@ -1,8 +1,8 @@
 package io.cryptorush.userservice.domain.user
 
-import io.cryptorush.userservice.domain.user.validation.EmailIsTakenException
-import io.cryptorush.userservice.domain.user.validation.InvalidUserTypeException
-import io.cryptorush.userservice.domain.user.validation.LoginIsTakenException
+import io.cryptorush.userservice.domain.user.validation.EmailIsTakenExceptionField
+import io.cryptorush.userservice.domain.user.validation.InvalidUserTypeExceptionField
+import io.cryptorush.userservice.domain.user.validation.LoginIsTakenExceptionField
 import org.springframework.security.crypto.password.PasswordEncoder
 import spock.lang.Specification
 
@@ -55,7 +55,7 @@ class DefaultUserServiceSpec extends Specification {
         userService.createSystemUser(user)
 
         then:
-        def e = thrown(InvalidUserTypeException)
+        def e = thrown(InvalidUserTypeExceptionField)
         e.message == "Forbidden user type"
         e.fieldName == "type"
     }
@@ -71,7 +71,9 @@ class DefaultUserServiceSpec extends Specification {
         userService.createSystemUser(user)
 
         then:
-        def e = thrown(LoginIsTakenException)
+        def e = thrown(LoginIsTakenExceptionField)
+        e.message == "Supplied login is already taken"
+        e.fieldName == "login"
     }
 
     def "create new system user, error case with taken email"() {
@@ -86,6 +88,8 @@ class DefaultUserServiceSpec extends Specification {
         userService.createSystemUser(user)
 
         then:
-        def e = thrown(EmailIsTakenException)
+        def e = thrown(EmailIsTakenExceptionField)
+        e.message == "Supplied email is already taken"
+        e.fieldName == "email"
     }
 }

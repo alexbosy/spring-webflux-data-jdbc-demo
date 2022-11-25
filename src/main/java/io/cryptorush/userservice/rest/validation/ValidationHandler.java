@@ -1,5 +1,7 @@
 package io.cryptorush.userservice.rest.validation;
 
+import io.cryptorush.userservice.domain.user.validation.UserNotFoundException;
+import io.cryptorush.userservice.domain.validation.BusinessFieldValidationException;
 import io.cryptorush.userservice.domain.validation.BusinessValidationException;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
@@ -37,9 +39,15 @@ public class ValidationHandler {
         }).publishOn(scheduler);
     }
 
-    @ExceptionHandler({BusinessValidationException.class})
-    public Mono<ResponseEntity<Map<String, String>>> handleBusinessValidationException(BusinessValidationException e) {
+    @ExceptionHandler({BusinessFieldValidationException.class})
+    public Mono<ResponseEntity<Map<String, String>>> handleBusinessFieldValidationException(BusinessFieldValidationException e) {
         return Mono.just(ResponseEntity.status(HttpStatus.FORBIDDEN).body(Map.of(e.getFieldName(), e.getMessage())))
+                .publishOn(scheduler);
+    }
+
+    @ExceptionHandler({UserNotFoundException.class})
+    public Mono<ResponseEntity<Map<String, String>>> handleNotFoundException(BusinessValidationException e) {
+        return Mono.just(ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("error", e.getMessage())))
                 .publishOn(scheduler);
     }
 }

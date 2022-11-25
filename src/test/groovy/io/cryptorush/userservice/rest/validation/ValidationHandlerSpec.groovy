@@ -1,7 +1,7 @@
 package io.cryptorush.userservice.rest.validation
 
-import io.cryptorush.userservice.domain.user.validation.EmailIsTakenException
-import io.cryptorush.userservice.domain.user.validation.LoginIsTakenException
+import io.cryptorush.userservice.domain.user.validation.EmailIsTakenExceptionField
+import io.cryptorush.userservice.domain.user.validation.LoginIsTakenExceptionField
 import org.springframework.core.annotation.SynthesizingMethodParameter
 import org.springframework.validation.BeanPropertyBindingResult
 import org.springframework.validation.FieldError
@@ -35,12 +35,12 @@ class ValidationHandlerSpec extends Specification {
 
     def "handle business validation exceptions"() {
         when:
-        def result = validationHandler.handleBusinessValidationException(businessValidationException).block()
+        def result = validationHandler.handleBusinessFieldValidationException(businessValidationException).block()
 
         then:
         result.body[businessValidationException.fieldName] == businessValidationException.message
 
         where:
-        businessValidationException << [new LoginIsTakenException(), new EmailIsTakenException()]
+        businessValidationException << [new LoginIsTakenExceptionField(), new EmailIsTakenExceptionField()]
     }
 }

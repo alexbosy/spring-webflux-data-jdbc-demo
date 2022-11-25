@@ -3,12 +3,10 @@ package io.cryptorush.userservice.rest.user;
 import io.cryptorush.userservice.domain.user.User;
 import io.cryptorush.userservice.domain.user.UserService;
 import io.cryptorush.userservice.rest.user.dto.UserCreatedResponseDTO;
+import io.cryptorush.userservice.rest.user.dto.UserFullResponseDTO;
 import io.cryptorush.userservice.rest.user.dto.UserRequestDTO;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
 import reactor.core.scheduler.Scheduler;
 
@@ -44,6 +42,20 @@ public class UserController {
                     .id(createdUser.getId())
                     .login(createdUser.getLogin())
                     .build();
+        }).publishOn(scheduler);
+    }
+
+    @GetMapping("/{id}")
+    public Mono<UserFullResponseDTO> getUser(@PathVariable("id") long id) {
+        return Mono.fromCallable(() -> {
+            User user = userService.getById(id);
+            return UserFullResponseDTO.builder()
+                    .id(user.getId())
+                    .login(user.getLogin())
+                    .name(user.getName())
+                    .surname(user.getSurname())
+                    .email(user.getEmail())
+                    .type(user.getType()).build();
         }).publishOn(scheduler);
     }
 }

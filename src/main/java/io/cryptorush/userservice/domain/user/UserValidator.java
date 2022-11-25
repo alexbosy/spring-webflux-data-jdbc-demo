@@ -1,8 +1,8 @@
 package io.cryptorush.userservice.domain.user;
 
-import io.cryptorush.userservice.domain.user.validation.EmailIsTakenException;
-import io.cryptorush.userservice.domain.user.validation.InvalidUserTypeException;
-import io.cryptorush.userservice.domain.user.validation.LoginIsTakenException;
+import io.cryptorush.userservice.domain.user.validation.EmailIsTakenExceptionField;
+import io.cryptorush.userservice.domain.user.validation.InvalidUserTypeExceptionField;
+import io.cryptorush.userservice.domain.user.validation.LoginIsTakenExceptionField;
 import org.springframework.stereotype.Component;
 
 import java.util.Objects;
@@ -27,7 +27,7 @@ public class UserValidator {
     private void validateUserType(User user) {
         var type = user.getType();
         if (type != ADMIN && type != MANAGER) {
-            throw new InvalidUserTypeException();
+            throw new InvalidUserTypeExceptionField();
         }
     }
 
@@ -38,9 +38,9 @@ public class UserValidator {
         userOptional.ifPresent(foundUser -> {
             var foundLogin = foundUser.getLogin();
             if (Objects.equals(foundLogin, currentLogin)) {
-                throw new LoginIsTakenException();
+                throw new LoginIsTakenExceptionField();
             } else {
-                throw new EmailIsTakenException();
+                throw new EmailIsTakenExceptionField();
             }
         });
     }
