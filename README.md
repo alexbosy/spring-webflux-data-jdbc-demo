@@ -105,7 +105,38 @@ Return the User object data except password.
 
 #### 3. PUT /user/{:id} - update user data by id.
 
-Supported types are only ADMIN/MANAGER.
+##### Request example:
+
+PUT /user/35
+
+body:
+
+```json
+{
+  "login": "updated login",
+  "name": "updated name",
+  "surname": "some surname",
+  "email": "some@email.lv",
+  "type": "ADMIN"
+}
+```
+
+##### Response example:
+
+```json
+{
+  "id": 35,
+  "login": "updated login",
+  "name": "updated name",
+  "surname": "updated surname",
+  "email": "some@email.lv",
+  "type": "ADMIN"
+}
+```
+
+##### Request data and business validation:
+
+Must be the same as for "create new user" endpoint.
 
 #### 4. DELETE /user/{:id} - delete user by id.
 
