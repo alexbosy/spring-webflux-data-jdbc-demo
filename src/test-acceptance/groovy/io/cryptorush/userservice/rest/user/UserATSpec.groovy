@@ -114,4 +114,38 @@ class UserATSpec extends Specification {
         res.status == 404
         res.data["error"] == "User not found"
     }
+
+    def "PUT /user/{id}"() {
+        when: "create a new user"
+        def res = testClient.post('/user', payload)
+
+        then:
+        res.status == 200
+
+        and: "find user by id"
+        def createdUserId = res.data["id"]
+        def res2 = testClient.get("/user/${createdUserId}")
+        res2.status == 200
+        res2.data["id"] == createdUserId
+        res2.data["login"] == payload.login
+        res2.data["name"] == payload.name
+        res2.data["surname"] == payload.surname
+        res2.data["email"] == payload.email
+        res2.data["type"] == payload.type
+
+        and: "update user by id"
+        def updatePayload = ["login": "new login", "name": "new name", "surname": "new surname",
+                             "email": "new@email.com", "type": UserType.ADMIN.name()]
+        def res3 = testClient.put("/user/${createdUserId}", updatePayload)
+        res3.status == 200
+        res3.data["id"] == createdUserId
+        res3.data["login"] == "new login"
+        res3.data["name"] == "new name"
+        res3.data["surname"] == "new surname"
+        res3.data["email"] == "new@email.com"
+        res3.data["type"] == UserType.ADMIN.name()
+
+        cleanup:
+        testClient.delete("/user/${createdUserId}")
+    }
 }

@@ -22,6 +22,10 @@ class TestRESTClient {
         client.put(path: uri) as HttpResponseDecorator
     }
 
+    HttpResponseDecorator put(String uri, Map body) {
+        client.put(path: uri, body: body, contentType: 'application/json') as HttpResponseDecorator
+    }
+
     HttpResponseDecorator delete(String uri) {
         client.delete(path: uri) as HttpResponseDecorator
     }
