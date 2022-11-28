@@ -19,9 +19,9 @@ public class UserValidator {
         this.userRepository = userRepository;
     }
 
-    public void validate(User user) {
+    public void validateUserCreationOrUpdate(User user) {
         validateUserType(user);
-        validateLoginAndEmail(user);
+        validateForLoginAndEmail(user.getLogin(), user.getEmail(), user.getId());
     }
 
     private void validateUserType(User user) {
@@ -31,10 +31,8 @@ public class UserValidator {
         }
     }
 
-    private void validateLoginAndEmail(User user) {
-        var currentLogin = user.getLogin();
-        var currentEmail = user.getEmail();
-        Optional<User> userOptional = userRepository.findByLoginOrEmail(currentLogin, currentEmail);
+    private void validateForLoginAndEmail(String currentLogin, String currentEmail, Long currentUserId) {
+        Optional<User> userOptional = findAlreadyExistingUser(currentLogin, currentEmail, currentUserId);
         userOptional.ifPresent(foundUser -> {
             var foundLogin = foundUser.getLogin();
             if (Objects.equals(foundLogin, currentLogin)) {
@@ -43,5 +41,15 @@ public class UserValidator {
                 throw new EmailIsTakenExceptionField();
             }
         });
+    }
+
+    private Optional<User> findAlreadyExistingUser(String currentLogin, String currentEmail, Long currentUserId) {
+        Optional<User> userOptional;
+        if (currentUserId != null) {
+            userOptional = userRepository.findByLoginOrEmailExceptId(currentLogin, currentEmail, currentUserId);
+        } else {
+            userOptional = userRepository.findByLoginOrEmail(currentLogin, currentEmail);
+        }
+        return userOptional;
     }
 }
