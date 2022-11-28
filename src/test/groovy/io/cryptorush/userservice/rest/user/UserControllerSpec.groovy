@@ -4,6 +4,7 @@ import io.cryptorush.userservice.domain.user.User
 import io.cryptorush.userservice.domain.user.UserService
 import io.cryptorush.userservice.domain.user.UserType
 import io.cryptorush.userservice.rest.user.dto.UserCreationRequestDTO
+import io.cryptorush.userservice.rest.user.dto.UserUpdateRequestDTO
 import org.springframework.http.HttpStatus
 import reactor.core.scheduler.Schedulers
 import spock.lang.Specification
@@ -21,7 +22,7 @@ class UserControllerSpec extends Specification {
     def password = "password"
     def type = "ADMIN"
 
-    def "POST /user - create user handler"() {
+    def "POST /user - create new user"() {
         given:
         def userRequestDTO = new UserCreationRequestDTO(login: login, name: name, surname: surname, email: email, password:
                 password, type: type)
@@ -70,5 +71,25 @@ class UserControllerSpec extends Specification {
         then:
         1 * userService.deleteById(id)
         result.statusCode == HttpStatus.NO_CONTENT
+    }
+
+    def "PUT /user/{id} - update user by id"() {
+        given:
+        def id = 666L
+        def userDTO = new UserUpdateRequestDTO(login: login, name: name, surname: surname, email: email, type: type)
+
+        when:
+        def result = controller.updateUser(id, userDTO).block()
+
+        then:
+        1 * userService.updateUser({ User user ->
+            user.id == id
+        } as User) >> new User(id: 666L, login: login, name: name, surname: surname, email: email, type: type)
+        result.id == id
+        result.login == login
+        result.name == name
+        result.surname == surname
+        result.email == email
+        result.type == UserType.ADMIN
     }
 }

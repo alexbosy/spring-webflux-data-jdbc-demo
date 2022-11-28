@@ -82,7 +82,7 @@ class DefaultUserServiceSpec extends Specification {
         def user = new User(email: "taken email", type: UserType.ADMIN)
 
         and: "specified email is taken"
-        userRepository.findByLoginOrEmail(_, "taken email",) >> Optional.of(new User(login: "some login", email:
+        userRepository.findByLoginOrEmail(_, "taken email") >> Optional.of(new User(login: "some login", email:
                 "taken email"))
 
         when:
@@ -92,6 +92,93 @@ class DefaultUserServiceSpec extends Specification {
         def e = thrown(EmailIsTakenExceptionField)
         e.message == "Supplied email is already taken"
         e.fieldName == "email"
+    }
+
+    def "update existing user"() {
+        given:
+        def existingUserId = 666L
+        def updatedLogin = "updated login"
+        def updatedEmail = "updated email"
+        def updatedPassword = "updated password"
+        def updatedName = "some name"
+        def updatedSurname = "some surname"
+        def updatedType = supportedType
+        def user = new User(id: existingUserId, login: updatedLogin, email: updatedEmail, type: updatedType, password:
+                updatedPassword, name: updatedName, surname: updatedSurname)
+
+        and:
+        userRepository.findById(existingUserId) >> Optional.of(new User(id: existingUserId))
+
+        and: "specified login or email is not taken"
+        userRepository.findByLoginOrEmailExceptId(updatedLogin, updatedEmail, existingUserId) >> Optional.empty()
+
+        when:
+        userService.updateUser(user)
+
+        then:
+        1 * userRepository.save({ User u ->
+            u.login == updatedLogin &&
+                    u.name == updatedName &&
+                    u.surname == updatedSurname &&
+                    u.email == updatedEmail &&
+                    u.type == updatedType
+        } as User)
+
+        where:
+        supportedType << [UserType.ADMIN, UserType.MANAGER]
+    }
+
+    def "update exising user, error case with taken email"() {
+        given:
+        def id = 100L
+        def user = new User(id: id, email: "taken email", type: UserType.ADMIN)
+        userRepository.findById(id) >> Optional.of(new User(id: id))
+
+        and: "specified email is taken"
+        userRepository.findByLoginOrEmailExceptId(_, "taken email", id) >> Optional.of(new User(login: "some login", email:
+                "taken email"))
+
+        when:
+        userService.updateUser(user)
+
+        then:
+        def e = thrown(EmailIsTakenExceptionField)
+        e.message == "Supplied email is already taken"
+        e.fieldName == "email"
+    }
+
+    def "update exising user, error case with taken login"() {
+        given:
+        def id = 100L
+        def user = new User(id: id, login: "taken login", type: UserType.ADMIN)
+        userRepository.findById(id) >> Optional.of(new User(id: id))
+
+        and: "specified email is taken"
+        userRepository.findByLoginOrEmailExceptId("taken login", _, id) >> Optional.of(new User(login:
+                "taken login", email:
+                "some email"))
+
+        when:
+        userService.updateUser(user)
+
+        then:
+        def e = thrown(LoginIsTakenExceptionField)
+        e.message == "Supplied login is already taken"
+        e.fieldName == "login"
+    }
+
+    def "update exising user, error case, when user not found"() {
+        given:
+        def existingId = 1000L
+        def user = new User(id: existingId)
+        userRepository.findById(existingId) >> Optional.empty()
+
+        when:
+        userService.updateUser(user)
+
+        then:
+        def e = thrown(UserNotFoundException)
+        e.message == "User not found"
     }
 
     def "get user by id"() {
