@@ -58,7 +58,7 @@ Then in another terminal run the tests using gradle wrapper:
 - **it** - run integration tests
 - **at** - run acceptance tests
 
-# Sample API requests via curl
+# Sample API requests via curl or httpie
 
 ```shell
 curl --header "Content-Type: application/json" \
@@ -90,4 +90,8 @@ name="some name" \
 surname="some surname" \
 email="new@new.com"  \
 type="ADMIN"
+```
+
+```shell
+http GET http://localhost:8080/users\?offset\=0\&limit\=2
 ```
