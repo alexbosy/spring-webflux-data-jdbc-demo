@@ -148,4 +148,29 @@ class UserATSpec extends Specification {
         cleanup:
         testClient.delete("/user/${createdUserId}")
     }
+
+    def "GET /users?offset={offset}&limit={limit}."() {
+        when: "create a 2 new users"
+        def res1 = testClient.post('/user', payload)
+        payload["login"] = "at-" + System.currentTimeMillis()
+        payload["email"] = System.currentTimeMillis() + "@at-tests.lv"
+        def res2 = testClient.post('/user', payload)
+
+        then:
+        res1.status == 200
+        def user1Id = res1.data["id"]
+        res2.status == 200
+        def user2Id = res2.data["id"]
+
+        and: "get all users with offset 0 and limit 2"
+        def offset = 0
+        def limit = 2
+        def result = testClient.get("/users", ["offset": offset, "limit": limit])
+        result.status == 200
+        result.data.size == 2
+
+        cleanup:
+        testClient.delete("/user/${user1Id}")
+        testClient.delete("/user/${user2Id}")
+    }
 }
