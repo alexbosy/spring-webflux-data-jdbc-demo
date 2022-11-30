@@ -144,10 +144,6 @@ Must be the same as for "create new user" endpoint.
 
 Return a pageable list of users (user type is ADMIN/MANAGER) with specified offset and limit.
 
-#### 6. GET /customers?offset={:offset}&limit={:limit}
-
-Return a pageable list of customers (customer type is CUSTOMER) with specified offset and limit.
-
 ##### Request example:
 
 GET /users?offset=0&limit=2
@@ -170,10 +166,14 @@ GET /users?offset=0&limit=2
     "name": "sdsdsd",
     "surname": "some surname",
     "email": "new@new454.com",
-    "type": "ADMIN"
+    "type": "MANAGER"
   }
 ]
 ```
+
+#### 6. GET /customers?offset={:offset}&limit={:limit}
+
+Return a pageable list of customers (customer type is CUSTOMER) with specified offset and limit.
 
 #### 7. GET /me - get current(authenticated) user.
 
