@@ -84,12 +84,33 @@ class UserControllerSpec extends Specification {
         then:
         1 * userService.updateUser({ User user ->
             user.id == id
-        } as User) >> new User(id: 666L, login: login, name: name, surname: surname, email: email, type: type)
+        } as User) >> new User(id: 666L, login: login, name: name, surname: surname, email: email, type: UserType.ADMIN)
         result.id == id
         result.login == login
         result.name == name
         result.surname == surname
         result.email == email
         result.type == UserType.ADMIN
+    }
+
+    def "GET /users?offset={offset}&limit={limit} - get users list with specified offset and limit"() {
+        given:
+        def offset = 0
+        def limit = 1
+
+        when:
+        def result = controller.getUsers(offset, limit).block()
+
+        then:
+        1 * userService.getAllUsers(offset, limit) >> [new User(id: 666L, login: login, name: name,
+                surname: surname, email: email, type: UserType.MANAGER)]
+        result.size() == 1
+        def userDTO = result[0]
+        userDTO.id == 666L
+        userDTO.login == login
+        userDTO.name == name
+        userDTO.surname == surname
+        userDTO.email == email
+        userDTO.type == UserType.MANAGER
     }
 }

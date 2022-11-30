@@ -13,7 +13,7 @@ import java.util.Optional;
 @Service
 public class DefaultUserService implements UserService {
 
-    private final static int MAX_LIMIT = 100;
+    public final static int MAX_LIMIT = 100;
 
     private final UserRepository userRepository;
     private final UserValidator userValidator;

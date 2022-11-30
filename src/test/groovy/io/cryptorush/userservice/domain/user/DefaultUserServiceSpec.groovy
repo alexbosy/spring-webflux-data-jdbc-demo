@@ -238,4 +238,19 @@ class DefaultUserServiceSpec extends Specification {
         def e = thrown(UserNotFoundException)
         e.message == "User not found"
     }
+
+    def "get all users with specified offset and limit "() {
+        given:
+        def offset = 1
+        def limit = DefaultUserService.MAX_LIMIT + 1
+        userRepository.getAllUsers(1, DefaultUserService.MAX_LIMIT) >> [new User(id: 100L), new User(id: 101L)]
+
+        when:
+        def users = userService.getAllUsers(offset, limit)
+
+        then:
+        users.size() == 2
+        users[0].id == 100L
+        users[1].id == 101L
+    }
 }
