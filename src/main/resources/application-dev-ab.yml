@@ -22,3 +22,4 @@ spring:
     username: "user"
     password: "password"
 
+logging.level.org.springframework.jdbc.core: TRACE
