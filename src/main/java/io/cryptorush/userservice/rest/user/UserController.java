@@ -13,9 +13,10 @@ import reactor.core.publisher.Mono;
 import reactor.core.scheduler.Scheduler;
 
 import javax.validation.Valid;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("user")
 public class UserController {
 
     private final Scheduler scheduler;
@@ -26,7 +27,7 @@ public class UserController {
         this.userService = userService;
     }
 
-    @PostMapping
+    @PostMapping("user")
     public Mono<UserCreatedResponseDTO> createUser(@Valid @RequestBody UserCreationRequestDTO userCreationRequestDTO) {
         return Mono.fromCallable(() -> {
             User user = User.builder()
@@ -47,7 +48,7 @@ public class UserController {
         }).publishOn(scheduler);
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("user/{id}")
     public Mono<UserFullResponseDTO> updateUser(@PathVariable("id") long id,
                                                 @Valid @RequestBody UserUpdateRequestDTO userUpdateRequestDTO) {
         return Mono.fromCallable(() -> {
@@ -70,7 +71,7 @@ public class UserController {
         }).publishOn(scheduler);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("user/{id}")
     public Mono<UserFullResponseDTO> getUser(@PathVariable("id") long id) {
         return Mono.fromCallable(() -> {
             User user = userService.getById(id);
@@ -84,11 +85,28 @@ public class UserController {
         }).publishOn(scheduler);
     }
 
-    @DeleteMapping(path = "/{id}")
+    @DeleteMapping("user/{id}")
     Mono<ResponseEntity<Object>> deleteUser(@PathVariable("id") long id) {
         return Mono.fromCallable(() -> {
             userService.deleteById(id);
             return ResponseEntity.noContent().build();
+        }).publishOn(scheduler);
+    }
+
+    @GetMapping("users")
+    Mono<List<UserFullResponseDTO>> getUsers(@RequestParam(defaultValue = "0", required = false) int offset,
+                                             @RequestParam(defaultValue = "10", required = false) int limit) {
+        return Mono.fromCallable(() -> {
+            List<User> users = userService.getAllUsers(offset, limit);
+            return users.stream().map(user ->
+                    UserFullResponseDTO.builder()
+                            .id(user.getId())
+                            .login(user.getLogin())
+                            .name(user.getName())
+                            .surname(user.getSurname())
+                            .email(user.getEmail())
+                            .type(user.getType()).build()
+            ).collect(Collectors.toList());
         }).publishOn(scheduler);
     }
 }
