@@ -148,6 +148,33 @@ Return a pageable list of users (user type is ADMIN/MANAGER) with specified offs
 
 Return a pageable list of customers (customer type is CUSTOMER) with specified offset and limit.
 
+##### Request example:
+
+GET /users?offset=0&limit=2
+
+##### Response example:
+
+```json
+[
+  {
+    "id": 26,
+    "login": "some login",
+    "name": "some name",
+    "surname": "some surname",
+    "email": "new@new.com",
+    "type": "ADMIN"
+  },
+  {
+    "id": 27,
+    "login": "some login3456",
+    "name": "sdsdsd",
+    "surname": "some surname",
+    "email": "new@new454.com",
+    "type": "ADMIN"
+  }
+]
+```
+
 #### 7. GET /me - get current(authenticated) user.
 
 ### Public REST endpoints (will be used in public web/mobile apps):
