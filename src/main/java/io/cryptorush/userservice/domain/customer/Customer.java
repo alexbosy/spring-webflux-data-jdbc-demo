@@ -1,11 +1,12 @@
 package io.cryptorush.userservice.domain.customer;
 
-import io.cryptorush.userservice.domain.user.User;
 import lombok.Builder;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.jdbc.core.mapping.AggregateReference;
 import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
+import org.springframework.security.core.userdetails.User;
 
 import java.util.Date;
 
@@ -22,5 +23,5 @@ public class Customer {
     private String registrationIp;
     private String registrationCountry;
     @Column("user_id")
-    private User user;
+    private AggregateReference<User, Long> userRef;
 }

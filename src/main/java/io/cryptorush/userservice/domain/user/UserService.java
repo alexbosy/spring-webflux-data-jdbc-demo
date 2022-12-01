@@ -12,4 +12,6 @@ public interface UserService {
     User updateUser(User user);
 
     List<User> getAllSystemUsers(int offset, int limit);
+
+    List<User> getAllCustomerUsers(int offset, int limit);
 }
