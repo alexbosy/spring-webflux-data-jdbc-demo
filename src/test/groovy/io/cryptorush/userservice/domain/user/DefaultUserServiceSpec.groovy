@@ -243,10 +243,10 @@ class DefaultUserServiceSpec extends Specification {
         given:
         def offset = 1
         def limit = DefaultUserService.MAX_LIMIT + 1
-        userRepository.getAllUsers(1, DefaultUserService.MAX_LIMIT) >> [new User(id: 100L), new User(id: 101L)]
+        userRepository.getAllSystemUsers(1, DefaultUserService.MAX_LIMIT) >> [new User(id: 100L), new User(id: 101L)]
 
         when:
-        def users = userService.getAllUsers(offset, limit)
+        def users = userService.getAllSystemUsers(offset, limit)
 
         then:
         users.size() == 2

@@ -72,10 +72,10 @@ public class DefaultUserService implements UserService {
     }
 
     @Override
-    public List<User> getAllUsers(int offset, int limit) {
+    public List<User> getAllSystemUsers(int offset, int limit) {
         if (limit > MAX_LIMIT) {
             limit = MAX_LIMIT;
         }
-        return userRepository.getAllUsers(offset, limit);
+        return userRepository.getAllSystemUsers(offset, limit);
     }
 }

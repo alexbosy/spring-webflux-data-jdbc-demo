@@ -102,7 +102,7 @@ class UserControllerSpec extends Specification {
         def result = controller.getUsers(offset, limit).block()
 
         then:
-        1 * userService.getAllUsers(offset, limit) >> [new User(id: 666L, login: login, name: name,
+        1 * userService.getAllSystemUsers(offset, limit) >> [new User(id: 666L, login: login, name: name,
                 surname: surname, email: email, type: UserType.MANAGER)]
         result.size() == 1
         def userDTO = result[0]

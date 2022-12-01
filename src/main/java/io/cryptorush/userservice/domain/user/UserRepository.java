@@ -25,6 +25,11 @@ public interface UserRepository extends PagingAndSortingRepository<User, Long> {
     @Query("DELETE FROM users WHERE id=:pId")
     long hardDeleteById(@Param("pId") long id);
 
-    @Query("SELECT * FROM users ORDER BY id OFFSET :pOffset LIMIT :pLimit ")
-    List<User> getAllUsers(@Param("pOffset") int offset, @Param("pLimit") int limit);
+    @Query("SELECT * FROM users WHERE type!=:pType ORDER BY id OFFSET :pOffset LIMIT :pLimit")
+    List<User> getUsersExceptOfType(@NonNull @Param("pType") UserType type, @Param("pOffset") int offset,
+                                    @Param("pLimit") int limit);
+
+    default List<User> getAllSystemUsers(int offset, int limit) {
+        return getUsersExceptOfType(UserType.CUSTOMER, offset, limit);
+    }
 }

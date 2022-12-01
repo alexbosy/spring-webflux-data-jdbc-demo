@@ -11,5 +11,5 @@ public interface UserService {
 
     User updateUser(User user);
 
-    List<User> getAllUsers(int offset, int limit);
+    List<User> getAllSystemUsers(int offset, int limit);
 }

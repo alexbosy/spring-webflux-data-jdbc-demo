@@ -97,7 +97,7 @@ public class UserController {
     Mono<List<UserFullResponseDTO>> getUsers(@RequestParam(defaultValue = "0", required = false) int offset,
                                              @RequestParam(defaultValue = "10", required = false) int limit) {
         return Mono.fromCallable(() -> {
-            List<User> users = userService.getAllUsers(offset, limit);
+            List<User> users = userService.getAllSystemUsers(offset, limit);
             return users.stream().map(user ->
                     UserFullResponseDTO.builder()
                             .id(user.getId())
