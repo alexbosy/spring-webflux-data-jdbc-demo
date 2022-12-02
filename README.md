@@ -175,6 +175,45 @@ GET /users?offset=0&limit=2
 
 Return a pageable list of customers (customer type is CUSTOMER) with specified offset and limit.
 
+##### Request example:
+
+GET /customers?offset=0&limit=2
+
+##### Response example:
+
+```json
+[
+  {
+    "id": 1,
+    "countryOfResidence": "LV",
+    "dateOfBirth": "09-12-1997",
+    "identityNumber": "101297-10111",
+    "passportNumber": "LV9384938498",
+    "registrationCountry": "LV",
+    "registrationIp": "88.22.33.44",
+    "userId": 26,
+    "login": "some login",
+    "email": "new@new.com",
+    "name": "some name",
+    "surname": "some surname"
+  },
+  {
+    "id": 2,
+    "countryOfResidence": "LV",
+    "dateOfBirth": "03-12-1980",
+    "identityNumber": "041280-10717",
+    "passportNumber": "LV3948938433",
+    "registrationCountry": "US",
+    "registrationIp": "92.33.45.122",
+    "userId": 27,
+    "login": "some login3456",
+    "email": "new@new454.com",
+    "name": "sdsdsd",
+    "surname": "some surname"
+  }
+]
+```
+
 #### 7. GET /me - get current(authenticated) user.
 
 ### Public REST endpoints (will be used in public web/mobile apps):

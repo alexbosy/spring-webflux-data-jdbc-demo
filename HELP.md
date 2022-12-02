@@ -95,3 +95,7 @@ type="ADMIN"
 ```shell
 http GET http://localhost:8080/users\?offset\=0\&limit\=2
 ```
+
+```shell
+http GET http://localhost:8080/customers\?offset\=0\&limit\=2
+```
