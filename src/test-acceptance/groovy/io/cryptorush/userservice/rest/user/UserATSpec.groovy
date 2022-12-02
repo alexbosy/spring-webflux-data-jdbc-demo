@@ -149,7 +149,7 @@ class UserATSpec extends Specification {
         testClient.delete("/user/${createdUserId}")
     }
 
-    def "GET /users?offset={offset}&limit={limit}."() {
+    def "GET /users?offset={offset}&limit={limit}"() {
         when: "create a 2 new users"
         def res1 = testClient.post('/user', payload)
         payload["login"] = "at-" + System.currentTimeMillis()
