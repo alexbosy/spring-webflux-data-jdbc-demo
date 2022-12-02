@@ -1,8 +1,6 @@
 package io.cryptorush.userservice.rest.customer;
 
-
 import io.cryptorush.userservice.domain.customer.Customer;
-import io.cryptorush.userservice.domain.customer.CustomerService;
 import io.cryptorush.userservice.domain.user.User;
 import io.cryptorush.userservice.domain.user.UserService;
 import io.cryptorush.userservice.rest.customer.dto.CustomerFullResponseDTO;
@@ -19,12 +17,10 @@ import java.util.stream.Collectors;
 public class CustomerController {
 
     private final Scheduler scheduler;
-    private final CustomerService customerService;
     private final UserService userService;
 
-    public CustomerController(Scheduler scheduler, CustomerService customerService, UserService userService) {
+    public CustomerController(Scheduler scheduler, UserService userService) {
         this.scheduler = scheduler;
-        this.customerService = customerService;
         this.userService = userService;
     }
 
