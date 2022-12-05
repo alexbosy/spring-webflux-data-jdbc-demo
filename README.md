@@ -220,7 +220,7 @@ GET /customers?offset=0&limit=2
 
 All customer object responses must not contain "id" field.
 
-#### 1. POST /registration - register a new customer (no auth)
+#### 1. POST /customer/registration - register a new customer (no auth)
 
 #### 2. GET /customer/profile/{:login} - get any customer public profile by login (no auth).
 
