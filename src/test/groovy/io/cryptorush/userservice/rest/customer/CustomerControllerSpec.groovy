@@ -1,6 +1,7 @@
 package io.cryptorush.userservice.rest.customer
 
 import io.cryptorush.userservice.domain.customer.Customer
+import io.cryptorush.userservice.domain.customer.CustomerService
 import io.cryptorush.userservice.domain.user.User
 import io.cryptorush.userservice.domain.user.UserService
 import io.cryptorush.userservice.domain.user.UserType
@@ -11,7 +12,8 @@ class CustomerControllerSpec extends Specification {
 
     def scheduler = Schedulers.immediate()
     def userService = Mock(UserService)
-    def controller = new CustomerController(scheduler, userService)
+    def customerService = Mock(CustomerService)
+    def controller = new CustomerController(scheduler, userService, customerService)
 
     def "GET /customers?offset={offset}&limit={limit} - get customers list with specified offset and limit"() {
         given:

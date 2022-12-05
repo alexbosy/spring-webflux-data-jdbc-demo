@@ -1,18 +1,23 @@
 package io.cryptorush.userservice.rest.customer.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Past;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.util.Date;
 
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class CustomerCreationRequestDTO {
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
-    @NotBlank(message = "Date of birth can not be empty")
+    @Past(message = "Date of birth must be in the past.")
     private Date dateOfBirth;
 
     @NotBlank(message = "Country of residence can not be empty")
@@ -34,20 +39,20 @@ public class CustomerCreationRequestDTO {
             @Size(min = 6, message = "Login min length is {min} chars"),
             @Size(max = 20, message = "Login max length is {max} chars")
     })
-    private final String login;
+    private String login;
 
     @NotBlank(message = "Name can not be empty")
-    private final String name;
+    private String name;
 
     @NotBlank(message = "Surname can not be empty")
-    private final String surname;
+    private String surname;
 
     @NotBlank(message = "Email can not be empty")
     @Pattern(regexp = "^\\w+([.-]?\\w+)*@\\w+([.-]?\\w+)*(.\\w{2,3})+$", message = "Email is not valid")
     @Size(max = 25, message = "Email max length is {max} chars")
-    private final String email;
+    private String email;
 
     @NotBlank(message = "Password can not be empty")
     @Size(min = 8, message = "Password min length is {min} chars")
-    private final String password;
+    private String password;
 }

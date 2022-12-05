@@ -19,8 +19,12 @@ public class UserValidator {
         this.userRepository = userRepository;
     }
 
-    public void validateUserCreationOrUpdate(User user) {
+    public void validateSystemUserCreationOrUpdate(User user) {
         validateUserType(user);
+        validateForLoginAndEmail(user.getLogin(), user.getEmail(), user.getId());
+    }
+
+    public void validateCustomerUserCreationOrUpdate(User user) {
         validateForLoginAndEmail(user.getLogin(), user.getEmail(), user.getId());
     }
 

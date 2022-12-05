@@ -1,5 +1,7 @@
 package io.cryptorush.userservice.domain.customer;
 
-public interface CustomerService {
+import io.cryptorush.userservice.domain.user.User;
 
+public interface CustomerService {
+    User registerNewCustomer(User user);
 }

@@ -31,7 +31,7 @@ public class DefaultUserService implements UserService {
     @Transactional(timeout = 1)
     public User createSystemUser(User user) {
         log.debug("Creating new system user=[{}]", user);
-        userValidator.validateUserCreationOrUpdate(user);
+        userValidator.validateSystemUserCreationOrUpdate(user);
         log.debug("Encoding password for user with login={}", user.getLogin());
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         log.debug("Finished password encoding for user with login={}", user.getLogin());
@@ -58,7 +58,7 @@ public class DefaultUserService implements UserService {
     public User updateUser(User user) {
         Optional<User> optionalUser = userRepository.findById(user.getId());
         if (optionalUser.isPresent()) {
-            userValidator.validateUserCreationOrUpdate(user);
+            userValidator.validateSystemUserCreationOrUpdate(user);
             User foundUser = optionalUser.get();
             foundUser.setLogin(user.getLogin());
             foundUser.setName(user.getName());
