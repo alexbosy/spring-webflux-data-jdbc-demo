@@ -27,5 +27,5 @@ public class Customer {
     private String registrationIp;
     private String registrationCountry;
     @Column("user_id")
-    private AggregateReference<User, Long> userRef;
+    private AggregateReference<User, Long> userReference;
 }
