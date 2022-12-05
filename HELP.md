@@ -78,7 +78,6 @@ email="skdjsk" \
 password="some password" \
 type="ADMIN"
 ```
-
 ```shell
 http GET http://localhost:8080/user/35
 ```
@@ -98,4 +97,18 @@ http GET http://localhost:8080/users\?offset\=0\&limit\=2
 
 ```shell
 http GET http://localhost:8080/customers\?offset\=0\&limit\=2
+```
+
+```shell
+http POST http://localhost:8080/customer/registration \
+X-Forwarded-For:88.23.45.55 \
+login="some login555" \
+name="some name" \
+surname="some surname" \
+email="email222@ddd.lv" \
+password="some password" \
+dateOfBirth="12-12-1981" \
+countryOfResidence="LV" \
+identityNumber="identity number" \
+passportNumber="passport number"
 ```
