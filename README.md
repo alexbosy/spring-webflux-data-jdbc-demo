@@ -228,6 +228,6 @@ Show only login/name/surname/date of birth and country of residence.
 
 #### 3. GET /customer/my/profile - get current (authenticated) customer's profile (JWT auth).
 
-Show all data except id and password.
+Show all data except id, password, IP and registration country.
 
 #### 4. PUT /customer/my/profile - update current (authenticated) customer's profile by id (JWT auth).
