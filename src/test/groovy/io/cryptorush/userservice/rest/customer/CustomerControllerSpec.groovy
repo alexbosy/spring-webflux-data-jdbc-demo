@@ -5,6 +5,7 @@ import io.cryptorush.userservice.domain.customer.CustomerService
 import io.cryptorush.userservice.domain.user.User
 import io.cryptorush.userservice.domain.user.UserService
 import io.cryptorush.userservice.domain.user.UserType
+import io.cryptorush.userservice.rest.util.IpResolver
 import reactor.core.scheduler.Schedulers
 import spock.lang.Specification
 
@@ -13,18 +14,20 @@ class CustomerControllerSpec extends Specification {
     def scheduler = Schedulers.immediate()
     def userService = Mock(UserService)
     def customerService = Mock(CustomerService)
+    def ipResolver = Mock(IpResolver)
+
     def controller = new CustomerController(scheduler, userService, customerService, ipResolver)
+
+    def customerId = 200L
+    def dateOfBirth = new Date()
+    def countryOfResidence = "US"
+    def identityNumber = "identity number"
+    def passportNumber = "passport number"
+    def registrationIp = "33.33.33.33"
+    def registrationCountry = "LV"
 
     def "GET /customers?offset={offset}&limit={limit} - get customers list with specified offset and limit"() {
         given:
-        def customerId = 200L
-        def dateOfBirth = new Date()
-        def countryOfResidence = "US"
-        def identityNumber = "identity number"
-        def passportNumber = "passport number"
-        def registrationIp = "33.33.33.33"
-        def registrationCountry = "LV"
-
         def customer = new Customer(id: customerId, dateOfBirth: dateOfBirth, countryOfResidence: countryOfResidence,
                 identityNumber: identityNumber, passportNumber: passportNumber, registrationIp: registrationIp,
                 registrationCountry: registrationCountry)
@@ -63,9 +66,7 @@ class CustomerControllerSpec extends Specification {
         customerDTO.email == email
     }
 
-    def ""() {
 
-    }
 
 
 }
