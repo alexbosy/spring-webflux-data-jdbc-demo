@@ -13,7 +13,7 @@ class CustomerControllerSpec extends Specification {
     def scheduler = Schedulers.immediate()
     def userService = Mock(UserService)
     def customerService = Mock(CustomerService)
-    def controller = new CustomerController(scheduler, userService, customerService)
+    def controller = new CustomerController(scheduler, userService, customerService, ipResolver)
 
     def "GET /customers?offset={offset}&limit={limit} - get customers list with specified offset and limit"() {
         given:

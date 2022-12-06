@@ -8,6 +8,7 @@ import io.cryptorush.userservice.domain.user.UserType;
 import io.cryptorush.userservice.rest.customer.dto.CustomerCreationRequestDTO;
 import io.cryptorush.userservice.rest.customer.dto.CustomerFullProfileDTO;
 import io.cryptorush.userservice.rest.customer.dto.CustomerFullResponseDTO;
+import io.cryptorush.userservice.rest.util.IpResolver;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.web.bind.annotation.*;
@@ -15,7 +16,6 @@ import reactor.core.publisher.Mono;
 import reactor.core.scheduler.Scheduler;
 
 import javax.validation.Valid;
-import java.net.InetSocketAddress;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -25,19 +25,21 @@ public class CustomerController {
     private final Scheduler scheduler;
     private final UserService userService;
     private final CustomerService customerService;
+    private final IpResolver ipResolver;
 
     public CustomerController(@Qualifier("rest-scheduler") Scheduler scheduler, UserService userService,
-                              CustomerService customerService) {
+                              CustomerService customerService, IpResolver ipResolver) {
         this.scheduler = scheduler;
         this.userService = userService;
         this.customerService = customerService;
+        this.ipResolver = ipResolver;
     }
 
     @PostMapping("customer/registration")
     Mono<CustomerFullProfileDTO> registerNewCustomer(@Valid @RequestBody CustomerCreationRequestDTO requestDTO, ServerHttpRequest request) {
         return Mono.fromCallable(() -> {
 
-            String ip = getRequestIpAddress(request);
+            String ip = ipResolver.resolveIpAddress(request.getRemoteAddress());
             Customer customer = Customer.builder()
                     .dateOfBirth(requestDTO.getDateOfBirth())
                     .countryOfResidence(requestDTO.getCountryOfResidence())
@@ -69,20 +71,6 @@ public class CustomerController {
                     .build();
         }).publishOn(scheduler);
 
-    }
-
-    private String getRequestIpAddress(ServerHttpRequest request) {
-        InetSocketAddress remoteAddress = request.getRemoteAddress();
-        if (remoteAddress != null) {
-            String hostName = remoteAddress.getHostName();
-            if (hostName != null) {
-                //The real IP from X-Forwarded-For header. It will be populated by ForwardedHeaderTransformer bean.
-                return hostName;
-            } else {
-                return remoteAddress.getAddress().getHostAddress();
-            }
-        }
-        return "unknown";
     }
 
     @GetMapping("customers")
