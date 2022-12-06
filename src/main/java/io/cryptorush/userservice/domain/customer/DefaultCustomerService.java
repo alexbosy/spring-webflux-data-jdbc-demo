@@ -34,17 +34,13 @@ public class DefaultCustomerService implements CustomerService {
     public User registerNewCustomer(User user) {
         log.debug("Creating new customer user=[{}]", user);
         userValidator.validateCustomerUserCreationOrUpdate(user);
-
         log.debug("Encoding password for customer user with login={}", user.getLogin());
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         log.debug("Finished password encoding for customer user with login={}", user.getLogin());
-
-        String registrationIp = user.getCustomer().getRegistrationIp();
-
         User createdCustomerUser = userRepository.save(user);
         log.debug("Customer user was created successfully, id=[{}]", createdCustomerUser.getId());
 
-        countryResolutionService.getCountryCodeByIp(registrationIp)
+        countryResolutionService.getCountryCodeByIp(user.getCustomer().getRegistrationIp())
                 .subscribe(country -> {
                     Long customerId = createdCustomerUser.getCustomer().getId();
                     customerRepository.updateRegistrationCountry(customerId, country);
