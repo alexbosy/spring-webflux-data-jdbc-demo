@@ -17,13 +17,16 @@ public class DefaultCustomerService implements CustomerService {
     private final UserValidator userValidator;
     private final PasswordEncoder passwordEncoder;
     private final CountryResolutionService countryResolutionService;
+    private final CustomerRepository customerRepository;
 
     public DefaultCustomerService(UserRepository userRepository, UserValidator userValidator,
-                                  PasswordEncoder passwordEncoder, CountryResolutionService countryResolutionService) {
+                                  PasswordEncoder passwordEncoder, CountryResolutionService countryResolutionService,
+                                  CustomerRepository customerRepository) {
         this.userRepository = userRepository;
         this.userValidator = userValidator;
         this.passwordEncoder = passwordEncoder;
         this.countryResolutionService = countryResolutionService;
+        this.customerRepository = customerRepository;
     }
 
     @Transactional(timeout = 2)
@@ -37,13 +40,17 @@ public class DefaultCustomerService implements CustomerService {
         log.debug("Finished password encoding for customer user with login={}", user.getLogin());
 
         String registrationIp = user.getCustomer().getRegistrationIp();
-        log.debug("Resolving country of registration by IP=[{}]", registrationIp);
-        String registrationCountry = countryResolutionService.getCountryCodeByIp(registrationIp);
-        user.getCustomer().setRegistrationCountry(registrationCountry);
-        log.debug("Country of registration for IP=[{}] is [{}]", registrationIp, registrationCountry);
 
         User createdCustomerUser = userRepository.save(user);
         log.debug("Customer user was created successfully, id=[{}]", createdCustomerUser.getId());
+
+        countryResolutionService.getCountryCodeByIp(registrationIp)
+                .subscribe(country -> {
+                    Long customerId = createdCustomerUser.getCustomer().getId();
+                    customerRepository.updateRegistrationCountry(customerId, country);
+                    log.debug("Customer user country was updated successfully, id=[{}], country=[{}]", customerId, country);
+                });
+
         return createdCustomerUser;
     }
 }

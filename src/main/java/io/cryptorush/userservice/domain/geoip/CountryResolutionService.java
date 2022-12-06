@@ -1,5 +1,7 @@
 package io.cryptorush.userservice.domain.geoip;
 
+import reactor.core.publisher.Mono;
+
 public interface CountryResolutionService {
-    String getCountryCodeByIp(String registrationIp);
+    Mono<String> getCountryCodeByIp(String registrationIp);
 }

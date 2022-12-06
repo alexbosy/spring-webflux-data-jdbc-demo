@@ -14,6 +14,11 @@ scheduler.rest.max.pool.size: 5
 scheduler.rest.keep.alive.time.secs: 120
 scheduler.rest.queue.max.size: 50
 
+scheduler.ext.core.pool.size: 2
+scheduler.ext.max.pool.size: 5
+scheduler.ext.keep.alive.time.secs: 120
+scheduler.ext.queue.max.size: 500
+
 spring:
   sql.init.platform: "postgres"
   datasource:

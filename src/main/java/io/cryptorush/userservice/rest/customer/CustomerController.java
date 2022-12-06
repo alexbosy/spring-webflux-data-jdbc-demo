@@ -8,6 +8,7 @@ import io.cryptorush.userservice.domain.user.UserType;
 import io.cryptorush.userservice.rest.customer.dto.CustomerCreationRequestDTO;
 import io.cryptorush.userservice.rest.customer.dto.CustomerFullProfileDTO;
 import io.cryptorush.userservice.rest.customer.dto.CustomerFullResponseDTO;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
@@ -25,7 +26,8 @@ public class CustomerController {
     private final UserService userService;
     private final CustomerService customerService;
 
-    public CustomerController(Scheduler scheduler, UserService userService, CustomerService customerService) {
+    public CustomerController(@Qualifier("rest-scheduler") Scheduler scheduler, UserService userService,
+                              CustomerService customerService) {
         this.scheduler = scheduler;
         this.userService = userService;
         this.customerService = customerService;
