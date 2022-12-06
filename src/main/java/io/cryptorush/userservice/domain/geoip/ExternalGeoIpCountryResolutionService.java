@@ -46,7 +46,3 @@ public class ExternalGeoIpCountryResolutionService implements CountryResolutionS
     private record GeoIpResponse(String country_code) {
     }
 }
-
-
-
-

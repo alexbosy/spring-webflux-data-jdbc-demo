@@ -63,5 +63,9 @@ class CustomerControllerSpec extends Specification {
         customerDTO.email == email
     }
 
+    def ""() {
+
+    }
+
 
 }
