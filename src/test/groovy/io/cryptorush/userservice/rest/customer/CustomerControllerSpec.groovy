@@ -68,7 +68,6 @@ class CustomerControllerSpec extends Specification {
         customerDTO.email == email
     }
 
-
     def "POST /customer/registration - register a new customer"() {
         given:
         def login = "login"
@@ -90,10 +89,15 @@ class CustomerControllerSpec extends Specification {
 
         then:
         1 * customerService.registerNewCustomer(u -> {
-            u.login == login
-        }) >> new User(login: login, name: name, surname: surname, email: email, customer: new Customer(dateOfBirth:
-                dateOfBirth, countryOfResidence: countryOfResidence, identityNumber: identityNumber, passportNumber:
-                passportNumber))
+            u.login == login &&
+                    u.name == name &&
+                    u.surname == surname &&
+                    u.email == email &&
+                    u.password == password &&
+                    u.type == UserType.CUSTOMER
+        }) >> new User(login: login, name: name, surname: surname, email: email,
+                customer: new Customer(dateOfBirth: dateOfBirth, countryOfResidence: countryOfResidence,
+                        identityNumber: identityNumber, passportNumber: passportNumber))
         resDTO.login == login
         resDTO.name == name
         resDTO.surname == surname
