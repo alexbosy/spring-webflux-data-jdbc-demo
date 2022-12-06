@@ -20,7 +20,7 @@ public class ExternalGeoIpCountryResolutionService implements CountryResolutionS
         this.webClient = webClientBuilder.baseUrl(EXTERNAL_GEOIP_SERVICE_URL).build();
     }
 
-    //Example query - GET https://reallyfreegeoip.org/json/88.23.45.55
+    //Example request - GET https://reallyfreegeoip.org/json/88.23.45.55
     @Override
     public String getCountryCodeByIp(String registrationIp) {
         String uri = REQUEST_PATTERN.formatted(registrationIp);
