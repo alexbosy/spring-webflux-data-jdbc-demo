@@ -14,7 +14,7 @@ public class CustomerFullProfileDTO {
     private final String surname;
     private final String email;
 
-    private final Date dateOfBrith;
+    private final Date dateOfBirth;
     private final String countryOfResidence;
     private final String identityNumber;
     private final String passportNumber;

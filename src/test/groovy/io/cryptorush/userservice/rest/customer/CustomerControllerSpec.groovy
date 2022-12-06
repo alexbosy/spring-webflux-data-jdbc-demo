@@ -5,7 +5,9 @@ import io.cryptorush.userservice.domain.customer.CustomerService
 import io.cryptorush.userservice.domain.user.User
 import io.cryptorush.userservice.domain.user.UserService
 import io.cryptorush.userservice.domain.user.UserType
+import io.cryptorush.userservice.rest.customer.dto.CustomerCreationRequestDTO
 import io.cryptorush.userservice.rest.util.IpResolver
+import org.springframework.mock.http.server.reactive.MockServerHttpRequest
 import reactor.core.scheduler.Schedulers
 import spock.lang.Specification
 
@@ -67,6 +69,38 @@ class CustomerControllerSpec extends Specification {
     }
 
 
+    def "POST /customer/registration - register a new customer"() {
+        given:
+        def login = "login"
+        def name = "name"
+        def surname = "surname"
+        def email = "email"
+        def password = "password"
 
+        def requestDto = new CustomerCreationRequestDTO(dateOfBirth: dateOfBirth, countryOfResidence:
+                countryOfResidence, identityNumber: identityNumber, passportNumber: passportNumber, login: login,
+                name: name, surname: surname, email: email, password: password)
 
+        def inetSocketAddress = new InetSocketAddress(InetAddress.getByName("88.88.88.88"), 8080)
+        def request = MockServerHttpRequest.post("some url").remoteAddress(inetSocketAddress).build()
+        ipResolver.resolveIpAddress(request.getRemoteAddress()) >> "88.88.88.88"
+
+        when:
+        def resDTO = controller.registerNewCustomer(requestDto, request).block()
+
+        then:
+        1 * customerService.registerNewCustomer(u -> {
+            u.login == login
+        }) >> new User(login: login, name: name, surname: surname, email: email, customer: new Customer(dateOfBirth:
+                dateOfBirth, countryOfResidence: countryOfResidence, identityNumber: identityNumber, passportNumber:
+                passportNumber))
+        resDTO.login == login
+        resDTO.name == name
+        resDTO.surname == surname
+        resDTO.email == email
+        resDTO.dateOfBirth == dateOfBirth
+        resDTO.countryOfResidence == countryOfResidence
+        resDTO.identityNumber == identityNumber
+        resDTO.passportNumber == passportNumber
+    }
 }
