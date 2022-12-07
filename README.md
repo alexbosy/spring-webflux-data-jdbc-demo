@@ -222,6 +222,53 @@ All customer object responses must not contain "id" field.
 
 #### 1. POST /customer/registration - register a new customer (no auth)
 
+Creates a new user and related customer by supplied data
+
+##### Request example:
+
+POST /customer/registration
+
+body:
+
+```json
+{
+  "login": "some login",
+  "name": "some name",
+  "surname": "some surname",
+  "email": "some email",
+  "password": "some password",
+  "dateOfBirth": "12-12-1981,",
+  "countryOfResidence": "LV",
+  "identityNumber": "identity number",
+  "passportNumber": "passport number"
+}
+```
+
+##### Response example:
+
+```json
+{
+  "login": "some login59",
+  "email": "email222@dd5412.lv",
+  "name": "some name",
+  "surname": "some surname",
+  "dateOfBirth": "12-12-1981",
+  "countryOfResidence": "LV",
+  "identityNumber": "identity number",
+  "passportNumber": "passport number"
+}
+```
+
+##### Request data validation:
+
+All request data fields must be not empty and have some min/max length limits (on your choice). Email address must be of
+a valid form (use corresponding RegEx pattern).
+
+##### Business validation:
+
+* Login must be unique.
+* Email must be unique.
+
 #### 2. GET /customer/profile/{:login} - get any customer public profile by login (no auth).
 
 Show only login/name/surname/date of birth and country of residence.
