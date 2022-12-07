@@ -173,7 +173,7 @@ GET /users?offset=0&limit=2
 
 #### 6. GET /customers?offset={:offset}&limit={:limit}
 
-Return a pageable list of customers (customer type is CUSTOMER) with specified offset and limit.
+Return a pageable list of customers (user type is CUSTOMER) with specified offset and limit.
 
 ##### Request example:
 
