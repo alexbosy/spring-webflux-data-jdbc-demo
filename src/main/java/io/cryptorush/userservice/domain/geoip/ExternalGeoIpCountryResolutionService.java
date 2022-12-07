@@ -22,6 +22,7 @@ public class ExternalGeoIpCountryResolutionService implements CountryResolutionS
 
     public ExternalGeoIpCountryResolutionService(WebClient.Builder webClientBuilder,
                                                  @Qualifier("ext-scheduler") Scheduler scheduler) {
+
         this.webClient = webClientBuilder.baseUrl(EXTERNAL_GEOIP_SERVICE_URL).build();
         this.scheduler = scheduler;
     }
