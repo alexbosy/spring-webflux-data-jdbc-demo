@@ -22,7 +22,7 @@ class SpringWebFluxIpResolverSpec extends Specification {
     def "resolve IP address from supplied remote address, hostname is set via ForwardedHeaderTransformer"() {
         given:
         def ip = "155.123.234.45"
-        def inetSocketAddress = new InetSocketAddress(ip, 8080)
+        def inetSocketAddress = InetSocketAddress.createUnresolved(ip, 8080);
 
         when:
         def res = ipResolver.resolveIpAddress(inetSocketAddress)
