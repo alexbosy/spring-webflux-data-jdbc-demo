@@ -12,7 +12,7 @@ import spock.lang.Specification
 class DefaultCustomerServiceSpec extends Specification {
 
     def userRepository = Mock(UserRepository)
-    def userValidator = Mock(UserValidator)
+    def userValidator = new UserValidator(userRepository)
     def passwordEncoder = Mock(PasswordEncoder)
     def countryResolutionService = Mock(CountryResolutionService)
     def customerRepository = Mock(CustomerRepository)
