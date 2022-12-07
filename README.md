@@ -235,7 +235,7 @@ body:
   "login": "some login",
   "name": "some name",
   "surname": "some surname",
-  "email": "some email",
+  "email": "some@email.com",
   "password": "some password",
   "dateOfBirth": "12-12-1981,",
   "countryOfResidence": "LV",
@@ -248,8 +248,8 @@ body:
 
 ```json
 {
-  "login": "some login59",
-  "email": "email222@dd5412.lv",
+  "login": "some login",
+  "email": "some@email.com",
   "name": "some name",
   "surname": "some surname",
   "dateOfBirth": "12-12-1981",
