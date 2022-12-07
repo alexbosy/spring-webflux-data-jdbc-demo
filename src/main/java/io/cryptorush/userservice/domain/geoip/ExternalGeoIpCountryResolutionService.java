@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 import reactor.core.scheduler.Scheduler;
@@ -34,7 +35,10 @@ public class ExternalGeoIpCountryResolutionService implements CountryResolutionS
                 .exchangeToMono(response -> {
                     if (response.statusCode().equals(HttpStatus.OK)) {
                         return response.bodyToMono(GeoIpResponse.class)
-                                .map(result -> result.country_code);
+                                .map(result -> {
+                                    String countryCode = result.country_code;
+                                    return StringUtils.hasText(countryCode) ? countryCode : UNKNOWN_COUNTRY_CODE;
+                                });
                     } else {
                         return Mono.just(UNKNOWN_COUNTRY_CODE);
                     }

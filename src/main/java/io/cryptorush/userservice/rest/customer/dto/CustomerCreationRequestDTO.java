@@ -15,7 +15,7 @@ import java.util.Date;
 public class CustomerCreationRequestDTO {
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
-    @Past(message = "Date of birth must be in the past.")
+    @Past(message = "Date of birth must be in the past")
     private Date dateOfBirth;
 
     @NotBlank(message = "Country of residence can not be empty")

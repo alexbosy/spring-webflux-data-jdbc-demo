@@ -69,7 +69,7 @@ class UserControllerSpec extends Specification {
         def result = controller.deleteUser(id).block()
 
         then:
-        1 * userService.deleteById(id)
+        1 * userService.deleteSystemUserById(id)
         result.statusCode == HttpStatus.NO_CONTENT
     }
 

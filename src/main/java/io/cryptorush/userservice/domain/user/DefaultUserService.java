@@ -47,7 +47,7 @@ public class DefaultUserService implements UserService {
     }
 
     @Override
-    public void deleteById(long id) {
+    public void deleteSystemUserById(long id) {
         long count = userRepository.hardDeleteById(id);
         if (count == 0) {
             throw new UserNotFoundException();

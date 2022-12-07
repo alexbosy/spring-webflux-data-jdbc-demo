@@ -221,7 +221,7 @@ class DefaultUserServiceSpec extends Specification {
         userRepository.hardDeleteById(id) >> 1
 
         when:
-        userService.deleteById(id)
+        userService.deleteSystemUserById(id)
 
         then:
         noExceptionThrown()
@@ -233,7 +233,7 @@ class DefaultUserServiceSpec extends Specification {
         userRepository.hardDeleteById(id) >> 0
 
         when:
-        userService.deleteById(id)
+        userService.deleteSystemUserById(id)
 
         then:
         def e = thrown(UserNotFoundException)

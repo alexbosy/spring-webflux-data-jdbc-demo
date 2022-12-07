@@ -88,7 +88,7 @@ public class UserController {
     @DeleteMapping("user/{id}")
     Mono<ResponseEntity<Object>> deleteUser(@PathVariable("id") long id) {
         return Mono.fromCallable(() -> {
-            userService.deleteById(id);
+            userService.deleteSystemUserById(id);
             return ResponseEntity.noContent().build();
         }).publishOn(scheduler);
     }

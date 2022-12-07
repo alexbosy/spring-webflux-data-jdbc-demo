@@ -1,5 +1,6 @@
 package io.cryptorush.userservice.rest.customer.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Builder;
 import lombok.Data;
 
@@ -14,6 +15,7 @@ public class CustomerFullProfileDTO {
     private final String surname;
     private final String email;
 
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
     private final Date dateOfBirth;
     private final String countryOfResidence;
     private final String identityNumber;
