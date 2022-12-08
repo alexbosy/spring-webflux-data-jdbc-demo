@@ -4,4 +4,6 @@ import io.cryptorush.userservice.domain.user.User;
 
 public interface CustomerService {
     User registerNewCustomer(User user);
+
+    User getCustomerUserByLogin(String login);
 }

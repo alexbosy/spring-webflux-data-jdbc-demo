@@ -4,6 +4,7 @@ import io.cryptorush.userservice.domain.geoip.CountryResolutionService;
 import io.cryptorush.userservice.domain.user.User;
 import io.cryptorush.userservice.domain.user.UserRepository;
 import io.cryptorush.userservice.domain.user.UserValidator;
+import io.cryptorush.userservice.domain.user.validation.UserNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -48,5 +49,11 @@ public class DefaultCustomerService implements CustomerService {
                 });
 
         return createdCustomerUser;
+    }
+
+    @Override
+    public User getCustomerUserByLogin(String login) {
+        return customerRepository.findCustomerUserByLogin(login)
+                .orElseThrow(UserNotFoundException::new);
     }
 }

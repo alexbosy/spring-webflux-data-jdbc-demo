@@ -55,4 +55,12 @@ public class CustomerController {
             return users.stream().map(customerUserMapper::toFullResponseDTO).collect(Collectors.toList());
         }).publishOn(scheduler);
     }
+
+    @GetMapping("customer/{login}")
+    Mono<CustomerFullResponseDTO> getCustomer(@PathVariable("login") String login) {
+        return Mono.fromCallable(() -> {
+            User user = customerService.getCustomerUserByLogin(login);
+            return customerUserMapper.toFullResponseDTO(user);
+        }).publishOn(scheduler);
+    }
 }
