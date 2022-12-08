@@ -112,3 +112,7 @@ countryOfResidence="LV" \
 identityNumber="identity number" \
 passportNumber="passport number"
 ```
+
+```shell
+http GET http://localhost:8080/customer/some\ login49
+```

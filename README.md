@@ -203,15 +203,43 @@ GET /customers?offset=0&limit=2
     "dateOfBirth": "03-12-1980",
     "identityNumber": "041280-10717",
     "passportNumber": "LV3948938433",
-    "registrationCountry": "US",
-    "registrationIp": "92.33.45.122",
-    "userId": 27,
-    "login": "some login3456",
-    "email": "new@new454.com",
-    "name": "sdsdsd",
-    "surname": "some surname"
+     "registrationCountry": "US",
+     "registrationIp": "92.33.45.122",
+     "userId": 27,
+     "login": "some login3456",
+     "email": "new@new454.com",
+     "name": "sdsdsd",
+     "surname": "some surname"
   }
 ]
+```
+
+#### 7. GET /customer/{login} - get customer user by login.
+
+Return the customer user data for the specified login. All data must be returned, this endpoint will be used only in
+admin application.
+
+##### Request example:
+
+GET /customer/at-1670433267681
+
+##### Response example:
+
+```json
+{
+   "countryOfResidence": "US",
+   "dateOfBirth": "06-12-1982",
+   "email": "1670433267686@at-tests.lv",
+   "id": 64,
+   "identityNumber": "identity number",
+   "login": "at-1670433267681",
+   "name": "some name",
+   "passportNumber": "passport number",
+   "registrationCountry": "XX",
+   "registrationIp": "127.0.0.1",
+   "surname": "some surname",
+   "userId": 320
+}
 ```
 
 #### 7. GET /me - get current(authenticated) user.
