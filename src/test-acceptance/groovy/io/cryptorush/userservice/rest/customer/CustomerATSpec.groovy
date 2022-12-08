@@ -25,7 +25,7 @@ class CustomerATSpec extends Specification {
 
 
     def dateNow = LocalDate.now()
-    def dateOfBirth = dateNow.minusYears(40)
+    def dateOfBirth = dateNow.minusYears(25)
     def dateOfBirthStr = dateOfBirth.format("dd-MM-yyyy")
 
     def payload = ["dateOfBirth"   : dateOfBirthStr, "countryOfResidence": countryOfResidence, "identityNumber": identityNumber,
@@ -95,6 +95,32 @@ class CustomerATSpec extends Specification {
         res.data["login"] == "Login min length is 6 chars"
         res.data["countryOfResidence"] == "Country of residence max length is 2 chars"
         res.data["email"] == "Email is not valid"
+    }
+
+    def "GET /customer/{login}"() {
+        when: "register a new customer user"
+        def res = testClient.post('/customer/registration', payload, ["X-Forwarded-For": "88.88.88.233"])
+        sleep 1500
+
+        then:
+        res.status == 200
+        res.data["login"] == uniqueLogin
+
+        and: "try to find created user by login"
+        def res2 = testClient.get("/customer/${uniqueLogin}")
+        res2.status == 200
+        res2.data["id"] != null
+        res2.data["userId"] != null
+        res2.data["login"] == uniqueLogin
+        res2.data["name"] == name
+        res2.data["surname"] == surname
+        res2.data["email"] == uniqueEmail
+        res2.data["dateOfBirth"] == dateOfBirthStr
+        res2.data["countryOfResidence"] == countryOfResidence
+        res2.data["identityNumber"] == identityNumber
+        res2.data["passportNumber"] == passportNumber
+        res2.data["registrationIp"] == "88.88.88.233"
+        res2.data["registrationCountry"] == "NO"
     }
 
     def "GET /customers?offset={offset}&limit={limit}"() {

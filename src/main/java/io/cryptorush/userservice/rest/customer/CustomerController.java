@@ -9,6 +9,7 @@ import io.cryptorush.userservice.rest.customer.dto.CustomerFullProfileDTO;
 import io.cryptorush.userservice.rest.customer.dto.CustomerFullResponseDTO;
 import io.cryptorush.userservice.rest.customer.mapper.CustomerUserMapper;
 import io.cryptorush.userservice.rest.util.IpResolver;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.web.bind.annotation.*;
@@ -19,6 +20,7 @@ import javax.validation.Valid;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Slf4j
 @RestController
 public class CustomerController {
 

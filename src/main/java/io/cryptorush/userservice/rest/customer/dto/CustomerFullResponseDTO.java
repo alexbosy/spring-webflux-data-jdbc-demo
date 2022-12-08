@@ -6,7 +6,8 @@ import java.util.Date;
 
 public record CustomerFullResponseDTO(
         long id,
-        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy") Date dateOfBirth,
+        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
+        Date dateOfBirth,
         String countryOfResidence,
         String identityNumber,
         String passportNumber,

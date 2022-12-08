@@ -6,6 +6,9 @@ import org.springframework.web.reactive.config.EnableWebFlux;
 import org.springframework.web.reactive.config.WebFluxConfigurer;
 import org.springframework.web.server.adapter.ForwardedHeaderTransformer;
 
+import javax.annotation.PostConstruct;
+import java.util.TimeZone;
+
 @Configuration
 @EnableWebFlux
 public class WebFluxConfig implements WebFluxConfigurer {
@@ -13,5 +16,10 @@ public class WebFluxConfig implements WebFluxConfigurer {
     @Bean
     public ForwardedHeaderTransformer forwardedHeaderTransformer() {
         return new ForwardedHeaderTransformer();
+    }
+
+    @PostConstruct
+    public void init() {
+        TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
     }
 }
