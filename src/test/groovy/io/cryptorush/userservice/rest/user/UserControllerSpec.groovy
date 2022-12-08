@@ -5,6 +5,7 @@ import io.cryptorush.userservice.domain.user.UserService
 import io.cryptorush.userservice.domain.user.UserType
 import io.cryptorush.userservice.rest.user.dto.UserCreationRequestDTO
 import io.cryptorush.userservice.rest.user.dto.UserUpdateRequestDTO
+import io.cryptorush.userservice.rest.user.mapper.SystemUserMapperImpl
 import org.springframework.http.HttpStatus
 import reactor.core.scheduler.Schedulers
 import spock.lang.Specification
@@ -13,7 +14,8 @@ class UserControllerSpec extends Specification {
 
     def scheduler = Schedulers.immediate()
     def userService = Mock(UserService)
-    def controller = new UserController(scheduler, userService)
+    def userMapper = new SystemUserMapperImpl()
+    def controller = new UserController(scheduler, userService, userMapper)
 
     def login = "login"
     def name = "name"
@@ -83,7 +85,12 @@ class UserControllerSpec extends Specification {
 
         then:
         1 * userService.updateUser({ User user ->
-            user.id == id
+            user.id == id &&
+                    user.login == login &&
+                    user.name == name &&
+                    user.surname == surname &&
+                    user.email == email &&
+                    user.type.name() == type
         } as User) >> new User(id: 666L, login: login, name: name, surname: surname, email: email, type: UserType.ADMIN)
         result.id == id
         result.login == login

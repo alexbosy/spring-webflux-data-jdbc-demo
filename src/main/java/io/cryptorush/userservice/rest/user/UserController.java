@@ -6,6 +6,7 @@ import io.cryptorush.userservice.rest.user.dto.UserCreatedResponseDTO;
 import io.cryptorush.userservice.rest.user.dto.UserCreationRequestDTO;
 import io.cryptorush.userservice.rest.user.dto.UserFullResponseDTO;
 import io.cryptorush.userservice.rest.user.dto.UserUpdateRequestDTO;
+import io.cryptorush.userservice.rest.user.mapper.SystemUserMapper;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,30 +22,20 @@ public class UserController {
 
     private final Scheduler scheduler;
     private final UserService userService;
+    private final SystemUserMapper userMapper;
 
-    public UserController(@Qualifier("rest-scheduler") Scheduler scheduler, UserService userService) {
+    public UserController(@Qualifier("rest-scheduler") Scheduler scheduler, UserService userService, SystemUserMapper systemUserMapper) {
         this.scheduler = scheduler;
         this.userService = userService;
+        this.userMapper = systemUserMapper;
     }
 
     @PostMapping("user")
     public Mono<UserCreatedResponseDTO> createUser(@Valid @RequestBody UserCreationRequestDTO userCreationRequestDTO) {
         return Mono.fromCallable(() -> {
-            User user = User.builder()
-                    .login(userCreationRequestDTO.getLogin())
-                    .name(userCreationRequestDTO.getName())
-                    .surname(userCreationRequestDTO.getSurname())
-                    .email(userCreationRequestDTO.getEmail())
-                    .password(userCreationRequestDTO.getPassword())
-                    .type(userCreationRequestDTO.getType())
-                    .build();
-
+            User user = userMapper.toUser(userCreationRequestDTO);
             User createdUser = userService.createSystemUser(user);
-
-            return UserCreatedResponseDTO.builder()
-                    .id(createdUser.getId())
-                    .login(createdUser.getLogin())
-                    .build();
+            return userMapper.toCreatedResponseDTO(createdUser);
         }).publishOn(scheduler);
     }
 
@@ -52,22 +43,9 @@ public class UserController {
     public Mono<UserFullResponseDTO> updateUser(@PathVariable("id") long id,
                                                 @Valid @RequestBody UserUpdateRequestDTO userUpdateRequestDTO) {
         return Mono.fromCallable(() -> {
-            User user = User.builder()
-                    .id(id)
-                    .login(userUpdateRequestDTO.getLogin())
-                    .name(userUpdateRequestDTO.getName())
-                    .surname(userUpdateRequestDTO.getSurname())
-                    .email(userUpdateRequestDTO.getEmail())
-                    .type(userUpdateRequestDTO.getType())
-                    .build();
+            User user = userMapper.toUser(id, userUpdateRequestDTO);
             User updatedUser = userService.updateUser(user);
-            return UserFullResponseDTO.builder()
-                    .id(updatedUser.getId())
-                    .login(updatedUser.getLogin())
-                    .name(updatedUser.getName())
-                    .surname(updatedUser.getSurname())
-                    .email(updatedUser.getEmail())
-                    .type(updatedUser.getType()).build();
+            return userMapper.toFullResponseDTO(updatedUser);
         }).publishOn(scheduler);
     }
 
@@ -75,13 +53,7 @@ public class UserController {
     public Mono<UserFullResponseDTO> getUser(@PathVariable("id") long id) {
         return Mono.fromCallable(() -> {
             User user = userService.getById(id);
-            return UserFullResponseDTO.builder()
-                    .id(user.getId())
-                    .login(user.getLogin())
-                    .name(user.getName())
-                    .surname(user.getSurname())
-                    .email(user.getEmail())
-                    .type(user.getType()).build();
+            return userMapper.toFullResponseDTO(user);
         }).publishOn(scheduler);
     }
 
@@ -98,15 +70,7 @@ public class UserController {
                                              @RequestParam(defaultValue = "10", required = false) int limit) {
         return Mono.fromCallable(() -> {
             List<User> users = userService.getAllSystemUsers(offset, limit);
-            return users.stream().map(user ->
-                    UserFullResponseDTO.builder()
-                            .id(user.getId())
-                            .login(user.getLogin())
-                            .name(user.getName())
-                            .surname(user.getSurname())
-                            .email(user.getEmail())
-                            .type(user.getType()).build()
-            ).collect(Collectors.toList());
+            return users.stream().map(userMapper::toFullResponseDTO).collect(Collectors.toList());
         }).publishOn(scheduler);
     }
 }

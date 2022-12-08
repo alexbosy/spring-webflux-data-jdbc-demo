@@ -6,6 +6,7 @@ import io.cryptorush.userservice.domain.user.User
 import io.cryptorush.userservice.domain.user.UserService
 import io.cryptorush.userservice.domain.user.UserType
 import io.cryptorush.userservice.rest.customer.dto.CustomerCreationRequestDTO
+import io.cryptorush.userservice.rest.customer.mapper.CustomerUserMapperImpl
 import io.cryptorush.userservice.rest.util.IpResolver
 import org.springframework.mock.http.server.reactive.MockServerHttpRequest
 import reactor.core.scheduler.Schedulers
@@ -17,8 +18,9 @@ class CustomerControllerSpec extends Specification {
     def userService = Mock(UserService)
     def customerService = Mock(CustomerService)
     def ipResolver = Mock(IpResolver)
+    def customerUserMapper = new CustomerUserMapperImpl()
 
-    def controller = new CustomerController(scheduler, userService, customerService, ipResolver)
+    def controller = new CustomerController(scheduler, userService, customerService, ipResolver, customerUserMapper)
 
     def customerId = 200L
     def dateOfBirth = new Date()
@@ -54,7 +56,7 @@ class CustomerControllerSpec extends Specification {
         1 * userService.getAllCustomerUsers(offset, limit) >> [user]
         result.size() == 1
         def customerDTO = result[0]
-        customerDTO.getId() == customerId
+        customerDTO.id() == customerId
         customerDTO.dateOfBirth == dateOfBirth
         customerDTO.countryOfResidence == countryOfResidence
         customerDTO.identityNumber == identityNumber

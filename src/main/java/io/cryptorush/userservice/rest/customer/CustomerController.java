@@ -1,6 +1,5 @@
 package io.cryptorush.userservice.rest.customer;
 
-import io.cryptorush.userservice.domain.customer.Customer;
 import io.cryptorush.userservice.domain.customer.CustomerService;
 import io.cryptorush.userservice.domain.user.User;
 import io.cryptorush.userservice.domain.user.UserService;
@@ -8,6 +7,7 @@ import io.cryptorush.userservice.domain.user.UserType;
 import io.cryptorush.userservice.rest.customer.dto.CustomerCreationRequestDTO;
 import io.cryptorush.userservice.rest.customer.dto.CustomerFullProfileDTO;
 import io.cryptorush.userservice.rest.customer.dto.CustomerFullResponseDTO;
+import io.cryptorush.userservice.rest.customer.mapper.CustomerUserMapper;
 import io.cryptorush.userservice.rest.util.IpResolver;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.server.reactive.ServerHttpRequest;
@@ -26,52 +26,25 @@ public class CustomerController {
     private final UserService userService;
     private final CustomerService customerService;
     private final IpResolver ipResolver;
+    private final CustomerUserMapper customerUserMapper;
 
     public CustomerController(@Qualifier("rest-scheduler") Scheduler scheduler, UserService userService,
-                              CustomerService customerService, IpResolver ipResolver) {
+                              CustomerService customerService, IpResolver ipResolver, CustomerUserMapper customerUserMapper) {
         this.scheduler = scheduler;
         this.userService = userService;
         this.customerService = customerService;
         this.ipResolver = ipResolver;
+        this.customerUserMapper = customerUserMapper;
     }
 
     @PostMapping("customer/registration")
     Mono<CustomerFullProfileDTO> registerNewCustomer(@Valid @RequestBody CustomerCreationRequestDTO requestDTO, ServerHttpRequest request) {
         return Mono.fromCallable(() -> {
-
             String ip = ipResolver.resolveIpAddress(request.getRemoteAddress());
-            Customer customer = Customer.builder()
-                    .dateOfBirth(requestDTO.getDateOfBirth())
-                    .countryOfResidence(requestDTO.getCountryOfResidence())
-                    .identityNumber(requestDTO.getIdentityNumber())
-                    .passportNumber(requestDTO.getPassportNumber())
-                    .registrationIp(ip)
-                    .build();
-
-            User user = User.builder()
-                    .type(UserType.CUSTOMER)
-                    .login(requestDTO.getLogin())
-                    .name(requestDTO.getName())
-                    .surname(requestDTO.getSurname())
-                    .password(requestDTO.getPassword())
-                    .email(requestDTO.getEmail())
-                    .customer(customer)
-                    .build();
-
+            User user = customerUserMapper.toCustomer(ip, UserType.CUSTOMER, requestDTO);
             User registeredUser = customerService.registerNewCustomer(user);
-
-            return CustomerFullProfileDTO.builder()
-                    .login(registeredUser.getLogin())
-                    .name(registeredUser.getName())
-                    .surname(registeredUser.getSurname())
-                    .email(registeredUser.getEmail())
-                    .dateOfBirth(registeredUser.getCustomer().getDateOfBirth())
-                    .countryOfResidence(registeredUser.getCustomer().getCountryOfResidence())
-                    .identityNumber(registeredUser.getCustomer().getIdentityNumber())
-                    .passportNumber(registeredUser.getCustomer().getPassportNumber())
-                    .build();
+            return customerUserMapper.toFullProfileDTO(registeredUser);
         }).publishOn(scheduler);
-
     }
 
     @GetMapping("customers")
@@ -79,24 +52,7 @@ public class CustomerController {
                                                      @RequestParam(defaultValue = "10", required = false) int limit) {
         return Mono.fromCallable(() -> {
             List<User> users = userService.getAllCustomerUsers(offset, limit);
-            return users.stream().map(user -> {
-                Customer customer = user.getCustomer();
-                return CustomerFullResponseDTO.builder()
-                        .userId(user.getId())
-                        .login(user.getLogin())
-                        .name(user.getName())
-                        .surname(user.getSurname())
-                        .email(user.getEmail())
-                        .id(customer.getId())
-                        .dateOfBirth(customer.getDateOfBirth())
-                        .countryOfResidence(customer.getCountryOfResidence())
-                        .identityNumber(customer.getIdentityNumber())
-                        .passportNumber(customer.getPassportNumber())
-                                .registrationIp(customer.getRegistrationIp())
-                                .registrationCountry(customer.getRegistrationCountry())
-                                .build();
-                    }
-            ).collect(Collectors.toList());
+            return users.stream().map(customerUserMapper::toFullResponseDTO).collect(Collectors.toList());
         }).publishOn(scheduler);
     }
 }
