@@ -223,6 +223,7 @@ All customer object responses must not contain "id" field.
 #### 1. POST /customer/registration - register a new customer (no auth)
 
 Create a new user and related customer by supplied data.
+
 **The stored Customer domain object must include the following data:**
 
 1. Registration IP address. It must be resolved using incoming HTTP request taking into account, that our service can
