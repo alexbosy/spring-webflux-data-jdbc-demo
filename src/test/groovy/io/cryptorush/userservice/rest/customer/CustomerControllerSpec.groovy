@@ -30,22 +30,22 @@ class CustomerControllerSpec extends Specification {
     def registrationIp = "33.33.33.33"
     def registrationCountry = "LV"
 
+    def customer = new Customer(id: customerId, dateOfBirth: dateOfBirth, countryOfResidence: countryOfResidence,
+            identityNumber: identityNumber, passportNumber: passportNumber, registrationIp: registrationIp,
+            registrationCountry: registrationCountry)
+
+    def userId = 100L
+    def login = "login"
+    def name = "name"
+    def surname = "surname"
+    def email = "email"
+    def type = UserType.CUSTOMER
+
+    def user = new User(id: userId, login: login, name: name, surname: surname, email: email, type: type,
+            customer: customer)
+
     def "GET /customers?offset={offset}&limit={limit} - get customers list with specified offset and limit"() {
         given:
-        def customer = new Customer(id: customerId, dateOfBirth: dateOfBirth, countryOfResidence: countryOfResidence,
-                identityNumber: identityNumber, passportNumber: passportNumber, registrationIp: registrationIp,
-                registrationCountry: registrationCountry)
-
-        def userId = 100L
-        def login = "login"
-        def name = "name"
-        def surname = "surname"
-        def email = "email"
-        def type = UserType.CUSTOMER
-
-        def user = new User(id: userId, login: login, name: name, surname: surname, email: email, type: type,
-                customer: customer)
-
         def offset = 0
         def limit = 1
 
@@ -57,17 +57,17 @@ class CustomerControllerSpec extends Specification {
         result.size() == 1
         def customerDTO = result[0]
         customerDTO.id() == customerId
-        customerDTO.dateOfBirth == dateOfBirth
-        customerDTO.countryOfResidence == countryOfResidence
-        customerDTO.identityNumber == identityNumber
-        customerDTO.passportNumber == passportNumber
-        customerDTO.registrationIp == registrationIp
-        customerDTO.registrationCountry == registrationCountry
-        customerDTO.userId == userId
-        customerDTO.login == login
-        customerDTO.name == name
-        customerDTO.surname == surname
-        customerDTO.email == email
+        customerDTO.dateOfBirth() == dateOfBirth
+        customerDTO.countryOfResidence() == countryOfResidence
+        customerDTO.identityNumber() == identityNumber
+        customerDTO.passportNumber() == passportNumber
+        customerDTO.registrationIp() == registrationIp
+        customerDTO.registrationCountry() == registrationCountry
+        customerDTO.userId() == userId
+        customerDTO.login() == login
+        customerDTO.name() == name
+        customerDTO.surname() == surname
+        customerDTO.email() == email
     }
 
     def "POST /customer/registration - register a new customer"() {
@@ -100,13 +100,35 @@ class CustomerControllerSpec extends Specification {
         }) >> new User(login: login, name: name, surname: surname, email: email,
                 customer: new Customer(dateOfBirth: dateOfBirth, countryOfResidence: countryOfResidence,
                         identityNumber: identityNumber, passportNumber: passportNumber))
-        resDTO.login == login
-        resDTO.name == name
-        resDTO.surname == surname
-        resDTO.email == email
-        resDTO.dateOfBirth == dateOfBirth
-        resDTO.countryOfResidence == countryOfResidence
-        resDTO.identityNumber == identityNumber
-        resDTO.passportNumber == passportNumber
+        resDTO.login() == login
+        resDTO.name() == name
+        resDTO.surname() == surname
+        resDTO.email() == email
+        resDTO.dateOfBirth() == dateOfBirth
+        resDTO.countryOfResidence() == countryOfResidence
+        resDTO.identityNumber() == identityNumber
+        resDTO.passportNumber() == passportNumber
+    }
+
+    def "POST /customer/{login} - find customer user by login"() {
+        given:
+        customerService.getCustomerUserByLogin(login) >> user
+
+        when:
+        def customerDTO = controller.getCustomer(login).block()
+
+        then:
+        customerDTO.id() == customerId
+        customerDTO.dateOfBirth() == dateOfBirth
+        customerDTO.countryOfResidence() == countryOfResidence
+        customerDTO.identityNumber() == identityNumber
+        customerDTO.passportNumber() == passportNumber
+        customerDTO.registrationIp() == registrationIp
+        customerDTO.registrationCountry() == registrationCountry
+        customerDTO.userId() == userId
+        customerDTO.login() == login
+        customerDTO.name() == name
+        customerDTO.surname() == surname
+        customerDTO.email() == email
     }
 }
