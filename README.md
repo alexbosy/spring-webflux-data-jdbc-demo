@@ -223,15 +223,15 @@ All customer object responses must not contain "id" field.
 #### 1. POST /customer/registration - register a new customer (no auth)
 
 Create a new user and related customer by supplied data.
-The Customer domain object must have he following fields:
+**The stored Customer domain object must include the following data:**
 
 1. Registration IP address. It must be resolved using incoming HTTP request taking into account, that our service can
    be deployed behind a reverse proxy or load balancer. This field must not be exposed to the end public users of our
    public application and will be accessible only for admins and managers in our administration application.
-2. Registration country. It must be resolved via some public external GeoIP HTTP service, e.g. http://reallyfreegeoip.
-   org. When implementing this external service call, you must think about the app end users and reduce the response
-   time
-   of the parent REST endpoint (system responsiveness), so the resolution can be done in async way. You also should
+2. Registration country. It must be resolved via some public external GeoIP HTTP service,
+   e.g. http://reallyfreegeoip.org.
+   When implementing this external service call, you must think about the app end users and reduce the response
+   time of the parent REST endpoint (system responsiveness), so the resolution can be done in async way. You also should
    think about the overall system stability and how to protect it from external service performance
    degradation and failures (system resiliency). This field also must not be exposed to the end public users.
 
