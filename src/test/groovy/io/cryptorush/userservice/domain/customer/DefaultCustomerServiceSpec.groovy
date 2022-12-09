@@ -112,4 +112,29 @@ class DefaultCustomerServiceSpec extends Specification {
         def e = thrown(UserNotFoundException)
         e.message == "User not found"
     }
+
+    def "delete customer user by supplied user id"() {
+        given:
+        def userId = 1000L
+
+        when:
+        service.deleteCustomerUserByUserId(userId)
+
+        then:
+        1 * customerRepository.hardDeleteByUserId(userId) >> 1
+        1 * userRepository.hardDeleteById(userId)
+    }
+
+    def "delete customer user by supplied user id, user not found case"() {
+        given:
+        def userId = 1000L
+
+        when:
+        service.deleteCustomerUserByUserId(userId)
+
+        then:
+        1 * customerRepository.hardDeleteByUserId(userId) >> 0
+        def e = thrown(UserNotFoundException)
+        e.message == "User not found"
+    }
 }

@@ -8,6 +8,7 @@ import io.cryptorush.userservice.domain.user.UserType
 import io.cryptorush.userservice.rest.customer.dto.CustomerCreationRequestDTO
 import io.cryptorush.userservice.rest.customer.mapper.CustomerUserMapperImpl
 import io.cryptorush.userservice.rest.util.IpResolver
+import org.springframework.http.HttpStatus
 import org.springframework.mock.http.server.reactive.MockServerHttpRequest
 import reactor.core.scheduler.Schedulers
 import spock.lang.Specification
@@ -130,5 +131,17 @@ class CustomerControllerSpec extends Specification {
         customerDTO.name() == name
         customerDTO.surname() == surname
         customerDTO.email() == email
+    }
+
+    def "DELETE /customer/{userId} - delete customer user by supplied user id"() {
+        given:
+        def userId = 1000L
+
+        when:
+        def result = controller.deleteUser(userId).block()
+
+        then:
+        1 * customerService.deleteCustomerUserByUserId(userId)
+        result.statusCode == HttpStatus.NO_CONTENT
     }
 }
