@@ -58,6 +58,10 @@ class CustomerATSpec extends Specification {
         def res3 = testClient.post('/customer/registration', payload, ["X-Forwarded-For": "45.22.33.233"])
         res3.status == 403
         res3.data["email"] == "Supplied email is already taken"
+
+        cleanup:
+        def res4 = testClient.get("/customer/${uniqueLogin}")
+        testClient.delete("/customer/${res4.data["userId"]}")
     }
 
     def "POST /customer/registration, error case with empty payload"() {
@@ -83,8 +87,8 @@ class CustomerATSpec extends Specification {
         def invalidCountryCode = "ABC"
         def invalidEmail = "invalid email"
         def smallPassword = "1234567"
-        def payload = ["dateOfBirth"   : dateOfBirthStrInFuture, "countryOfResidence": invalidCountryCode, "identityNumber": identityNumber,
-                       "passportNumber": passportNumber, "login": smallLogin, "name": name,
+        def payload = ["dateOfBirth"   : dateOfBirthStrInFuture, "countryOfResidence": invalidCountryCode,
+                       "identityNumber": identityNumber, "passportNumber": passportNumber, "login": smallLogin, "name": name,
                        "surname"       : surname, "email": invalidEmail, "password": smallPassword]
         def res = testClient.post('/customer/registration', payload)
 
@@ -121,17 +125,67 @@ class CustomerATSpec extends Specification {
         res2.data["passportNumber"] == passportNumber
         res2.data["registrationIp"] == "88.88.88.233"
         res2.data["registrationCountry"] == "NO"
+
+        cleanup:
+        testClient.delete("/customer/${res2.data["userId"]}")
+    }
+
+    def "DELETE /customer/{userId}"() {
+        when: "create a new customer user"
+        def res = testClient.post('/customer/registration', payload)
+
+        then:
+        res.status == 200
+
+        and: "try to find created user by login"
+        def res2 = testClient.get("/customer/${uniqueLogin}")
+        res2.status == 200
+
+        and: "delete this created customer user"
+        def createdCustomerUserId = res2.data["userId"]
+        def res3 = testClient.delete("/customer/${createdCustomerUserId}")
+        res3.status == 204
+
+        and: "check this user was deleted"
+        def res4 = testClient.get("/customer/${uniqueLogin}")
+        res4.status == 404
+
+        and: "delete not existing customer user"
+        def res5 = testClient.delete("/customer/${0}")
+        res5.status == 404
+        res5.data["error"] == "User not found"
     }
 
     def "GET /customers?offset={offset}&limit={limit}"() {
-        //TODO: must be finished, when CRUD API will be ready
-        expect:
-        1 == 1
+        when: "create a 2 new customer users"
+        def res1 = testClient.post('/customer/registration', payload)
+        payload["login"] = "at-" + System.currentTimeMillis()
+        payload["email"] = System.currentTimeMillis() + "@at-tests.lv"
+        def res2 = testClient.post('/customer/registration', payload)
+
+        then:
+        res1.status == 200
+        def user1Login = res1.data["login"]
+        res2.status == 200
+        def user2Login = res2.data["login"]
+
+        and: "get all customer users with offset 0 and limit 2"
+        def offset = 0
+        def limit = 2
+        def result = testClient.get("/customers", ["offset": offset, "limit": limit])
+        result.status == 200
+        result.data.size == 2
+
+        cleanup:
+        def res3 = testClient.get("/customer/${user1Login}")
+        testClient.delete("/customer/${res3.data["userId"]}")
+        def res4 = testClient.get("/customer/${user2Login}")
+        testClient.delete("/customer/${res4.data["userId"]}")
     }
 
     def cleanupSpec() {
         //added small delay for async methods execution
         sleep 1500
-        //TODO: replace real external service calls with WireMock or MockWebServer
+        //TODO: replace real external service calls with WireMock or MockWebServer and remove all sleeps
     }
 }
