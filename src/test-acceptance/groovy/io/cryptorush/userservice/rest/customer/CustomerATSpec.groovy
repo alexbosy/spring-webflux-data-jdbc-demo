@@ -132,5 +132,6 @@ class CustomerATSpec extends Specification {
     def cleanupSpec() {
         //added small delay for async methods execution
         sleep 1500
+        //TODO: replace real external service calls with WireMock or MockWebServer
     }
 }
