@@ -6,4 +6,6 @@ public interface CustomerService {
     User registerNewCustomer(User user);
 
     User getCustomerUserByLogin(String login);
+
+    void deleteCustomerUserByUserId(long userId);
 }

@@ -35,4 +35,8 @@ public interface CustomerRepository extends CrudRepository<Customer, Long> {
     default Optional<User> findCustomerUserByLogin(@NonNull String login) {
         return findCustomerUserByLoginAndType(login, UserType.CUSTOMER);
     }
+
+    @Modifying
+    @Query("DELETE FROM customers WHERE user_id=:pUserId")
+    long hardDeleteByUserId(@Param("pUserId") long userId);
 }

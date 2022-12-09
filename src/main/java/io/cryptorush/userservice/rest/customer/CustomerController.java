@@ -11,6 +11,7 @@ import io.cryptorush.userservice.rest.customer.mapper.CustomerUserMapper;
 import io.cryptorush.userservice.rest.util.IpResolver;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.ResponseEntity;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
@@ -63,6 +64,14 @@ public class CustomerController {
         return Mono.fromCallable(() -> {
             User user = customerService.getCustomerUserByLogin(login);
             return customerUserMapper.toFullResponseDTO(user);
+        }).publishOn(scheduler);
+    }
+
+    @DeleteMapping("customer/{userId}")
+    Mono<ResponseEntity<Object>> deleteUser(@PathVariable("userId") long userId) {
+        return Mono.fromCallable(() -> {
+            customerService.deleteCustomerUserByUserId(userId);
+            return ResponseEntity.noContent().build();
         }).publishOn(scheduler);
     }
 }

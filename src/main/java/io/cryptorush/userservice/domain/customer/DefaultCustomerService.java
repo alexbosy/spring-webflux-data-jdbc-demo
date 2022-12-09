@@ -56,4 +56,14 @@ public class DefaultCustomerService implements CustomerService {
         return customerRepository.findCustomerUserByLogin(login)
                 .orElseThrow(UserNotFoundException::new);
     }
+
+    @Transactional(timeout = 1)
+    @Override
+    public void deleteCustomerUserByUserId(long userId) {
+        long count = customerRepository.hardDeleteByUserId(userId);
+        if (count == 0) {
+            throw new UserNotFoundException();
+        }
+        userRepository.hardDeleteById(userId);
+    }
 }
