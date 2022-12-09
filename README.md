@@ -242,7 +242,9 @@ GET /customer/at-1670433267681
 }
 ```
 
-#### 7. GET /me - get current(authenticated) user.
+#### 8. DELETE /customer/{userId} - delete customer user by supplied user id.
+
+#### 9. GET /me - get current(authenticated) user.
 
 ### Public REST endpoints (will be used in public web/mobile apps):
 

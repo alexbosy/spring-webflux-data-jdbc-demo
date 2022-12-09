@@ -114,5 +114,9 @@ passportNumber="passport number"
 ```
 
 ```shell
-http GET http://localhost:8080/customer/some\ login49
+http GET http://localhost:8080/customer/some-login49
+```
+
+```shell
+http DELETE http://localhost:8080/customer/666
 ```
