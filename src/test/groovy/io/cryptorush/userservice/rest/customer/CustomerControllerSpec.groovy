@@ -1,6 +1,7 @@
 package io.cryptorush.userservice.rest.customer
 
 import io.cryptorush.userservice.domain.customer.Customer
+import io.cryptorush.userservice.domain.customer.CustomerPublicProfile
 import io.cryptorush.userservice.domain.customer.CustomerService
 import io.cryptorush.userservice.domain.user.User
 import io.cryptorush.userservice.domain.user.UserService
@@ -111,7 +112,7 @@ class CustomerControllerSpec extends Specification {
         resDTO.passportNumber() == passportNumber
     }
 
-    def "POST /customer/{login} - find customer user by login"() {
+    def "GET /customer/{login} - find customer user by login"() {
         given:
         customerService.getCustomerUserByLogin(login) >> user
 
@@ -131,6 +132,23 @@ class CustomerControllerSpec extends Specification {
         customerDTO.name() == name
         customerDTO.surname() == surname
         customerDTO.email() == email
+    }
+
+    def "GET /customer/profile/{login} - find customer user public profile by login"() {
+        given:
+        def profile = new CustomerPublicProfile(login, name, surname, email, dateOfBirth, countryOfResidence)
+        customerService.getCustomerPublicProfileByLogin(login) >> profile
+
+        when:
+        def profileDTO = controller.getCustomerPublicProfile(login).block()
+
+        then:
+        profileDTO.login() == login
+        profileDTO.name() == name
+        profileDTO.surname() == surname
+        profileDTO.email() == email
+        profileDTO.dateOfBirth() == dateOfBirth
+        profileDTO.countryOfResidence() == countryOfResidence
     }
 
     def "DELETE /customer/{userId} - delete customer user by supplied user id"() {

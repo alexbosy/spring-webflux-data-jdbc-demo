@@ -78,7 +78,7 @@ class DefaultCustomerServiceSpec extends Specification {
         user.customer.registrationCountry = "LV"
         user.customer.registrationIp = "88.34.55.66"
 
-        customerRepository.findCustomerUserByLogin(login) >> Optional.of(this.user)
+        customerRepository.findCustomerUserByLogin(login) >> Optional.of(user)
 
         when:
         def foundUser = service.getCustomerUserByLogin(login)
@@ -107,6 +107,30 @@ class DefaultCustomerServiceSpec extends Specification {
 
         when:
         service.getCustomerUserByLogin(login)
+
+        then:
+        def e = thrown(UserNotFoundException)
+        e.message == "User not found"
+    }
+
+    def "get customer user public profile by login"() {
+        given:
+        def profile = new CustomerPublicProfile(login, name, surname, email, dateOfBirth, countryOfResidence)
+        customerRepository.findCustomerPublicProfileByLogin(login) >> Optional.of(profile)
+
+        when:
+        def foundProfile = service.getCustomerPublicProfileByLogin(login)
+
+        then:
+        foundProfile.login() == login
+    }
+
+    def "get customer user public profile by login, user not found case"() {
+        given:
+        customerRepository.findCustomerPublicProfileByLogin(login) >> Optional.empty()
+
+        when:
+        service.getCustomerPublicProfileByLogin(login)
 
         then:
         def e = thrown(UserNotFoundException)
