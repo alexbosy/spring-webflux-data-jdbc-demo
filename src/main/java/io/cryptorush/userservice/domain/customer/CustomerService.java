@@ -8,4 +8,6 @@ public interface CustomerService {
     User getCustomerUserByLogin(String login);
 
     void deleteCustomerUserByUserId(long userId);
+
+    CustomerPublicProfile getCustomerPublicProfileByLogin(String login);
 }

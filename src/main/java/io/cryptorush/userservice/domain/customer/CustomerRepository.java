@@ -39,4 +39,18 @@ public interface CustomerRepository extends CrudRepository<Customer, Long> {
     @Modifying
     @Query("DELETE FROM customers WHERE user_id=:pUserId")
     long hardDeleteByUserId(@Param("pUserId") long userId);
+
+    @Query("""
+            SELECT u.login,
+            u.name,
+            u.surname,
+            u.email,
+            cu.date_of_birth,
+            cu.country_of_residence
+            FROM users u, customers cu
+            WHERE cu.user_id = u.id
+            AND u.login=:pLogin
+            AND u.type='CUSTOMER'
+            """)
+    Optional<CustomerPublicProfile> findCustomerPublicProfileByLogin(@NonNull @Param("pLogin") String login);
 }

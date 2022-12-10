@@ -1,10 +1,12 @@
 package io.cryptorush.userservice.rest.customer.mapper;
 
+import io.cryptorush.userservice.domain.customer.CustomerPublicProfile;
 import io.cryptorush.userservice.domain.user.User;
 import io.cryptorush.userservice.domain.user.UserType;
 import io.cryptorush.userservice.rest.customer.dto.CustomerCreationRequestDTO;
 import io.cryptorush.userservice.rest.customer.dto.CustomerFullProfileDTO;
 import io.cryptorush.userservice.rest.customer.dto.CustomerFullResponseDTO;
+import io.cryptorush.userservice.rest.customer.dto.CustomerPublicProfileDTO;
 import org.mapstruct.Builder;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -41,19 +43,5 @@ public interface CustomerUserMapper {
     @Mapping(target = "registrationCountry", source = "user.customer.registrationCountry")
     CustomerFullResponseDTO toFullResponseDTO(User user);
 
-
-   /* CustomerFullResponseDTO.builder()
-            .userId(user.getId())
-            .login(user.getLogin())
-            .name(user.getName())
-            .surname(user.getSurname())
-            .email(user.getEmail())
-            .id(customer.getId())
-            .dateOfBirth(customer.getDateOfBirth())
-            .countryOfResidence(customer.getCountryOfResidence())
-            .identityNumber(customer.getIdentityNumber())
-            .passportNumber(customer.getPassportNumber())
-            .registrationIp(customer.getRegistrationIp())
-            .registrationCountry(customer.getRegistrationCountry())
-            .build();*/
+    CustomerPublicProfileDTO toCustomerPublicProfileDTO(CustomerPublicProfile customerPublicProfile);
 }

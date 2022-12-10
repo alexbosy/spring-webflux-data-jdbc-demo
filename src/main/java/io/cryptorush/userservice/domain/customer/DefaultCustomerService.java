@@ -66,4 +66,10 @@ public class DefaultCustomerService implements CustomerService {
         }
         userRepository.hardDeleteById(userId);
     }
+
+    @Override
+    public CustomerPublicProfile getCustomerPublicProfileByLogin(String login) {
+        return customerRepository.findCustomerPublicProfileByLogin(login)
+                .orElseThrow(UserNotFoundException::new);
+    }
 }

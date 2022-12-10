@@ -1,5 +1,6 @@
 package io.cryptorush.userservice.rest.customer;
 
+import io.cryptorush.userservice.domain.customer.CustomerPublicProfile;
 import io.cryptorush.userservice.domain.customer.CustomerService;
 import io.cryptorush.userservice.domain.user.User;
 import io.cryptorush.userservice.domain.user.UserService;
@@ -7,6 +8,7 @@ import io.cryptorush.userservice.domain.user.UserType;
 import io.cryptorush.userservice.rest.customer.dto.CustomerCreationRequestDTO;
 import io.cryptorush.userservice.rest.customer.dto.CustomerFullProfileDTO;
 import io.cryptorush.userservice.rest.customer.dto.CustomerFullResponseDTO;
+import io.cryptorush.userservice.rest.customer.dto.CustomerPublicProfileDTO;
 import io.cryptorush.userservice.rest.customer.mapper.CustomerUserMapper;
 import io.cryptorush.userservice.rest.util.IpResolver;
 import lombok.extern.slf4j.Slf4j;
@@ -64,6 +66,14 @@ public class CustomerController {
         return Mono.fromCallable(() -> {
             User user = customerService.getCustomerUserByLogin(login);
             return customerUserMapper.toFullResponseDTO(user);
+        }).publishOn(scheduler);
+    }
+
+    @GetMapping("customer/profile/{login}")
+    Mono<CustomerPublicProfileDTO> getCustomerPublicProfile(@PathVariable("login") String login) {
+        return Mono.fromCallable(() -> {
+            CustomerPublicProfile profile = customerService.getCustomerPublicProfileByLogin(login);
+            return customerUserMapper.toCustomerPublicProfileDTO(profile);
         }).publishOn(scheduler);
     }
 
