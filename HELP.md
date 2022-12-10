@@ -120,3 +120,7 @@ http GET http://localhost:8080/customer/some-login49
 ```shell
 http DELETE http://localhost:8080/customer/666
 ```
+
+```shell
+http GET http://localhost:8080/customer/profile/some-login
+```

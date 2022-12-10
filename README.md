@@ -312,9 +312,26 @@ a valid form (use corresponding RegEx pattern).
 * Login must be unique.
 * Email must be unique.
 
-#### 2. GET /customer/profile/{:login} - get any customer public profile by login (no auth).
+#### 2. GET /customer/profile/{:login} - get customer public profile by login (no auth).
 
-Show only login/name/surname/date of birth and country of residence.
+Show only login, name, surname, email, date of birth and country of residence.
+
+##### Request example:
+
+GET /customer/profile/some-login
+
+##### Response example:
+
+```json
+{
+   "login": "some-login",
+   "name": "some name",
+   "surname": "some surname",
+   "email": "1670610229829@at-tests.lv",
+   "dateOfBirth": "09-12-1997",
+   "countryOfResidence": "US"
+}
+```
 
 #### 3. GET /customer/my/profile - get current (authenticated) customer's profile (JWT auth).
 
