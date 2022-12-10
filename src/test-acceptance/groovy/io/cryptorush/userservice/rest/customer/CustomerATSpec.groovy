@@ -130,6 +130,34 @@ class CustomerATSpec extends Specification {
         testClient.delete("/customer/${res2.data["userId"]}")
     }
 
+    def "GET /customer/profile/{login}"() {
+        when: "register a new customer user"
+        def res = testClient.post('/customer/registration', payload, ["X-Forwarded-For": "88.88.88.233"])
+
+        then:
+        res.status == 200
+        res.data["login"] == uniqueLogin
+
+        and: "try to get created customer user public profile by login"
+        def res2 = testClient.get("/customer/profile/${uniqueLogin}")
+        res2.status == 200
+        res2.data["login"] == uniqueLogin
+        res2.data["name"] == name
+        res2.data["surname"] == surname
+        res2.data["email"] == uniqueEmail
+        res2.data["dateOfBirth"] == dateOfBirthStr
+        res2.data["countryOfResidence"] == countryOfResidence
+
+        and: "try to find not existing customer user public profile by login"
+        def res3 = testClient.get("/customer/profile/not-existing${uniqueLogin}")
+        res3.status == 404
+        res3.data["error"] == "User not found"
+
+        cleanup:
+        def res4 = testClient.get("/customer/${uniqueLogin}")
+        testClient.delete("/customer/${res4.data["userId"]}")
+    }
+
     def "DELETE /customer/{userId}"() {
         when: "create a new customer user"
         def res = testClient.post('/customer/registration', payload)
