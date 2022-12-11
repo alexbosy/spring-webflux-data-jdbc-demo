@@ -1,4 +1,4 @@
-spring.profiles.active: ${DEV_PROFILE}
+spring.profiles.active: dev-local
 spring.jmx.enabled: false
 
 info.app.name: User Service
