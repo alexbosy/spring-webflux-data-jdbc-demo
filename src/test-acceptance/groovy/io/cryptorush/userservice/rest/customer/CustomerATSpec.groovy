@@ -2,8 +2,10 @@ package io.cryptorush.userservice.rest.customer
 
 
 import io.cryptorush.userservice.rest.client.TestRESTClient
+import io.fabric8.mockwebserver.DefaultMockServer
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.test.context.ActiveProfiles
+import spock.lang.Shared
 import spock.lang.Specification
 
 import java.time.LocalDate
@@ -32,10 +34,21 @@ class CustomerATSpec extends Specification {
                    "passportNumber": passportNumber, "login": uniqueLogin, "name": name,
                    "surname"       : surname, "email": uniqueEmail, "password": password]
 
+    @Shared
+    DefaultMockServer server = new DefaultMockServer()
+
+    def setupSpec() {
+        server.start(8088)
+        server.expect()
+                .get().withPath("/json/88.88.88.233")
+                .andReturn(200, '{"country_code":"NO"}')
+                .withHeader("Content-Type", "application/json; charset=utf-8").always()
+
+    }
 
     def "POST /customer/registration"() {
         when: "register a new customer user"
-        def res = testClient.post('/customer/registration', payload, ["X-Forwarded-For": "45.22.33.233"])
+        def res = testClient.post('/customer/registration', payload, ["X-Forwarded-For": "88.88.88.233"])
 
         then:
         res.status == 200
@@ -49,13 +62,13 @@ class CustomerATSpec extends Specification {
         res.data["passportNumber"] == passportNumber
 
         and: "trying to create a new user with existing login"
-        def res2 = testClient.post('/customer/registration', payload, ["X-Forwarded-For": "45.22.33.233"])
+        def res2 = testClient.post('/customer/registration', payload, ["X-Forwarded-For": "88.88.88.233"])
         res2.status == 403
         res2.data["login"] == "Supplied login is already taken"
 
         and: "trying to create a new user with existing email"
         payload.put("login", "at-" + System.currentTimeMillis())
-        def res3 = testClient.post('/customer/registration', payload, ["X-Forwarded-For": "45.22.33.233"])
+        def res3 = testClient.post('/customer/registration', payload, ["X-Forwarded-For": "88.88.88.233"])
         res3.status == 403
         res3.data["email"] == "Supplied email is already taken"
 
@@ -104,7 +117,7 @@ class CustomerATSpec extends Specification {
     def "GET /customer/{login}"() {
         when: "register a new customer user"
         def res = testClient.post('/customer/registration', payload, ["X-Forwarded-For": "88.88.88.233"])
-        sleep 1500
+        sleep 200 //wait for async ip resolution finished
 
         then:
         res.status == 200
@@ -212,8 +225,6 @@ class CustomerATSpec extends Specification {
     }
 
     def cleanupSpec() {
-        //added small delay for async methods execution
-        sleep 1500
-        //TODO: replace real external service calls with WireMock or MockWebServer and remove all sleeps
+        server.shutdown()
     }
 }

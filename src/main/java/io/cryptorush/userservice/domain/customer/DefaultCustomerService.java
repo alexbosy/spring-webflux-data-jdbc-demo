@@ -1,6 +1,6 @@
 package io.cryptorush.userservice.domain.customer;
 
-import io.cryptorush.userservice.domain.geoip.CountryResolutionService;
+import io.cryptorush.userservice.domain.geoip.GeoIpService;
 import io.cryptorush.userservice.domain.user.User;
 import io.cryptorush.userservice.domain.user.UserRepository;
 import io.cryptorush.userservice.domain.user.UserValidator;
@@ -17,16 +17,16 @@ public class DefaultCustomerService implements CustomerService {
     private final UserRepository userRepository;
     private final UserValidator userValidator;
     private final PasswordEncoder passwordEncoder;
-    private final CountryResolutionService countryResolutionService;
+    private final GeoIpService geoIpService;
     private final CustomerRepository customerRepository;
 
     public DefaultCustomerService(UserRepository userRepository, UserValidator userValidator,
-                                  PasswordEncoder passwordEncoder, CountryResolutionService countryResolutionService,
+                                  PasswordEncoder passwordEncoder, GeoIpService geoIpService,
                                   CustomerRepository customerRepository) {
         this.userRepository = userRepository;
         this.userValidator = userValidator;
         this.passwordEncoder = passwordEncoder;
-        this.countryResolutionService = countryResolutionService;
+        this.geoIpService = geoIpService;
         this.customerRepository = customerRepository;
     }
 
@@ -41,7 +41,7 @@ public class DefaultCustomerService implements CustomerService {
         User createdCustomerUser = userRepository.save(user);
         log.debug("Customer user was created successfully, id=[{}]", createdCustomerUser.getId());
 
-        countryResolutionService.getCountryCodeByIp(user.getCustomer().getRegistrationIp())
+        geoIpService.getCountryCodeByIp(user.getCustomer().getRegistrationIp())
                 .subscribe(country -> {
                     Long customerId = createdCustomerUser.getCustomer().getId();
                     customerRepository.updateRegistrationCountry(customerId, country);

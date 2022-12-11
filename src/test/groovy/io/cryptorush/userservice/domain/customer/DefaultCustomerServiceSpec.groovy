@@ -1,6 +1,6 @@
 package io.cryptorush.userservice.domain.customer
 
-import io.cryptorush.userservice.domain.geoip.CountryResolutionService
+import io.cryptorush.userservice.domain.geoip.GeoIpService
 import io.cryptorush.userservice.domain.user.User
 import io.cryptorush.userservice.domain.user.UserRepository
 import io.cryptorush.userservice.domain.user.UserType
@@ -15,7 +15,7 @@ class DefaultCustomerServiceSpec extends Specification {
     def userRepository = Mock(UserRepository)
     def userValidator = new UserValidator(userRepository)
     def passwordEncoder = Mock(PasswordEncoder)
-    def countryResolutionService = Mock(CountryResolutionService)
+    def countryResolutionService = Mock(GeoIpService)
     def customerRepository = Mock(CustomerRepository)
 
     def service = new DefaultCustomerService(userRepository, userValidator, passwordEncoder,

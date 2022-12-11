@@ -11,19 +11,18 @@ import reactor.core.scheduler.Scheduler;
 
 @Slf4j
 @Service
-public class ExternalGeoIpCountryResolutionService implements CountryResolutionService {
+public class ExternalGeoIpService implements GeoIpService {
 
-    public static final String EXTERNAL_GEOIP_SERVICE_URL = "https://reallyfreegeoip.org";
     public static final String UNKNOWN_COUNTRY_CODE = "XX";
     public static final String REQUEST_URI_PATTERN = "/json/%s";
 
     private final WebClient webClient;
     private final Scheduler scheduler;
 
-    public ExternalGeoIpCountryResolutionService(WebClient.Builder webClientBuilder,
-                                                 @Qualifier("ext-scheduler") Scheduler scheduler) {
+    public ExternalGeoIpService(WebClient webClient,
+                                @Qualifier("ext-scheduler") Scheduler scheduler) {
 
-        this.webClient = webClientBuilder.baseUrl(EXTERNAL_GEOIP_SERVICE_URL).build();
+        this.webClient = webClient;
         this.scheduler = scheduler;
     }
 

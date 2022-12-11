@@ -27,4 +27,10 @@ spring:
     username: "user"
     password: "password"
 
+external-geoip-service:
+  base-url: https://reallyfreegeoip.org
+  socket-connection-timeout-millis: 6000
+  read-timeout-millis: 2500
+  write-timeout-millis: 2500
+
 logging.level.org.springframework.jdbc.core: TRACE

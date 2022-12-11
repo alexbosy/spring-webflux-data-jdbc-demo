@@ -23,3 +23,9 @@ spring:
     url: "jdbc:postgresql://localhost:5432/db"
     username: "user"
     password: "password"
+
+external-geoip-service:
+  base-url: http://localhost:8088
+  socket-connection-timeout-millis: 6000
+  read-timeout-millis: 2500
+  write-timeout-millis: 2500

@@ -10,12 +10,12 @@ import reactor.core.publisher.Mono
 import reactor.core.scheduler.Schedulers
 import spock.lang.Specification
 
-class ExternalGeoIpCountryResolutionServiceSpec extends Specification {
+class ExternalGeoIpGeoIpServiceSpec extends Specification {
 
     def exchangeFunction = Mock(ExchangeFunction)
-    def webClientBuilder = WebClient.builder().exchangeFunction(exchangeFunction)
+    def webClient = WebClient.builder().exchangeFunction(exchangeFunction).build()
     def scheduler = Schedulers.immediate()
-    def service = new ExternalGeoIpCountryResolutionService(webClientBuilder, scheduler)
+    def service = new ExternalGeoIpService(webClient, scheduler)
 
     def "resolve country code for supplied IP, when external service returns HTTP success result"() {
         given:
@@ -33,7 +33,7 @@ class ExternalGeoIpCountryResolutionServiceSpec extends Specification {
         where:
         httpStatus             | returnedCountryCode || expectedResult
         HttpStatus.OK          | "LV"                || "LV"
-        HttpStatus.OK          | ""                  || ExternalGeoIpCountryResolutionService.UNKNOWN_COUNTRY_CODE
-        HttpStatus.BAD_REQUEST | ""                  || ExternalGeoIpCountryResolutionService.UNKNOWN_COUNTRY_CODE
+        HttpStatus.OK          | ""                  || ExternalGeoIpService.UNKNOWN_COUNTRY_CODE
+        HttpStatus.BAD_REQUEST | ""                  || ExternalGeoIpService.UNKNOWN_COUNTRY_CODE
     }
 }
