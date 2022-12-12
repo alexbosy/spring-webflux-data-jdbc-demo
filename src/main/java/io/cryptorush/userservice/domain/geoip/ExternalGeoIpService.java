@@ -1,5 +1,6 @@
 package io.cryptorush.userservice.domain.geoip;
 
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
@@ -14,6 +15,7 @@ import reactor.core.scheduler.Scheduler;
 public class ExternalGeoIpService implements GeoIpService {
 
     public static final String UNKNOWN_COUNTRY_CODE = "XX";
+    public static final String FALLBACK_COUNTRY_CODE = "ZZ";
     public static final String REQUEST_URI_PATTERN = "/json/%s";
 
     private final WebClient webClient;
@@ -26,8 +28,8 @@ public class ExternalGeoIpService implements GeoIpService {
         this.scheduler = scheduler;
     }
 
-    //Sample request - GET https://reallyfreegeoip.org/json/88.23.45.55
     @Override
+    @CircuitBreaker(name = "external-geoip-service", fallbackMethod = "fallback")
     public Mono<String> getCountryCodeByIp(String ip) {
         log.debug("Resolving country for IP=[{}]", ip);
         return webClient.get()
@@ -48,5 +50,9 @@ public class ExternalGeoIpService implements GeoIpService {
     }
 
     private record GeoIpResponse(String country_code) {
+    }
+
+    private Mono<String> fallback(Exception e) {
+        return Mono.just(FALLBACK_COUNTRY_CODE);
     }
 }

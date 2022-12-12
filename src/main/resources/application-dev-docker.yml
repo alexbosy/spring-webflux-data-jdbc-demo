@@ -1,11 +1,12 @@
 logging.config: classpath:log4j2-dev.yml
 
 #Actuator setup
-#Enabling only the info endpoint
-management.endpoints.enabled-by-default: false
-management.endpoint.info.enabled: true
-management.endpoints.web.exposure.include: info
+management.endpoints.web.exposure.include: "*"
 management.endpoints.jmx.exposure.exclude: "*"
+management.endpoint.health.show-details: always
+
+management.health.circuitbreakers.enabled: true
+management.health.diskspace.enabled: false
 
 server.port: 8080
 
@@ -32,4 +33,19 @@ external-geoip-service:
   socket-connection-timeout-millis: 6000
   read-timeout-millis: 2500
   write-timeout-millis: 2500
+
+resilience4j.circuitbreaker:
+  instances:
+    external-geoip-service:
+      registerHealthIndicator: true
+      slidingWindowSize: 10
+      permittedNumberOfCallsInHalfOpenState: 2
+      slidingWindowType: TIME_BASED
+      minimumNumberOfCalls: 2
+      waitDurationInOpenState: 30s
+      failureRateThreshold: 2
+      eventConsumerBufferSize: 10
+  configs:
+    default:
+      registerHealthIndicator: true
 
