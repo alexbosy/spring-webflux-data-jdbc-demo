@@ -1,6 +1,7 @@
 package io.cryptorush.userservice.domain.geoip;
 
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
@@ -12,21 +13,16 @@ import reactor.core.scheduler.Scheduler;
 
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class ExternalGeoIpService implements GeoIpService {
 
     public static final String UNKNOWN_COUNTRY_CODE = "XX";
     public static final String FALLBACK_COUNTRY_CODE = "ZZ";
     public static final String REQUEST_URI_PATTERN = "/json/%s";
 
-    private final WebClient webClient;
+    @Qualifier("ext-scheduler")
     private final Scheduler scheduler;
-
-    public ExternalGeoIpService(WebClient webClient,
-                                @Qualifier("ext-scheduler") Scheduler scheduler) {
-
-        this.webClient = webClient;
-        this.scheduler = scheduler;
-    }
+    private final WebClient webClient;
 
     @Override
     @CircuitBreaker(name = "external-geoip-service", fallbackMethod = "fallback")

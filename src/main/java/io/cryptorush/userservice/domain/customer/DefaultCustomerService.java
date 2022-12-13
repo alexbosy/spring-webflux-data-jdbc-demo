@@ -5,6 +5,7 @@ import io.cryptorush.userservice.domain.user.User;
 import io.cryptorush.userservice.domain.user.UserRepository;
 import io.cryptorush.userservice.domain.user.UserValidator;
 import io.cryptorush.userservice.domain.user.validation.UserNotFoundException;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -12,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class DefaultCustomerService implements CustomerService {
 
     private final UserRepository userRepository;
@@ -19,16 +21,6 @@ public class DefaultCustomerService implements CustomerService {
     private final PasswordEncoder passwordEncoder;
     private final GeoIpService geoIpService;
     private final CustomerRepository customerRepository;
-
-    public DefaultCustomerService(UserRepository userRepository, UserValidator userValidator,
-                                  PasswordEncoder passwordEncoder, GeoIpService geoIpService,
-                                  CustomerRepository customerRepository) {
-        this.userRepository = userRepository;
-        this.userValidator = userValidator;
-        this.passwordEncoder = passwordEncoder;
-        this.geoIpService = geoIpService;
-        this.customerRepository = customerRepository;
-    }
 
     @Transactional(timeout = 2)
     @Override

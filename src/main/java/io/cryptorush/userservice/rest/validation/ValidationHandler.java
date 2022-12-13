@@ -3,6 +3,7 @@ package io.cryptorush.userservice.rest.validation;
 import io.cryptorush.userservice.domain.user.validation.UserNotFoundException;
 import io.cryptorush.userservice.domain.validation.BusinessFieldValidationException;
 import io.cryptorush.userservice.domain.validation.BusinessValidationException;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,13 +18,11 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @ControllerAdvice
+@RequiredArgsConstructor
 public class ValidationHandler {
 
+    @Qualifier("rest-scheduler")
     private final Scheduler scheduler;
-
-    public ValidationHandler(@Qualifier("rest-scheduler") Scheduler scheduler) {
-        this.scheduler = scheduler;
-    }
 
     @ExceptionHandler(WebExchangeBindException.class)
     public Mono<ResponseEntity<Map<String, String>>> handleRequestValidationException(WebExchangeBindException e) {

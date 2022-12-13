@@ -3,6 +3,7 @@ package io.cryptorush.userservice.domain.user;
 import io.cryptorush.userservice.domain.user.validation.EmailIsTakenExceptionField;
 import io.cryptorush.userservice.domain.user.validation.InvalidUserTypeExceptionField;
 import io.cryptorush.userservice.domain.user.validation.LoginIsTakenExceptionField;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.util.Objects;
@@ -12,12 +13,10 @@ import static io.cryptorush.userservice.domain.user.UserType.ADMIN;
 import static io.cryptorush.userservice.domain.user.UserType.MANAGER;
 
 @Component
+@RequiredArgsConstructor
 public class UserValidator {
-    private final UserRepository userRepository;
 
-    public UserValidator(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
+    private final UserRepository userRepository;
 
     public void validateSystemUserCreationOrUpdate(User user) {
         validateUserType(user);

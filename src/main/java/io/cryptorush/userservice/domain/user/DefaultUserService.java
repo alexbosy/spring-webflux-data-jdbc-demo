@@ -1,6 +1,7 @@
 package io.cryptorush.userservice.domain.user;
 
 import io.cryptorush.userservice.domain.user.validation.UserNotFoundException;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -11,6 +12,7 @@ import java.util.Optional;
 
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class DefaultUserService implements UserService {
 
     public final static int MAX_LIMIT = 100;
@@ -18,14 +20,6 @@ public class DefaultUserService implements UserService {
     private final UserRepository userRepository;
     private final UserValidator userValidator;
     private final PasswordEncoder passwordEncoder;
-
-    public DefaultUserService(UserRepository userRepository,
-                              UserValidator userValidator,
-                              PasswordEncoder passwordEncoder) {
-        this.userRepository = userRepository;
-        this.userValidator = userValidator;
-        this.passwordEncoder = passwordEncoder;
-    }
 
     @Override
     @Transactional(timeout = 1)

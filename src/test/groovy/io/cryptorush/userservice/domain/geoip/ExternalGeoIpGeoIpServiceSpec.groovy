@@ -15,7 +15,7 @@ class ExternalGeoIpGeoIpServiceSpec extends Specification {
     def exchangeFunction = Mock(ExchangeFunction)
     def webClient = WebClient.builder().exchangeFunction(exchangeFunction).build()
     def scheduler = Schedulers.immediate()
-    def service = new ExternalGeoIpService(webClient, scheduler)
+    def service = new ExternalGeoIpService(scheduler, webClient)
 
     def "resolve country code for supplied IP, when external service returns HTTP success result"() {
         given:

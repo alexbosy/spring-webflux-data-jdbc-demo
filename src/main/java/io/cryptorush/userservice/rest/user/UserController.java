@@ -7,6 +7,7 @@ import io.cryptorush.userservice.rest.user.dto.UserCreationRequestDTO;
 import io.cryptorush.userservice.rest.user.dto.UserFullResponseDTO;
 import io.cryptorush.userservice.rest.user.dto.UserUpdateRequestDTO;
 import io.cryptorush.userservice.rest.user.mapper.SystemUserMapper;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,17 +19,13 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
+@RequiredArgsConstructor
 public class UserController {
 
+    @Qualifier("rest-scheduler")
     private final Scheduler scheduler;
     private final UserService userService;
     private final SystemUserMapper userMapper;
-
-    public UserController(@Qualifier("rest-scheduler") Scheduler scheduler, UserService userService, SystemUserMapper systemUserMapper) {
-        this.scheduler = scheduler;
-        this.userService = userService;
-        this.userMapper = systemUserMapper;
-    }
 
     @PostMapping("user")
     public Mono<UserCreatedResponseDTO> createUser(@Valid @RequestBody UserCreationRequestDTO userCreationRequestDTO) {

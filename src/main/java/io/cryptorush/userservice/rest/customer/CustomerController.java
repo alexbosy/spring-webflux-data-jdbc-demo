@@ -11,6 +11,7 @@ import io.cryptorush.userservice.rest.customer.dto.CustomerFullResponseDTO;
 import io.cryptorush.userservice.rest.customer.dto.CustomerPublicProfileDTO;
 import io.cryptorush.userservice.rest.customer.mapper.CustomerUserMapper;
 import io.cryptorush.userservice.rest.util.IpResolver;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
@@ -25,22 +26,15 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @RestController
+@RequiredArgsConstructor
 public class CustomerController {
 
+    @Qualifier("rest-scheduler")
     private final Scheduler scheduler;
     private final UserService userService;
     private final CustomerService customerService;
     private final IpResolver ipResolver;
     private final CustomerUserMapper customerUserMapper;
-
-    public CustomerController(@Qualifier("rest-scheduler") Scheduler scheduler, UserService userService,
-                              CustomerService customerService, IpResolver ipResolver, CustomerUserMapper customerUserMapper) {
-        this.scheduler = scheduler;
-        this.userService = userService;
-        this.customerService = customerService;
-        this.ipResolver = ipResolver;
-        this.customerUserMapper = customerUserMapper;
-    }
 
     @PostMapping("customer/registration")
     Mono<CustomerFullProfileDTO> registerNewCustomer(@Valid @RequestBody CustomerCreationRequestDTO requestDTO, ServerHttpRequest request) {
