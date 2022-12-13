@@ -117,7 +117,7 @@ class CustomerATSpec extends Specification {
     def "GET /customer/{login}"() {
         when: "register a new customer user"
         def res = testClient.post('/customer/registration', payload, ["X-Forwarded-For": "88.88.88.233"])
-        sleep 200 //wait for async ip resolution finished
+        sleep 500 //wait for async ip resolution finished
 
         then:
         res.status == 200
