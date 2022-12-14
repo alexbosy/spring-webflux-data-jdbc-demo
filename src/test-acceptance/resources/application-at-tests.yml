@@ -29,3 +29,8 @@ external-geoip-service:
   socket-connection-timeout-millis: 6000
   read-timeout-millis: 2500
   write-timeout-millis: 2500
+
+security.jwt:
+  private.key: classpath:app.key
+  public.key: classpath:app.pub
+  expiration-time-in-sec: 600

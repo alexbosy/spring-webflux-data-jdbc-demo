@@ -1,5 +1,6 @@
 package io.cryptorush.userservice.rest.validation;
 
+import io.cryptorush.userservice.domain.auth.AuthException;
 import io.cryptorush.userservice.domain.user.validation.UserNotFoundException;
 import io.cryptorush.userservice.domain.validation.BusinessFieldValidationException;
 import io.cryptorush.userservice.domain.validation.BusinessValidationException;
@@ -47,6 +48,12 @@ public class ValidationHandler {
     @ExceptionHandler({UserNotFoundException.class})
     public Mono<ResponseEntity<Map<String, String>>> handleNotFoundException(BusinessValidationException e) {
         return Mono.just(ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("error", e.getMessage())))
+                .publishOn(scheduler);
+    }
+
+    @ExceptionHandler({AuthException.class})
+    public Mono<ResponseEntity<Map<String, String>>> handleAuthException(AuthException e) {
+        return Mono.just(ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("error", e.getMessage())))
                 .publishOn(scheduler);
     }
 }

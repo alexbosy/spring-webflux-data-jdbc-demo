@@ -11,6 +11,9 @@ import java.util.Optional;
 
 public interface UserRepository extends CrudRepository<User, Long> {
 
+    @Query("SELECT password,type FROM users WHERE login=:pLogin")
+    Optional<UserAuthModel> findUserAuthModelByLogin(@NonNull @Param("pLogin") String login);
+
     @Query("SELECT * FROM users WHERE login=:pLogin OR email=:pEmail")
     Optional<User> findByLoginOrEmail(@NonNull @Param("pLogin") String login, @NonNull @Param("pEmail") String email);
 

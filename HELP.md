@@ -124,3 +124,14 @@ http DELETE http://localhost:8080/customer/666
 ```shell
 http GET http://localhost:8080/customer/profile/some-login
 ```
+
+```shell
+http POST http://localhost:8080/auth \                                                             ✔ 
+login="somelogin20" \
+password="some password"
+```
+
+```shell
+http GET http://localhost:8080/customer/profile/some-login \
+Authorization: Bearer yJhbGciOiJIUzUxMiJ9.eyJ0eXBlIjoiQ1VTVE9NRVIiLCJzdWIiOiJzb21lbG9naW4yMCIsImlhdCI6MTY3MDk2NTg0NSwiZXhwIjoxNjcwOTY2NDQ1fQ.Szsoxe1M_WwnZyfV9kDOOeTYGvouNGJYWOt4APa5P7Rl0azSyqP-rFYCUJggxDV2fwuPMt6PyVZBxzJjZAWGxg
+```

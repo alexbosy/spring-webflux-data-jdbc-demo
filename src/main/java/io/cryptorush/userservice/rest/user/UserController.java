@@ -10,6 +10,7 @@ import io.cryptorush.userservice.rest.user.mapper.SystemUserMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
 import reactor.core.scheduler.Scheduler;
@@ -47,6 +48,7 @@ public class UserController {
     }
 
     @GetMapping("user/{id}")
+    @PreAuthorize("hasAuthority('SCOPE_ADMIN')")
     public Mono<UserFullResponseDTO> getUser(@PathVariable("id") long id) {
         return Mono.fromCallable(() -> {
             User user = userService.getById(id);
