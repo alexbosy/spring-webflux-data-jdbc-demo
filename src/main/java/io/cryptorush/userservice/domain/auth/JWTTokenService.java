@@ -1,8 +1,10 @@
 package io.cryptorush.userservice.domain.auth;
 
 import io.cryptorush.userservice.domain.user.UserType;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.jwt.JwtClaimsSet;
 import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
@@ -12,16 +14,13 @@ import java.time.Instant;
 
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class JWTTokenService implements TokenService {
 
     @Value("${security.jwt.expiration-time-in-sec}")
     private long expirationTime;
 
     private final JwtEncoder encoder;
-
-    public JWTTokenService(JwtEncoder encoder) {
-        this.encoder = encoder;
-    }
 
     public String generateToken(String login, UserType type) {
         Instant now = Instant.now();
@@ -32,6 +31,8 @@ public class JWTTokenService implements TokenService {
                 .subject(login)
                 .claim("scope", type)
                 .build();
-        return encoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
+        JwtEncoderParameters parameters = JwtEncoderParameters.from(claims);
+        Jwt jwt = encoder.encode(parameters);
+        return jwt.getTokenValue();
     }
 }
