@@ -49,6 +49,7 @@ public class DefaultUserService implements UserService {
     }
 
     @Override
+    @Transactional(timeout = 1)
     public User updateUser(User user) {
         Optional<User> optionalUser = userRepository.findById(user.getId());
         if (optionalUser.isPresent()) {

@@ -28,6 +28,15 @@ spring:
     username: "user"
     password: "password"
 
+security:
+  jwt:
+    private.key: classpath:app.key
+    public.key: classpath:app.pub
+    expiration-time-in-sec: 600
+  scrypt:
+    cpu-cost: 2
+    memory-cost: 1
+
 external-geoip-service:
   base-url: https://reallyfreegeoip.org
   socket-connection-timeout-millis: 6000

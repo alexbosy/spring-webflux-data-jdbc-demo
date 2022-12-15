@@ -34,10 +34,16 @@ import java.security.interfaces.RSAPublicKey;
 public class SecurityConfig {
 
     @Value("${security.jwt.public.key}")
-    RSAPublicKey rsaPublicKey;
+    private RSAPublicKey rsaPublicKey;
 
     @Value("${security.jwt.private.key}")
-    RSAPrivateKey rsaPrivateKey;
+    private RSAPrivateKey rsaPrivateKey;
+
+    @Value("${security.scrypt.cpu-cost: 2}")
+    private int scryptCpuCost;
+
+    @Value("${security.scrypt.memory-cost: 1}")
+    private int scryptMemoryCost;
 
     @Bean
     public SecurityWebFilterChain springSecurityFilterChain(ServerHttpSecurity http) {
@@ -71,6 +77,6 @@ public class SecurityConfig {
 
     @Bean
     public PasswordEncoder passwordEncoder() {
-        return new SCryptPasswordEncoder();
+        return new SCryptPasswordEncoder(scryptCpuCost, scryptMemoryCost, 1, 32, 64);
     }
 }
