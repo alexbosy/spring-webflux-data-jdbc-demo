@@ -20,7 +20,7 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping("/auth")
-    public Mono<AuthResponseDTO> login(@RequestBody AuthRequestDTO requestDTO) {
+    public Mono<AuthResponseDTO> auth(@RequestBody AuthRequestDTO requestDTO) {
         return Mono.fromCallable(() -> {
             String token = authService.authenticate(requestDTO.getLogin(), requestDTO.getPassword());
             return new AuthResponseDTO(token);

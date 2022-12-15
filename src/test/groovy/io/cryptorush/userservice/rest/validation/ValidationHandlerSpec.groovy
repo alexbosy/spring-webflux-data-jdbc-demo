@@ -1,5 +1,6 @@
 package io.cryptorush.userservice.rest.validation
 
+import io.cryptorush.userservice.domain.auth.AuthException
 import io.cryptorush.userservice.domain.user.validation.EmailIsTakenExceptionField
 import io.cryptorush.userservice.domain.user.validation.LoginIsTakenExceptionField
 import io.cryptorush.userservice.domain.user.validation.UserNotFoundException
@@ -54,5 +55,15 @@ class ValidationHandlerSpec extends Specification {
 
         where:
         notFoundException << [new UserNotFoundException()]
+    }
+
+    def "handle authentication exception"() {
+
+        when:
+        def e = new AuthException()
+        def res = validationHandler.handleAuthException(e).block()
+
+        then:
+        res.body["error"] == e.message
     }
 }
