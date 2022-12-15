@@ -41,6 +41,12 @@ public class DefaultUserService implements UserService {
     }
 
     @Override
+    public User getByLogin(String login) {
+        return userRepository.findByLogin(login)
+                .orElseThrow(UserNotFoundException::new);
+    }
+
+    @Override
     public void deleteSystemUserById(long id) {
         long count = userRepository.hardDeleteById(id);
         if (count == 0) {

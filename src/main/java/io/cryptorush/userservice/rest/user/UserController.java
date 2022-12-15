@@ -8,6 +8,7 @@ import io.cryptorush.userservice.rest.user.dto.UserFullResponseDTO;
 import io.cryptorush.userservice.rest.user.dto.UserUpdateRequestDTO;
 import io.cryptorush.userservice.rest.user.mapper.SystemUserMapper;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -16,9 +17,11 @@ import reactor.core.publisher.Mono;
 import reactor.core.scheduler.Scheduler;
 
 import javax.validation.Valid;
+import java.security.Principal;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Slf4j
 @RestController
 @RequiredArgsConstructor
 public class UserController {
@@ -52,6 +55,15 @@ public class UserController {
     public Mono<UserFullResponseDTO> getUser(@PathVariable("id") long id) {
         return Mono.fromCallable(() -> {
             User user = userService.getById(id);
+            return userMapper.toFullResponseDTO(user);
+        }).publishOn(scheduler);
+    }
+
+    @GetMapping("me")
+    @PreAuthorize("hasAuthority('SCOPE_ADMIN') OR hasAuthority('SCOPE_MANAGER')")
+    public Mono<UserFullResponseDTO> getMe(Principal principal) {
+        return Mono.fromCallable(() -> {
+            User user = userService.getByLogin(principal.getName());
             return userMapper.toFullResponseDTO(user);
         }).publishOn(scheduler);
     }
