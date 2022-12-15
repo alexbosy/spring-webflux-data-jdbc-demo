@@ -14,7 +14,8 @@ class TestRESTClient {
         client.handler.failure = client.handler.success
     }
 
-    HttpResponseDecorator get(String path, Map parametersMap = [:]) {
+    HttpResponseDecorator get(String path, Map parametersMap = [:], Map headers = [:]) {
+        client.headers = headers
         client.get(path: path, query: parametersMap) as HttpResponseDecorator
     }
 
@@ -26,7 +27,8 @@ class TestRESTClient {
         client.put(path: uri, body: body, contentType: 'application/json') as HttpResponseDecorator
     }
 
-    HttpResponseDecorator delete(String uri) {
+    HttpResponseDecorator delete(String uri, Map headers = [:]) {
+        client.headers = headers
         client.delete(path: uri) as HttpResponseDecorator
     }
 

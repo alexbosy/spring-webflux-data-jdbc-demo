@@ -63,29 +63,45 @@ class UserATSpec extends Specification {
         then:
         res.status == 200
 
+        and: "authenticate"
+        def res2 = testClient.post('/auth', ["login": res.data["login"], "password": payload.password])
+        res2.status == 200
+        res2.data["token"] != null
+
         and: "find user by id"
         def createdUserId = res.data["id"]
-        def res2 = testClient.get("/user/${createdUserId}")
-        res2.status == 200
-        res2.data["id"] == createdUserId
-        res2.data["login"] == payload.login
-        res2.data["name"] == payload.name
-        res2.data["surname"] == payload.surname
-        res2.data["email"] == payload.email
-        res2.data["type"] == payload.type
+        def jwt = res2.data["token"]
+        def res3 = testClient.get("/user/${createdUserId}", [:], ["Authorization": "Bearer ${jwt}"])
+        res3.status == 200
+        res3.data["id"] == createdUserId
+        res3.data["login"] == payload.login
+        res3.data["name"] == payload.name
+        res3.data["surname"] == payload.surname
+        res3.data["email"] == payload.email
+        res3.data["type"] == payload.type
 
         cleanup:
         testClient.delete("/user/${createdUserId}")
     }
 
     def "GET /user/{id}, user not found case"() {
-        when:
-        def notExistingId = 0L
-        def res = testClient.get("/user/${notExistingId}")
+        when: "create a new user"
+        def res = testClient.post('/user', payload)
 
         then:
-        res.status == 404
-        res.data["error"] == "User not found"
+        res.status == 200
+
+        and: "authenticate"
+        def res2 = testClient.post('/auth', ["login": res.data["login"], "password": payload.password])
+        res2.status == 200
+        res2.data["token"] != null
+
+        and:
+        def notExistingId = 0L
+        def jwt = res2.data["token"]
+        def res3 = testClient.get("/user/${notExistingId}", [:], ["Authorization": "Bearer ${jwt}"])
+        res3.status == 404
+        res3.data["error"] == "User not found"
     }
 
     def "DELETE /user/{id}"() {
@@ -100,9 +116,24 @@ class UserATSpec extends Specification {
         def res2 = testClient.delete("/user/${createdUserId}")
         res2.status == 204
 
+        and: "create second user"
+        def result = testClient.post('/user', payload)
+        result.status == 200
+
+        and: "authenticate"
+        def res3 = testClient.post('/auth', ["login": result.data["login"], "password": payload.password])
+        res3.status == 200
+        res3.data["token"] != null
+
         and: "check this user was deleted"
-        def res3 = testClient.get("/user/${createdUserId}")
-        res3.status == 404
+        def jwt = res3.data["token"]
+        def res4 = testClient.get("/user/${createdUserId}", [:], ["Authorization": "Bearer ${jwt}"])
+        res4.status == 404
+
+        and: "delete second user"
+        def secondUserId = result.data["id"]
+        def res5 = testClient.delete("/user/${secondUserId}")
+        res5.status == 204
     }
 
     def "DELETE /user/{id}, user not found case"() {
@@ -122,9 +153,15 @@ class UserATSpec extends Specification {
         then:
         res.status == 200
 
+        and: "authenticate"
+        def auth = testClient.post('/auth', ["login": res.data["login"], "password": payload.password])
+        auth.status == 200
+        auth.data["token"] != null
+
         and: "find user by id"
+        def jwt = auth.data["token"]
         def createdUserId = res.data["id"]
-        def res2 = testClient.get("/user/${createdUserId}")
+        def res2 = testClient.get("/user/${createdUserId}", [:], ["Authorization": "Bearer ${jwt}"])
         res2.status == 200
         res2.data["id"] == createdUserId
         res2.data["login"] == payload.login
