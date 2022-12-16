@@ -136,3 +136,8 @@ password="some password"
 http GET http://localhost:8080/me \
 Authorization:"Bearer ${JWT}"
 ```
+
+```shell
+http GET http://localhost:8080/customer/my/profile \
+Authorization:"Bearer ${JWT}"
+```
