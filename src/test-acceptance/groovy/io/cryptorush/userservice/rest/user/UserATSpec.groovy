@@ -84,6 +84,35 @@ class UserATSpec extends Specification {
         testClient.delete("/user/${createdUserId}")
     }
 
+    def "GET /me"() {
+        given:
+        when: "create a new user"
+        def res = testClient.post('/user', payload)
+
+        then:
+        res.status == 200
+
+        and: "authenticate"
+        def res2 = testClient.post('/auth', ["login": res.data["login"], "password": payload.password])
+        res2.status == 200
+        res2.data["token"] != null
+
+        and: "get current authenticated user"
+        def createdUserId = res.data["id"]
+        def jwt = res2.data["token"]
+        def res3 = testClient.get("/me", [:], ["Authorization": "Bearer ${jwt}"])
+        res3.status == 200
+        res3.data["id"] == createdUserId
+        res3.data["login"] == payload.login
+        res3.data["name"] == payload.name
+        res3.data["surname"] == payload.surname
+        res3.data["email"] == payload.email
+        res3.data["type"] == payload.type
+
+        cleanup:
+        testClient.delete("/user/${createdUserId}")
+    }
+
     def "GET /user/{id}, user not found case"() {
         when: "create a new user"
         def res = testClient.post('/user', payload)
