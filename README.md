@@ -152,22 +152,22 @@ GET /users?offset=0&limit=2
 
 ```json
 [
-  {
-    "id": 26,
-    "login": "some login",
-    "name": "some name",
-    "surname": "some surname",
-    "email": "new@new.com",
-    "type": "ADMIN"
-  },
-  {
-    "id": 27,
-    "login": "some login3456",
-    "name": "sdsdsd",
-    "surname": "some surname",
-    "email": "new@new454.com",
-    "type": "MANAGER"
-  }
+   {
+      "id": 26,
+      "login": "some login",
+      "name": "some name",
+      "surname": "some surname",
+      "email": "new@new.com",
+      "type": "ADMIN"
+   },
+   {
+      "id": 27,
+      "login": "some login2",
+      "name": "some name2",
+      "surname": "some surname2",
+      "email": "new@new2.com",
+      "type": "MANAGER"
+   }
 ]
 ```
 
@@ -193,24 +193,24 @@ GET /customers?offset=0&limit=2
     "registrationIp": "88.22.33.44",
     "userId": 26,
     "login": "some login",
-    "email": "new@new.com",
-    "name": "some name",
-    "surname": "some surname"
-  },
-  {
-    "id": 2,
-    "countryOfResidence": "LV",
-    "dateOfBirth": "03-12-1980",
-    "identityNumber": "041280-10717",
-    "passportNumber": "LV3948938433",
-     "registrationCountry": "US",
-     "registrationIp": "92.33.45.122",
-     "userId": 27,
-     "login": "some login3456",
-     "email": "new@new454.com",
-     "name": "sdsdsd",
+     "email": "new@new.com",
+     "name": "some name",
      "surname": "some surname"
-  }
+  },
+   {
+      "id": 2,
+      "countryOfResidence": "LV",
+      "dateOfBirth": "03-12-1980",
+      "identityNumber": "041289-15717",
+      "passportNumber": "LV3948938433",
+      "registrationCountry": "US",
+      "registrationIp": "92.33.45.122",
+      "userId": 27,
+      "login": "some login",
+      "email": "new@new.com",
+      "name": "some name",
+      "surname": "some surname"
+   }
 ]
 ```
 
@@ -221,30 +221,50 @@ admin application.
 
 ##### Request example:
 
-GET /customer/at-1670433267681
+GET /customer/login
 
 ##### Response example:
 
 ```json
 {
+   "id": 64,
+   "login": "login",
+   "email": "email@email.lv",
+   "name": "some name",
+   "surname": "some surname",
    "countryOfResidence": "US",
    "dateOfBirth": "06-12-1982",
-   "email": "1670433267686@at-tests.lv",
-   "id": 64,
    "identityNumber": "identity number",
-   "login": "at-1670433267681",
-   "name": "some name",
    "passportNumber": "passport number",
    "registrationCountry": "XX",
    "registrationIp": "127.0.0.1",
-   "surname": "some surname",
    "userId": 320
 }
 ```
 
 #### 8. DELETE /customer/{userId} - delete customer user by supplied user id.
 
-#### 9. GET /me - get current(authenticated) user.
+#### 9. GET /me - get current(authenticated) user. (requires JWT auth)
+
+Return the current authenticated user (ADMIN or MANAGER).
+
+##### Request example:
+
+GET /me
+Authorization:"Bearer ${JWT}"
+
+##### Response example:
+
+```json
+{
+   "id": 26,
+   "login": "adminlogin",
+   "name": "some name",
+   "surname": "some surname",
+   "email": "new@new.com",
+   "type": "ADMIN"
+}
+```
 
 ### Public REST endpoints (will be used in public web/mobile apps):
 
@@ -276,7 +296,7 @@ body:
 ```json
 {
    "login": "some login",
-  "name": "some name",
+   "name": "some name",
   "surname": "some surname",
   "email": "some@email.com",
   "password": "some password",
