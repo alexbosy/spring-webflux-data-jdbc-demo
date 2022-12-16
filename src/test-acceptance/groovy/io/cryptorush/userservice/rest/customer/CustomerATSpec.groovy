@@ -171,6 +171,37 @@ class CustomerATSpec extends Specification {
         testClient.delete("/customer/${res4.data["userId"]}")
     }
 
+    def "GET /customer/my/profile"() {
+        when: "register a new customer user"
+        def res = testClient.post('/customer/registration', payload, ["X-Forwarded-For": "88.88.88.233"])
+
+        then:
+        res.status == 200
+        res.data["login"] == uniqueLogin
+
+        and: "authenticate"
+        def res2 = testClient.post('/auth', ["login": uniqueLogin, "password": payload.password])
+        res2.status == 200
+        res2.data["token"] != null
+
+        and: "try to get currently authenticated customer full profile"
+        def res3 = testClient.get("/customer/profile/${uniqueLogin}")
+        res3.status == 200
+        res.data["login"] == uniqueLogin
+        res.data["name"] == name
+        res.data["surname"] == surname
+        res.data["email"] == uniqueEmail
+        res.data["dateOfBirth"] == dateOfBirthStr
+        res.data["countryOfResidence"] == countryOfResidence
+        res.data["identityNumber"] == identityNumber
+        res.data["passportNumber"] == passportNumber
+
+        cleanup:
+        def res4 = testClient.get("/customer/${uniqueLogin}")
+        testClient.delete("/customer/${res4.data["userId"]}")
+
+    }
+
     def "DELETE /customer/{userId}"() {
         when: "create a new customer user"
         def res = testClient.post('/customer/registration', payload)
