@@ -16,11 +16,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.server.reactive.ServerHttpRequest;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
 import reactor.core.scheduler.Scheduler;
 
 import javax.validation.Valid;
+import java.security.Principal;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -68,6 +70,16 @@ public class CustomerController {
         return Mono.fromCallable(() -> {
             CustomerPublicProfile profile = customerService.getCustomerPublicProfileByLogin(login);
             return customerUserMapper.toCustomerPublicProfileDTO(profile);
+        }).publishOn(scheduler);
+    }
+
+    @GetMapping("customer/my/profile")
+    @PreAuthorize("hasAuthority('SCOPE_CUSTOMER')")
+    Mono<CustomerFullProfileDTO> getMyPublicProfile(Principal principal) {
+        return Mono.fromCallable(() -> {
+            String login = principal.getName();
+            User user = customerService.getCustomerUserByLogin(login);
+            return customerUserMapper.toFullProfileDTO(user);
         }).publishOn(scheduler);
     }
 
