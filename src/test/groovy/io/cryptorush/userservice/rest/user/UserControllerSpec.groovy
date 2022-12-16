@@ -7,6 +7,8 @@ import io.cryptorush.userservice.rest.user.dto.UserCreationRequestDTO
 import io.cryptorush.userservice.rest.user.dto.UserUpdateRequestDTO
 import io.cryptorush.userservice.rest.user.mapper.SystemUserMapperImpl
 import org.springframework.http.HttpStatus
+import org.springframework.security.oauth2.jwt.Jwt
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken
 import reactor.core.scheduler.Schedulers
 import spock.lang.Specification
 
@@ -41,8 +43,8 @@ class UserControllerSpec extends Specification {
                     u.password == userRequestDTO.password &&
                     u.type == userRequestDTO.type
         } as User) >> new User(id: 12345L, login: login)
-        result.id == 12345L
-        result.login == login
+        result.id() == 12345L
+        result.login() == login
     }
 
     def "GET /user/{id} - get user by id"() {
@@ -55,12 +57,35 @@ class UserControllerSpec extends Specification {
         then:
         1 * userService.getById(id) >> new User(id: id, login: login, name: name, surname: surname, email: email,
                 password: "encrypted", type: UserType.MANAGER)
-        result.id == id
-        result.login == login
-        result.name == name
-        result.surname == surname
-        result.email == email
-        result.type == UserType.MANAGER
+        result.id() == id
+        result.login() == login
+        result.name() == name
+        result.surname() == surname
+        result.email() == email
+        result.type() == UserType.MANAGER
+    }
+
+    def "GET /me - get current authenticated user"() {
+        given:
+        def id = 100L
+        def jwt = Jwt.withTokenValue("some JWT token")
+                .subject("some login")
+                .header("some header", "some value")
+                .build()
+        def principal = new JwtAuthenticationToken(jwt)
+
+        when:
+        def result = controller.getMe(principal).block()
+
+        then:
+        1 * userService.getByLogin("some login") >> new User(id: id, login: login, name: name, surname: surname, email: email,
+                password: "encrypted", type: UserType.ADMIN)
+        result.id() == id
+        result.login() == login
+        result.name() == name
+        result.surname() == surname
+        result.email() == email
+        result.type() == UserType.ADMIN
     }
 
     def "DELETE /user/{id} - hard delete user by id"() {
@@ -92,12 +117,12 @@ class UserControllerSpec extends Specification {
                     user.email == email &&
                     user.type.name() == type
         } as User) >> new User(id: 666L, login: login, name: name, surname: surname, email: email, type: UserType.ADMIN)
-        result.id == id
-        result.login == login
-        result.name == name
-        result.surname == surname
-        result.email == email
-        result.type == UserType.ADMIN
+        result.id() == id
+        result.login() == login
+        result.name() == name
+        result.surname() == surname
+        result.email() == email
+        result.type() == UserType.ADMIN
     }
 
     def "GET /users?offset={offset}&limit={limit} - get users list with specified offset and limit"() {
@@ -113,11 +138,11 @@ class UserControllerSpec extends Specification {
                 surname: surname, email: email, type: UserType.MANAGER)]
         result.size() == 1
         def userDTO = result[0]
-        userDTO.id == 666L
-        userDTO.login == login
-        userDTO.name == name
-        userDTO.surname == surname
-        userDTO.email == email
-        userDTO.type == UserType.MANAGER
+        userDTO.id() == 666L
+        userDTO.login() == login
+        userDTO.name() == name
+        userDTO.surname() == surname
+        userDTO.email() == email
+        userDTO.type() == UserType.MANAGER
     }
 }
