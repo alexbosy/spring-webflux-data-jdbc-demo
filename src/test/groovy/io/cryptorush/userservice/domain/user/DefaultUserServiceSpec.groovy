@@ -202,6 +202,27 @@ class DefaultUserServiceSpec extends Specification {
         foundUser.password == "encrypted"
     }
 
+    def "get user by login"() {
+        given:
+        def login = "login"
+
+        def user = new User(id: 1000L, login: login, email: "email", type: UserType.ADMIN, password: "encrypted", name:
+                "name", surname: "surname")
+        userRepository.findByLogin(login) >> Optional.of(user)
+
+        when:
+        def foundUser = userService.getByLogin(login)
+
+        then:
+        foundUser.id == 1000L
+        foundUser.login == login
+        foundUser.email == "email"
+        foundUser.name == "name"
+        foundUser.surname == "surname"
+        foundUser.type == UserType.ADMIN
+        foundUser.password == "encrypted"
+    }
+
     def "get user by id, not found case"() {
         given:
         def id = 1000L
