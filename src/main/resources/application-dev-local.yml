@@ -32,7 +32,7 @@ security:
   jwt:
     private.key: classpath:app.key
     public.key: classpath:app.pub
-    expiration-time-in-sec: 600
+    expiration-time-in-sec: 3600
   scrypt:
     cpu-cost: 2
     memory-cost: 1
