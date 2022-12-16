@@ -75,7 +75,7 @@ public class CustomerController {
 
     @GetMapping("customer/my/profile")
     @PreAuthorize("hasAuthority('SCOPE_CUSTOMER')")
-    Mono<CustomerFullProfileDTO> getMyPublicProfile(Principal principal) {
+    Mono<CustomerFullProfileDTO> getMyFullProfile(Principal principal) {
         return Mono.fromCallable(() -> {
             String login = principal.getName();
             User user = customerService.getCustomerUserByLogin(login);

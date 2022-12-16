@@ -11,6 +11,8 @@ import io.cryptorush.userservice.rest.customer.mapper.CustomerUserMapperImpl
 import io.cryptorush.userservice.rest.util.IpResolver
 import org.springframework.http.HttpStatus
 import org.springframework.mock.http.server.reactive.MockServerHttpRequest
+import org.springframework.security.oauth2.jwt.Jwt
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken
 import reactor.core.scheduler.Schedulers
 import spock.lang.Specification
 
@@ -149,6 +151,29 @@ class CustomerControllerSpec extends Specification {
         profileDTO.email() == email
         profileDTO.dateOfBirth() == dateOfBirth
         profileDTO.countryOfResidence() == countryOfResidence
+    }
+
+    def "GET /customer/profile/{login} - get currently authenticated customer's full profile"() {
+        given:
+        def jwt = Jwt.withTokenValue("some JWT token")
+                .subject(login)
+                .header("some header", "some value")
+                .build()
+        def principal = new JwtAuthenticationToken(jwt)
+        customerService.getCustomerUserByLogin(login) >> user
+
+        when:
+        def res = controller.getMyFullProfile(principal).block()
+
+        then:
+        res.login() == login
+        res.name() == name
+        res.surname() == surname
+        res.email() == email
+        res.countryOfResidence() == countryOfResidence
+        res.dateOfBirth() == dateOfBirth
+        res.identityNumber() == identityNumber
+        res.passportNumber() == passportNumber
     }
 
     def "DELETE /customer/{userId} - delete customer user by supplied user id"() {
