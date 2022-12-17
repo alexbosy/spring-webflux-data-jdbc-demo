@@ -6,6 +6,7 @@ import io.cryptorush.userservice.domain.user.validation.LoginIsTakenExceptionFie
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -47,12 +48,12 @@ public class UserValidator {
     }
 
     private Optional<User> findAlreadyExistingUser(String currentLogin, String currentEmail, Long currentUserId) {
-        Optional<User> userOptional;
+        List<User> result;
         if (currentUserId != null) {
-            userOptional = userRepository.findByLoginOrEmailExceptId(currentLogin, currentEmail, currentUserId);
+            result = userRepository.findByLoginOrEmailExceptId(currentLogin, currentEmail, currentUserId);
         } else {
-            userOptional = userRepository.findByLoginOrEmail(currentLogin, currentEmail);
+            result = userRepository.findByLoginOrEmail(currentLogin, currentEmail);
         }
-        return userOptional;
+        return result.isEmpty() ? Optional.empty() : Optional.of(result.get(0));
     }
 }

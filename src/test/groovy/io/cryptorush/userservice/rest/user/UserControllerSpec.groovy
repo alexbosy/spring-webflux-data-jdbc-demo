@@ -109,7 +109,7 @@ class UserControllerSpec extends Specification {
         def result = controller.updateUser(id, userDTO).block()
 
         then:
-        1 * userService.updateUser({ User user ->
+        1 * userService.updateSystemUser({ User user ->
             user.id == id &&
                     user.login == login &&
                     user.name == name &&

@@ -41,7 +41,7 @@ class DefaultCustomerServiceSpec extends Specification {
 
     def "create new customer user, success case"() {
         given: "specified login or email is not taken"
-        userRepository.findByLoginOrEmail(login, email) >> Optional.empty()
+        userRepository.findByLoginOrEmail(login, email) >> []
 
         and:
         passwordEncoder.encode(password) >> "encrypted password"

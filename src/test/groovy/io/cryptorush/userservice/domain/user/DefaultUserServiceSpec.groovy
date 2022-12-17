@@ -27,7 +27,7 @@ class DefaultUserServiceSpec extends Specification {
         def user = new User(login: login, email: email, type: type, password: password, name: name, surname: surname)
 
         and: "specified login or email is not taken"
-        userRepository.findByLoginOrEmail(login, email) >> Optional.empty()
+        userRepository.findByLoginOrEmail(login, email) >> []
 
         and:
         passwordEncoder.encode(password) >> "encrypted password"
@@ -67,7 +67,7 @@ class DefaultUserServiceSpec extends Specification {
         def user = new User(login: "taken login", type: UserType.ADMIN)
 
         and: "specified login is taken"
-        userRepository.findByLoginOrEmail("taken login", _) >> Optional.of(user)
+        userRepository.findByLoginOrEmail("taken login", _) >> [user]
 
         when:
         userService.createSystemUser(user)
@@ -83,8 +83,8 @@ class DefaultUserServiceSpec extends Specification {
         def user = new User(email: "taken email", type: UserType.ADMIN)
 
         and: "specified email is taken"
-        userRepository.findByLoginOrEmail(_, "taken email") >> Optional.of(new User(login: "some login", email:
-                "taken email"))
+        userRepository.findByLoginOrEmail(_, "taken email") >> [new User(login: "some login", email:
+                "taken email")]
 
         when:
         userService.createSystemUser(user)
@@ -111,10 +111,10 @@ class DefaultUserServiceSpec extends Specification {
         userRepository.findById(existingUserId) >> Optional.of(new User(id: existingUserId))
 
         and: "specified login or email is not taken"
-        userRepository.findByLoginOrEmailExceptId(updatedLogin, updatedEmail, existingUserId) >> Optional.empty()
+        userRepository.findByLoginOrEmailExceptId(updatedLogin, updatedEmail, existingUserId) >> []
 
         when:
-        userService.updateUser(user)
+        userService.updateSystemUser(user)
 
         then:
         1 * userRepository.save({ User u ->
@@ -136,11 +136,12 @@ class DefaultUserServiceSpec extends Specification {
         userRepository.findById(id) >> Optional.of(new User(id: id))
 
         and: "specified email is taken"
-        userRepository.findByLoginOrEmailExceptId(_, "taken email", id) >> Optional.of(new User(login: "some login", email:
-                "taken email"))
+        userRepository.findByLoginOrEmailExceptId(_, "taken email", id) >> [new User(login: "some login",
+                email:
+                        "taken email")]
 
         when:
-        userService.updateUser(user)
+        userService.updateSystemUser(user)
 
         then:
         def e = thrown(EmailIsTakenExceptionField)
@@ -155,12 +156,12 @@ class DefaultUserServiceSpec extends Specification {
         userRepository.findById(id) >> Optional.of(new User(id: id))
 
         and: "specified email is taken"
-        userRepository.findByLoginOrEmailExceptId("taken login", _, id) >> Optional.of(new User(login:
+        userRepository.findByLoginOrEmailExceptId("taken login", _, id) >> [new User(login:
                 "taken login", email:
-                "some email"))
+                "some email")]
 
         when:
-        userService.updateUser(user)
+        userService.updateSystemUser(user)
 
         then:
         def e = thrown(LoginIsTakenExceptionField)
@@ -175,7 +176,7 @@ class DefaultUserServiceSpec extends Specification {
         userRepository.findById(existingId) >> Optional.empty()
 
         when:
-        userService.updateUser(user)
+        userService.updateSystemUser(user)
 
         then:
         def e = thrown(UserNotFoundException)

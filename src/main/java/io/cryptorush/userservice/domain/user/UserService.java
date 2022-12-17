@@ -12,7 +12,7 @@ public interface UserService {
 
     void deleteSystemUserById(long id);
 
-    User updateUser(User user);
+    User updateSystemUser(User user);
 
     List<User> getAllSystemUsers(int offset, int limit);
 

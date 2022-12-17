@@ -5,10 +5,7 @@ import io.cryptorush.userservice.domain.customer.CustomerService;
 import io.cryptorush.userservice.domain.user.User;
 import io.cryptorush.userservice.domain.user.UserService;
 import io.cryptorush.userservice.domain.user.UserType;
-import io.cryptorush.userservice.rest.customer.dto.CustomerCreationRequestDTO;
-import io.cryptorush.userservice.rest.customer.dto.CustomerFullProfileDTO;
-import io.cryptorush.userservice.rest.customer.dto.CustomerFullResponseDTO;
-import io.cryptorush.userservice.rest.customer.dto.CustomerPublicProfileDTO;
+import io.cryptorush.userservice.rest.customer.dto.*;
 import io.cryptorush.userservice.rest.customer.mapper.CustomerUserMapper;
 import io.cryptorush.userservice.rest.util.IpResolver;
 import lombok.RequiredArgsConstructor;
@@ -88,6 +85,18 @@ public class CustomerController {
         return Mono.fromCallable(() -> {
             customerService.deleteCustomerUserByUserId(userId);
             return ResponseEntity.noContent().build();
+        }).publishOn(scheduler);
+    }
+
+    @PutMapping("customer/my/profile")
+    @PreAuthorize("hasAuthority('SCOPE_CUSTOMER')")
+    public Mono<CustomerFullProfileDTO> updateUser(Principal principal,
+                                                   @Valid @RequestBody CustomerUpdateRequestDTO dto) {
+        return Mono.fromCallable(() -> {
+            String login = principal.getName();
+            User user = customerUserMapper.toCustomerForUpdate(login, UserType.CUSTOMER, dto);
+            User updatedUser = customerService.updateCustomerUser(login, user);
+            return customerUserMapper.toFullProfileDTO(updatedUser);
         }).publishOn(scheduler);
     }
 }

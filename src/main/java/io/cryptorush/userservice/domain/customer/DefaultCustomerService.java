@@ -11,6 +11,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -41,6 +43,30 @@ public class DefaultCustomerService implements CustomerService {
                 });
 
         return createdCustomerUser;
+    }
+
+    @Transactional(timeout = 1)
+    @Override
+    public User updateCustomerUser(String login, User user) {
+        Optional<User> optionalCustomerUser = customerRepository.findCustomerUserByLogin(login);
+        if (optionalCustomerUser.isPresent()) {
+            User foundCustomerUser = optionalCustomerUser.get();
+            user.setId(foundCustomerUser.getId());
+            userValidator.validateCustomerUserCreationOrUpdate(user);
+            foundCustomerUser.setName(user.getName());
+            foundCustomerUser.setSurname(user.getSurname());
+            foundCustomerUser.setEmail(user.getEmail());
+
+            Customer customer = foundCustomerUser.getCustomer();
+            customer.setDateOfBirth(user.getCustomer().getDateOfBirth());
+            customer.setCountryOfResidence(user.getCustomer().getCountryOfResidence());
+            customer.setIdentityNumber(user.getCustomer().getIdentityNumber());
+            customer.setPassportNumber(user.getCustomer().getPassportNumber());
+
+            return userRepository.save(foundCustomerUser);
+        } else {
+            throw new UserNotFoundException();
+        }
     }
 
     @Override

@@ -3,10 +3,7 @@ package io.cryptorush.userservice.rest.customer.mapper;
 import io.cryptorush.userservice.domain.customer.CustomerPublicProfile;
 import io.cryptorush.userservice.domain.user.User;
 import io.cryptorush.userservice.domain.user.UserType;
-import io.cryptorush.userservice.rest.customer.dto.CustomerCreationRequestDTO;
-import io.cryptorush.userservice.rest.customer.dto.CustomerFullProfileDTO;
-import io.cryptorush.userservice.rest.customer.dto.CustomerFullResponseDTO;
-import io.cryptorush.userservice.rest.customer.dto.CustomerPublicProfileDTO;
+import io.cryptorush.userservice.rest.customer.dto.*;
 import org.mapstruct.Builder;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -19,6 +16,7 @@ public interface CustomerUserMapper {
     @Mapping(target = "customer.identityNumber", source = "dto.identityNumber")
     @Mapping(target = "customer.passportNumber", source = "dto.passportNumber")
     @Mapping(target = "customer.registrationIp", source = "ip")
+    @Mapping(target = "login", source = "dto.login")
     @Mapping(target = "name", source = "dto.name")
     @Mapping(target = "surname", source = "dto.surname")
     @Mapping(target = "password", source = "dto.password")
@@ -26,6 +24,18 @@ public interface CustomerUserMapper {
     @Mapping(target = "type", source = "type")
     @Mapping(target = "id", ignore = true)
     User toCustomer(String ip, UserType type, CustomerCreationRequestDTO dto);
+
+    @Mapping(target = "customer.dateOfBirth", source = "dto.dateOfBirth")
+    @Mapping(target = "customer.countryOfResidence", source = "dto.countryOfResidence")
+    @Mapping(target = "customer.identityNumber", source = "dto.identityNumber")
+    @Mapping(target = "customer.passportNumber", source = "dto.passportNumber")
+    @Mapping(target = "name", source = "dto.name")
+    @Mapping(target = "surname", source = "dto.surname")
+    @Mapping(target = "email", source = "dto.email")
+    @Mapping(target = "type", source = "type")
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "password", ignore = true)
+    User toCustomerForUpdate(String login, UserType type, CustomerUpdateRequestDTO dto);
 
     @Mapping(target = "dateOfBirth", source = "user.customer.dateOfBirth")
     @Mapping(target = "countryOfResidence", source = "user.customer.countryOfResidence")

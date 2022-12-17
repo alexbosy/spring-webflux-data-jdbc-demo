@@ -18,11 +18,11 @@ public interface UserRepository extends CrudRepository<User, Long> {
     Optional<User> findByLogin(@NonNull @Param("pLogin") String login);
 
     @Query("SELECT * FROM users WHERE login=:pLogin OR email=:pEmail")
-    Optional<User> findByLoginOrEmail(@NonNull @Param("pLogin") String login, @NonNull @Param("pEmail") String email);
+    List<User> findByLoginOrEmail(@NonNull @Param("pLogin") String login, @NonNull @Param("pEmail") String email);
 
     @Query("SELECT * FROM users WHERE (login=:pLogin OR email=:pEmail) AND id!=:pId")
-    Optional<User> findByLoginOrEmailExceptId(@NonNull @Param("pLogin") String login,
-                                              @NonNull @Param("pEmail") String email, @NonNull @Param("pId") long id);
+    List<User> findByLoginOrEmailExceptId(@NonNull @Param("pLogin") String login,
+                                          @NonNull @Param("pEmail") String email, @NonNull @Param("pId") long id);
 
     @Query("SELECT * FROM users WHERE id=:pId")
     Optional<User> findById(@Param("pId") long id);

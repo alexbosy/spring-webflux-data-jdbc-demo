@@ -45,7 +45,7 @@ public class UserController {
                                                 @Valid @RequestBody UserUpdateRequestDTO userUpdateRequestDTO) {
         return Mono.fromCallable(() -> {
             User user = userMapper.toUser(id, userUpdateRequestDTO);
-            User updatedUser = userService.updateUser(user);
+            User updatedUser = userService.updateSystemUser(user);
             return userMapper.toFullResponseDTO(updatedUser);
         }).publishOn(scheduler);
     }

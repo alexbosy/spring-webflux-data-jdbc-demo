@@ -78,6 +78,7 @@ email="skdjsk" \
 password="some password" \
 type="ADMIN"
 ```
+
 ```shell
 http GET http://localhost:8080/user/35
 ```
@@ -140,4 +141,16 @@ Authorization:"Bearer ${JWT}"
 ```shell
 http GET http://localhost:8080/customer/my/profile \
 Authorization:"Bearer ${JWT}"
+```
+
+```shell
+http PUT http://localhost:8080/customer/my/profile \
+Authorization:"Bearer ${JWT}" \
+name="some name" \
+surname="some surname" \
+email="new@new.com" \
+dateOfBirth="11-11-1970" \
+countryOfResidence="US" \
+identityNumber="Identity number" \
+passportNumber="Passport number"
 ```
