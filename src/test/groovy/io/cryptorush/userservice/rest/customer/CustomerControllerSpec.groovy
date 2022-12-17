@@ -7,6 +7,7 @@ import io.cryptorush.userservice.domain.user.User
 import io.cryptorush.userservice.domain.user.UserService
 import io.cryptorush.userservice.domain.user.UserType
 import io.cryptorush.userservice.rest.customer.dto.CustomerCreationRequestDTO
+import io.cryptorush.userservice.rest.customer.dto.CustomerUpdateRequestDTO
 import io.cryptorush.userservice.rest.customer.mapper.CustomerUserMapperImpl
 import io.cryptorush.userservice.rest.util.IpResolver
 import org.springframework.http.HttpStatus
@@ -94,13 +95,48 @@ class CustomerControllerSpec extends Specification {
         def resDTO = controller.registerNewCustomer(requestDto, request).block()
 
         then:
-        1 * customerService.registerNewCustomer(u -> {
+        1 * customerService.registerNewCustomer({ User u ->
             u.login == login &&
                     u.name == name &&
                     u.surname == surname &&
                     u.email == email &&
                     u.password == password &&
                     u.type == UserType.CUSTOMER
+        }) >> new User(login: login, name: name, surname: surname, email: email,
+                customer: new Customer(dateOfBirth: dateOfBirth, countryOfResidence: countryOfResidence,
+                        identityNumber: identityNumber, passportNumber: passportNumber))
+        resDTO.login() == login
+        resDTO.name() == name
+        resDTO.surname() == surname
+        resDTO.email() == email
+        resDTO.dateOfBirth() == dateOfBirth
+        resDTO.countryOfResidence() == countryOfResidence
+        resDTO.identityNumber() == identityNumber
+        resDTO.passportNumber() == passportNumber
+    }
+
+    def "PUT /customer/my/profile - update currently authenticated customer"() {
+        given:
+        def jwt = Jwt.withTokenValue("some JWT token")
+                .subject(login)
+                .header("some header", "some value")
+                .build()
+        def principal = new JwtAuthenticationToken(jwt)
+        def requestDTO = new CustomerUpdateRequestDTO(name: name, surname: surname, email: email, countryOfResidence:
+                countryOfResidence, dateOfBirth: dateOfBirth, identityNumber: identityNumber, passportNumber: passportNumber)
+
+        when:
+        def resDTO = controller.updateUser(principal, requestDTO).block()
+
+        then:
+        1 * customerService.updateCustomerUser(login, { User u ->
+            u.name == name &&
+                    u.surname == surname &&
+                    u.email == email &&
+                    u.customer.countryOfResidence == countryOfResidence &&
+                    u.customer.dateOfBirth == dateOfBirth &&
+                    u.customer.identityNumber == identityNumber &&
+                    u.customer.passportNumber == passportNumber
         }) >> new User(login: login, name: name, surname: surname, email: email,
                 customer: new Customer(dateOfBirth: dateOfBirth, countryOfResidence: countryOfResidence,
                         identityNumber: identityNumber, passportNumber: passportNumber))

@@ -39,7 +39,7 @@ class DefaultCustomerServiceSpec extends Specification {
     def user = new User(login: login, email: email, type: UserType.CUSTOMER, password: password, name: name, surname:
             surname, customer: customer)
 
-    def "create new customer user, success case"() {
+    def "create new customer user"() {
         given: "specified login or email is not taken"
         userRepository.findByLoginOrEmail(login, email) >> []
 
@@ -69,6 +69,46 @@ class DefaultCustomerServiceSpec extends Specification {
         1 * customerRepository.updateRegistrationCountry(666L, registrationCountry)
         res.id == 1000L
         res.customer.id == 666L
+    }
+
+    def "update customer user by login, success case"() {
+        given:
+        customerRepository.findCustomerUserByLogin(login) >> Optional.of(new User(id: 1000L, login: login, customer:
+                new Customer(dateOfBirth: new Date(), identityNumber: "number", passportNumber: "pass",
+                        countryOfResidence: "some")))
+
+        and: "specified login or email is not taken"
+        userRepository.findByLoginOrEmailExceptId(login, email, 1000L) >> []
+
+        when:
+        user.login == null
+        service.updateCustomerUser(login, user)
+
+        then:
+        1 * userRepository.save({ User u ->
+            u.login == login
+                    && u.id == 1000L &&
+                    u.name == name &&
+                    u.surname == surname &&
+                    u.email == email &&
+                    u.type == null &&
+                    u.customer.dateOfBirth == dateOfBirth &&
+                    u.customer.passportNumber == passportNumber &&
+                    u.customer.identityNumber == identityNumber &&
+                    u.customer.countryOfResidence == countryOfResidence
+        } as User)
+    }
+
+    def "update customer user by login, user not found case"() {
+        given:
+        customerRepository.findCustomerUserByLogin(login) >> Optional.empty()
+
+        when:
+        service.updateCustomerUser(login, user)
+
+        then:
+        def e = thrown(UserNotFoundException)
+        e.message == "User not found"
     }
 
     def "get customer user by login"() {
