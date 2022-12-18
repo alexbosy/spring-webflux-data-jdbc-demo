@@ -17,7 +17,7 @@ class CustomerATSpec extends Specification {
     def testClient = new TestRESTClient()
 
     def uniqueLogin = "at-" + System.currentTimeMillis()
-    def uniqueEmail = System.currentTimeMillis() + "@at-tests.lv"
+    def uniqueEmail = System.currentTimeMillis() + "@at.lv"
     def name = "some name"
     def surname = "some surname"
     def password = "some password"
@@ -35,15 +35,14 @@ class CustomerATSpec extends Specification {
                    "surname"       : surname, "email": uniqueEmail, "password": password]
 
     @Shared
-    DefaultMockServer server = new DefaultMockServer()
+    DefaultMockServer externalGeoIpMockServer = new DefaultMockServer()
 
     def setupSpec() {
-        server.start(8088)
-        server.expect()
+        externalGeoIpMockServer.start(8088)
+        externalGeoIpMockServer.expect()
                 .get().withPath("/json/88.88.88.233")
                 .andReturn(200, '{"country_code":"NO"}')
                 .withHeader("Content-Type", "application/json; charset=utf-8").always()
-
     }
 
     def "POST /customer/registration"() {
@@ -197,6 +196,26 @@ class CustomerATSpec extends Specification {
         res3.data["identityNumber"] == identityNumber
         res3.data["passportNumber"] == passportNumber
 
+        and: "update currently authenticated customer profile"
+        def updatePayload = [
+                "name"            : "new name",
+                "surname"         : "new surname",
+                "email"           : "new" + uniqueEmail,
+                dateOfBirth       : "29-12-1999",
+                countryOfResidence: "DE",
+                identityNumber    : "new identity number",
+                passportNumber    : "new passport number"]
+        def res4 = testClient.put("/customer/my/profile", updatePayload, ["Authorization": "Bearer ${jwt}"])
+        res4.status == 200
+        res4.data["login"] == uniqueLogin
+        res4.data["name"] == "new name"
+        res4.data["surname"] == "new surname"
+        res4.data["email"] == "new" + uniqueEmail
+        res4.data["dateOfBirth"] == "29-12-1999"
+        res4.data["countryOfResidence"] == "DE"
+        res4.data["identityNumber"] == "new identity number"
+        res4.data["passportNumber"] == "new passport number"
+
         cleanup:
         def res5 = testClient.get("/customer/${uniqueLogin}")
         testClient.delete("/customer/${res5.data["userId"]}")
@@ -256,6 +275,6 @@ class CustomerATSpec extends Specification {
     }
 
     def cleanupSpec() {
-        server.shutdown()
+        externalGeoIpMockServer.shutdown()
     }
 }

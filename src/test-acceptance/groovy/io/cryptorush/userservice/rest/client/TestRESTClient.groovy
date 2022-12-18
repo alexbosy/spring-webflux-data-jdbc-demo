@@ -15,16 +15,15 @@ class TestRESTClient {
     }
 
     HttpResponseDecorator get(String path, Map parametersMap = [:], Map headers = [:]) {
-        client.headers = headers
-        client.get(path: path, query: parametersMap) as HttpResponseDecorator
+        client.get(path: path, query: parametersMap, headers: headers) as HttpResponseDecorator
     }
 
     HttpResponseDecorator put(String uri) {
         client.put(path: uri) as HttpResponseDecorator
     }
 
-    HttpResponseDecorator put(String uri, Map body) {
-        client.put(path: uri, body: body, contentType: 'application/json') as HttpResponseDecorator
+    HttpResponseDecorator put(String uri, Map body, Map headers = [:]) {
+        client.put(path: uri, body: body, contentType: 'application/json', headers: headers) as HttpResponseDecorator
     }
 
     HttpResponseDecorator delete(String uri, Map headers = [:]) {

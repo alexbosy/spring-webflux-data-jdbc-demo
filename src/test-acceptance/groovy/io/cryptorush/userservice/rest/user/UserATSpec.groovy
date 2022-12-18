@@ -202,7 +202,7 @@ class UserATSpec extends Specification {
         and: "update user by id"
         def updatePayload = ["login": "new login", "name": "new name", "surname": "new surname",
                              "email": "new@email.com", "type": UserType.ADMIN.name()]
-        def res3 = testClient.put("/user/${createdUserId}", updatePayload)
+        def res3 = testClient.put("/user/${createdUserId}", updatePayload, ["Authorization": "Bearer ${jwt}"])
         res3.status == 200
         res3.data["id"] == createdUserId
         res3.data["login"] == "new login"
