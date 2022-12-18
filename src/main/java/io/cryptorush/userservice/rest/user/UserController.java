@@ -41,6 +41,7 @@ public class UserController {
     }
 
     @PutMapping("user/{id}")
+    @PreAuthorize("hasAuthority('SCOPE_ADMIN')")
     public Mono<UserFullResponseDTO> updateUser(@PathVariable("id") long id,
                                                 @Valid @RequestBody UserUpdateRequestDTO userUpdateRequestDTO) {
         return Mono.fromCallable(() -> {
