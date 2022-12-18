@@ -171,7 +171,7 @@ class CustomerATSpec extends Specification {
         testClient.delete("/customer/${res4.data["userId"]}")
     }
 
-    def "GET /customer/my/profile"() {
+    def "GET and UPDATE /customer/my/profile"() {
         when: "register a new customer user"
         def res = testClient.post('/customer/registration', payload, ["X-Forwarded-For": "88.88.88.233"])
 
@@ -185,21 +185,21 @@ class CustomerATSpec extends Specification {
         res2.data["token"] != null
 
         and: "try to get currently authenticated customer full profile"
-        def res3 = testClient.get("/customer/profile/${uniqueLogin}")
+        def jwt = res2.data["token"]
+        def res3 = testClient.get("/customer/my/profile", [:], ["Authorization": "Bearer ${jwt}"])
         res3.status == 200
-        res.data["login"] == uniqueLogin
-        res.data["name"] == name
-        res.data["surname"] == surname
-        res.data["email"] == uniqueEmail
-        res.data["dateOfBirth"] == dateOfBirthStr
-        res.data["countryOfResidence"] == countryOfResidence
-        res.data["identityNumber"] == identityNumber
-        res.data["passportNumber"] == passportNumber
+        res3.data["login"] == uniqueLogin
+        res3.data["name"] == name
+        res3.data["surname"] == surname
+        res3.data["email"] == uniqueEmail
+        res3.data["dateOfBirth"] == dateOfBirthStr
+        res3.data["countryOfResidence"] == countryOfResidence
+        res3.data["identityNumber"] == identityNumber
+        res3.data["passportNumber"] == passportNumber
 
         cleanup:
-        def res4 = testClient.get("/customer/${uniqueLogin}")
-        testClient.delete("/customer/${res4.data["userId"]}")
-
+        def res5 = testClient.get("/customer/${uniqueLogin}")
+        testClient.delete("/customer/${res5.data["userId"]}")
     }
 
     def "DELETE /customer/{userId}"() {
