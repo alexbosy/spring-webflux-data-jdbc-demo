@@ -18,7 +18,7 @@ objects, as well as customer registration and authentication (optional subtask).
 
 The service will have the 2 main entities:
 
-- User - represents the "internal application user" that is user for private administration app and identity that is
+- User - represents the "internal application user", that is user for private administration app, and identity, that is
   used for authentication and contains the user type (ADMIN, MANAGER, CUSTOMER).
 - Customer - user extension, the "application end customer" or "public application user", that includes
   additional data.
@@ -42,7 +42,7 @@ The service will have the 2 main entities:
 - registration IP address (not exposed to customer)
 - registration country (not exposed to customer)
 
-### Private REST endpoints (will be used ony in internal administration application):
+### Private REST endpoints (will be used only in internal administration application):
 
 #### 1. POST /user - create new user.
 
@@ -77,6 +77,7 @@ a valid form (use corresponding RegEx pattern).
 
 **Sample error responses:**
 
+HTTP/1.1 400 Bad Request
 ```json
 {
   "login": "Login min length is 6 chars",
@@ -94,12 +95,14 @@ a valid form (use corresponding RegEx pattern).
 
 **Sample error responses:**
 
+HTTP/1.1 403 Forbidden
 ```json
 {
   "login": "Supplied login is already taken"
 }
 ```
 
+HTTP/1.1 403 Forbidden
 ```json
 {
   "email": "Supplied email is already taken"
