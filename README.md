@@ -183,20 +183,20 @@ GET /customers?offset=0&limit=2
 
 ```json
 [
-  {
-    "id": 1,
-    "countryOfResidence": "LV",
-    "dateOfBirth": "09-12-1997",
-    "identityNumber": "101297-10111",
-    "passportNumber": "LV9384938498",
-    "registrationCountry": "LV",
-    "registrationIp": "88.22.33.44",
-    "userId": 26,
-    "login": "some login",
-     "email": "new@new.com",
-     "name": "some name",
-     "surname": "some surname"
-  },
+   {
+      "id": 1,
+      "countryOfResidence": "LV",
+      "dateOfBirth": "09-12-1997",
+      "identityNumber": "101297-10111",
+      "passportNumber": "LV9384938498",
+      "registrationCountry": "LV",
+      "registrationIp": "88.22.33.44",
+      "userId": 26,
+      "login": "some login",
+      "email": "new@new.com",
+      "name": "some name",
+      "surname": "some surname"
+   },
    {
       "id": 2,
       "countryOfResidence": "LV",
@@ -297,13 +297,13 @@ body:
 {
    "login": "some login",
    "name": "some name",
-  "surname": "some surname",
-  "email": "some@email.com",
-  "password": "some password",
-  "dateOfBirth": "12-12-1981,",
-  "countryOfResidence": "LV",
-  "identityNumber": "identity number",
-  "passportNumber": "passport number"
+   "surname": "some surname",
+   "email": "some@email.com",
+   "password": "some password",
+   "dateOfBirth": "12-12-1981",
+   "countryOfResidence": "LV",
+   "identityNumber": "identity number",
+   "passportNumber": "passport number"
 }
 ```
 
@@ -377,3 +377,38 @@ GET /customer/my/profile
 ```
 
 #### 4. PUT /customer/my/profile - update current (authenticated) customer's profile by id (JWT auth).
+
+Return all data except id, password, IP and registration country.
+
+##### Request example:
+
+PUT /customer/my/profile
+
+body:
+
+```json
+{
+   "name": "some name",
+   "surname": "some surname",
+   "email": "new@newemail.com",
+   "dateOfBirth": "11-11-1971",
+   "countryOfResidence": "LV",
+   "identityNumber": "identity number",
+   "passportNumber": "passport number"
+}
+```
+
+##### Response example:
+
+```json
+{
+   "login": "somelogin16",
+   "name": "some name",
+   "surname": "some surname",
+   "email": "new@newemail.com",
+   "dateOfBirth": "11-11-1971",
+   "countryOfResidence": "LV",
+   "identityNumber": "identity number",
+   "passportNumber": "passport number"
+}
+```
