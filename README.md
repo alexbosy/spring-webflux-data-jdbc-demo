@@ -11,7 +11,7 @@ This is a demo app to test the following technical stack:
 - Spock
 - Springdoc OpenAPI
 
-## Application requirements
+## Test application requirements
 
 We must develop the user management service, that allows us to manage basic operations with User and Customer domain
 objects, as well as authentication and customer registration.
@@ -41,13 +41,7 @@ The service will have the 2 main entities:
 - registration IP address (not exposed to customer)
 - registration country (not exposed to customer)
 
-### Common REST endpoints (will be used in all client apps):
-
-#### 1. POST /auth - JWT authentication. Returns JWT token.
-
 ### Private REST endpoints (will be used ony in internal administration application):
-
-All private endpoints require JWT auth.
 
 #### 1. POST /user - create new user.
 
@@ -244,33 +238,12 @@ GET /customer/login
 
 #### 8. DELETE /customer/{userId} - delete customer user by supplied user id.
 
-#### 9. GET /me - get current(authenticated) user. (requires JWT auth)
-
-Return the current authenticated user (ADMIN or MANAGER).
-
-##### Request example:
-
-GET /me
-Authorization:"Bearer ${JWT}"
-
-##### Response example:
-
-```json
-{
-   "id": 26,
-   "login": "adminlogin",
-   "name": "some name",
-   "surname": "some surname",
-   "email": "new@new.com",
-   "type": "ADMIN"
-}
-```
 
 ### Public REST endpoints (will be used in public web/mobile apps):
 
 All customer object responses must not contain "id" field.
 
-#### 1. POST /customer/registration - register a new customer (no auth)
+#### 1. POST /customer/registration - register a new customer.
 
 Create a new user and related customer by supplied data.
 
@@ -332,7 +305,7 @@ a valid form (use corresponding RegEx pattern).
 * Login must be unique.
 * Email must be unique.
 
-#### 2. GET /customer/profile/{:login} - get customer public profile by login (no auth).
+#### 2. GET /customer/profile/{:login} - get customer public profile by login.
 
 Show only login, name, surname, email, date of birth and country of residence.
 
@@ -353,30 +326,32 @@ GET /customer/profile/some-login
 }
 ```
 
-#### 3. GET /customer/my/profile - get current (authenticated) customer's profile (JWT auth).
+### An OPTIONAL endpoints/tasks that can be skipped:
 
-Show all data except id, password, IP and registration country.
+#### 1. POST /auth - JWT authentication. Returns JWT token.
 
 ##### Request example:
 
-GET /customer/my/profile
+POST /auth
+
+body:
+
+```json
+{
+   "login": "some login",
+   "password": "some password"
+}
+```
 
 ##### Response example:
 
 ```json
 {
-   "login": "some login",
-   "name": "some name",
-   "email": "email@xxx.lv",
-   "surname": "some surname",
-   "countryOfResidence": "LV",
-   "dateOfBirth": "12-12-1981",
-   "identityNumber": "identity number",
-   "passportNumber": "passport number"
+   "token": "JWT token"
 }
 ```
 
-#### 4. PUT /customer/my/profile - update current (authenticated) customer's profile by id (JWT auth).
+#### 2. PUT /customer/my/profile - update current (authenticated) customer's profile by id (requires JWT auth with user type CUSTOMER).
 
 Return all data except id, password, IP and registration country.
 
@@ -412,3 +387,50 @@ body:
    "passportNumber": "passport number"
 }
 ```
+
+#### 3. GET /customer/my/profile - get current (authenticated) customer's profile (requires JWT auth with user type CUSTOMER).
+
+Show all data except id, password, IP and registration country.
+
+##### Request example:
+
+GET /customer/my/profile
+
+##### Response example:
+
+```json
+{
+   "login": "some login",
+   "name": "some name",
+   "email": "email@xxx.lv",
+   "surname": "some surname",
+   "countryOfResidence": "LV",
+   "dateOfBirth": "12-12-1981",
+   "identityNumber": "identity number",
+   "passportNumber": "passport number"
+}
+```
+
+#### 4. GET /me - get current(authenticated) user. (requires JWT auth with user type ADMIN or MANAGER)
+
+Return the current authenticated user (ADMIN or MANAGER).
+
+##### Request example:
+
+GET /me
+Authorization:"Bearer ${JWT}"
+
+##### Response example:
+
+```json
+{
+   "id": 26,
+   "login": "adminlogin",
+   "name": "some name",
+   "surname": "some surname",
+   "email": "new@new.com",
+   "type": "ADMIN"
+}
+```
+
+#### 5. Add authentication to some other endpoints on your choice using different roles.
