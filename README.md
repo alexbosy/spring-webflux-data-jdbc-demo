@@ -13,13 +13,14 @@ This is a demo app to test the following technical stack:
 
 ## Test application requirements
 
-We must develop the user management service, that allows us to manage basic operations with User and Customer domain
-objects, as well as authentication and customer registration.
+We must develop the user service, that allows us to manage basic operations with User and Customer domain
+objects, as well as customer registration and authentication (optional subtask).
 
 The service will have the 2 main entities:
 
-- User - represents the identity that is used for authentication and contains the user type (ADMIN,MANAGER,CUSTOMER).
-- Customer - user extension, the "application end customer" or "public system user", that includes
+- User - represents the "internal application user" that is user for private administration app and identity that is
+  used for authentication and contains the user type (ADMIN, MANAGER, CUSTOMER).
+- Customer - user extension, the "application end customer" or "public application user", that includes
   additional data.
 
 ### User data:
@@ -74,11 +75,36 @@ Creates a new user by supplied data, password must be stored in DB in encrypted 
 All request data fields must be not empty and have some min/max length limits (on your choice). Email address must be of
 a valid form (use corresponding RegEx pattern).
 
+**Sample error responses:**
+
+```json
+{
+  "login": "Login min length is 6 chars",
+  "name": "Name can not be empty",
+  "password": "Password min length is 8 chars",
+  "surname": "Surname can not be empty"
+}
+```
+
 ##### Business validation:
 
 * Supported types are only ADMIN/MANAGER.
 * Login must be unique.
 * Email must be unique.
+
+**Sample error responses:**
+
+```json
+{
+  "login": "Supplied login is already taken"
+}
+```
+
+```json
+{
+  "email": "Supplied email is already taken"
+}
+```
 
 #### 2. GET /user/{:id} - get user data by id.
 
@@ -146,22 +172,22 @@ GET /users?offset=0&limit=2
 
 ```json
 [
-   {
-      "id": 26,
-      "login": "some login",
-      "name": "some name",
-      "surname": "some surname",
-      "email": "new@new.com",
-      "type": "ADMIN"
-   },
-   {
-      "id": 27,
-      "login": "some login2",
-      "name": "some name2",
-      "surname": "some surname2",
-      "email": "new@new2.com",
-      "type": "MANAGER"
-   }
+  {
+    "id": 26,
+    "login": "some login",
+    "name": "some name",
+    "surname": "some surname",
+    "email": "new@new.com",
+    "type": "ADMIN"
+  },
+  {
+    "id": 27,
+    "login": "some login2",
+    "name": "some name2",
+    "surname": "some surname2",
+    "email": "new@new2.com",
+    "type": "MANAGER"
+  }
 ]
 ```
 
@@ -177,34 +203,34 @@ GET /customers?offset=0&limit=2
 
 ```json
 [
-   {
-      "id": 1,
-      "countryOfResidence": "LV",
-      "dateOfBirth": "09-12-1997",
-      "identityNumber": "101297-10111",
-      "passportNumber": "LV9384938498",
-      "registrationCountry": "LV",
-      "registrationIp": "88.22.33.44",
-      "userId": 26,
-      "login": "some login",
-      "email": "new@new.com",
-      "name": "some name",
-      "surname": "some surname"
-   },
-   {
-      "id": 2,
-      "countryOfResidence": "LV",
-      "dateOfBirth": "03-12-1980",
-      "identityNumber": "041289-15717",
-      "passportNumber": "LV3948938433",
-      "registrationCountry": "US",
-      "registrationIp": "92.33.45.122",
-      "userId": 27,
-      "login": "some login",
-      "email": "new@new.com",
-      "name": "some name",
-      "surname": "some surname"
-   }
+  {
+    "id": 1,
+    "countryOfResidence": "LV",
+    "dateOfBirth": "09-12-1997",
+    "identityNumber": "101297-10111",
+    "passportNumber": "LV9384938498",
+    "registrationCountry": "LV",
+    "registrationIp": "88.22.33.44",
+    "userId": 26,
+    "login": "some login",
+    "email": "new@new.com",
+    "name": "some name",
+    "surname": "some surname"
+  },
+  {
+    "id": 2,
+    "countryOfResidence": "LV",
+    "dateOfBirth": "03-12-1980",
+    "identityNumber": "041289-15717",
+    "passportNumber": "LV3948938433",
+    "registrationCountry": "US",
+    "registrationIp": "92.33.45.122",
+    "userId": 27,
+    "login": "some login",
+    "email": "new@new.com",
+    "name": "some name",
+    "surname": "some surname"
+  }
 ]
 ```
 
@@ -221,23 +247,22 @@ GET /customer/login
 
 ```json
 {
-   "id": 64,
-   "login": "login",
-   "email": "email@email.lv",
-   "name": "some name",
-   "surname": "some surname",
-   "countryOfResidence": "US",
-   "dateOfBirth": "06-12-1982",
-   "identityNumber": "identity number",
-   "passportNumber": "passport number",
-   "registrationCountry": "XX",
-   "registrationIp": "127.0.0.1",
-   "userId": 320
+  "id": 64,
+  "login": "login",
+  "email": "email@email.lv",
+  "name": "some name",
+  "surname": "some surname",
+  "countryOfResidence": "US",
+  "dateOfBirth": "06-12-1982",
+  "identityNumber": "identity number",
+  "passportNumber": "passport number",
+  "registrationCountry": "XX",
+  "registrationIp": "127.0.0.1",
+  "userId": 320
 }
 ```
 
 #### 8. DELETE /customer/{userId} - delete customer user by supplied user id.
-
 
 ### Public REST endpoints (will be used in public web/mobile apps):
 
@@ -268,15 +293,15 @@ body:
 
 ```json
 {
-   "login": "some login",
-   "name": "some name",
-   "surname": "some surname",
-   "email": "some@email.com",
-   "password": "some password",
-   "dateOfBirth": "12-12-1981",
-   "countryOfResidence": "LV",
-   "identityNumber": "identity number",
-   "passportNumber": "passport number"
+  "login": "some login",
+  "name": "some name",
+  "surname": "some surname",
+  "email": "some@email.com",
+  "password": "some password",
+  "dateOfBirth": "12-12-1981",
+  "countryOfResidence": "LV",
+  "identityNumber": "identity number",
+  "passportNumber": "passport number"
 }
 ```
 
@@ -317,12 +342,12 @@ GET /customer/profile/some-login
 
 ```json
 {
-   "login": "some-login",
-   "name": "some name",
-   "surname": "some surname",
-   "email": "1670610229829@at-tests.lv",
-   "dateOfBirth": "09-12-1997",
-   "countryOfResidence": "US"
+  "login": "some-login",
+  "name": "some name",
+  "surname": "some surname",
+  "email": "1670610229829@at-tests.lv",
+  "dateOfBirth": "09-12-1997",
+  "countryOfResidence": "US"
 }
 ```
 
@@ -338,8 +363,8 @@ body:
 
 ```json
 {
-   "login": "some login",
-   "password": "some password"
+  "login": "some login",
+  "password": "some password"
 }
 ```
 
@@ -347,7 +372,7 @@ body:
 
 ```json
 {
-   "token": "JWT token"
+  "token": "JWT token"
 }
 ```
 
@@ -363,13 +388,13 @@ body:
 
 ```json
 {
-   "name": "some name",
-   "surname": "some surname",
-   "email": "new@newemail.com",
-   "dateOfBirth": "11-11-1971",
-   "countryOfResidence": "LV",
-   "identityNumber": "identity number",
-   "passportNumber": "passport number"
+  "name": "some name",
+  "surname": "some surname",
+  "email": "new@newemail.com",
+  "dateOfBirth": "11-11-1971",
+  "countryOfResidence": "LV",
+  "identityNumber": "identity number",
+  "passportNumber": "passport number"
 }
 ```
 
@@ -377,14 +402,14 @@ body:
 
 ```json
 {
-   "login": "somelogin16",
-   "name": "some name",
-   "surname": "some surname",
-   "email": "new@newemail.com",
-   "dateOfBirth": "11-11-1971",
-   "countryOfResidence": "LV",
-   "identityNumber": "identity number",
-   "passportNumber": "passport number"
+  "login": "somelogin16",
+  "name": "some name",
+  "surname": "some surname",
+  "email": "new@newemail.com",
+  "dateOfBirth": "11-11-1971",
+  "countryOfResidence": "LV",
+  "identityNumber": "identity number",
+  "passportNumber": "passport number"
 }
 ```
 
@@ -400,14 +425,14 @@ GET /customer/my/profile
 
 ```json
 {
-   "login": "some login",
-   "name": "some name",
-   "email": "email@xxx.lv",
-   "surname": "some surname",
-   "countryOfResidence": "LV",
-   "dateOfBirth": "12-12-1981",
-   "identityNumber": "identity number",
-   "passportNumber": "passport number"
+  "login": "some login",
+  "name": "some name",
+  "email": "email@xxx.lv",
+  "surname": "some surname",
+  "countryOfResidence": "LV",
+  "dateOfBirth": "12-12-1981",
+  "identityNumber": "identity number",
+  "passportNumber": "passport number"
 }
 ```
 
@@ -424,13 +449,17 @@ Authorization:"Bearer ${JWT}"
 
 ```json
 {
-   "id": 26,
-   "login": "adminlogin",
-   "name": "some name",
-   "surname": "some surname",
-   "email": "new@new.com",
-   "type": "ADMIN"
+  "id": 26,
+  "login": "login",
+  "name": "some name",
+  "surname": "some surname",
+  "email": "new@new.com",
+  "type": "ADMIN"
 }
 ```
 
 #### 5. Add authentication to some other endpoints on your choice using different roles.
+
+#### 6. Besides unit and integration tests implement at least some e2e (end to end/acceptance) tests.
+
+#### 7. Implement also another transport protocols (not HTTP REST, e.g GraphQL, gRPC, WebSocket) for any of already existing API endpoints.
