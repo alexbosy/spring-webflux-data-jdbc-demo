@@ -58,6 +58,11 @@ Then in another terminal run the tests using gradle wrapper:
 - **it** - run integration tests
 - **at** - run acceptance tests
 
+# Open API links
+
+1. Open API v3 scheme - http://localhost:8080/v3/api-docs
+2. Swagger UI - http://localhost:8080/swagger-ui.html
+
 # Sample API requests via curl or httpie
 
 ```shell
