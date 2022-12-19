@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.support.WebExchangeBindException;
 import reactor.core.publisher.Mono;
 import reactor.core.scheduler.Scheduler;
@@ -26,6 +27,7 @@ public class ValidationHandler {
     private final Scheduler scheduler;
 
     @ExceptionHandler(WebExchangeBindException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
     public Mono<ResponseEntity<Map<String, String>>> handleRequestValidationException(WebExchangeBindException e) {
         return Mono.fromCallable(() -> {
             var errors = e.getBindingResult()
@@ -40,20 +42,26 @@ public class ValidationHandler {
     }
 
     @ExceptionHandler({BusinessFieldValidationException.class})
+    @ResponseStatus(HttpStatus.FORBIDDEN)
     public Mono<ResponseEntity<Map<String, String>>> handleBusinessFieldValidationException(BusinessFieldValidationException e) {
         return Mono.just(ResponseEntity.status(HttpStatus.FORBIDDEN).body(Map.of(e.getFieldName(), e.getMessage())))
                 .publishOn(scheduler);
     }
 
     @ExceptionHandler({UserNotFoundException.class})
-    public Mono<ResponseEntity<Map<String, String>>> handleNotFoundException(BusinessValidationException e) {
-        return Mono.just(ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("error", e.getMessage())))
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public Mono<ResponseEntity<Error>> handleNotFoundException(BusinessValidationException e) {
+        return Mono.just(ResponseEntity.status(HttpStatus.NOT_FOUND).body(new Error(e.getMessage())))
                 .publishOn(scheduler);
     }
 
     @ExceptionHandler({AuthException.class})
-    public Mono<ResponseEntity<Map<String, String>>> handleAuthException(AuthException e) {
-        return Mono.just(ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("error", e.getMessage())))
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    public Mono<ResponseEntity<Error>> handleAuthException(AuthException e) {
+        return Mono.just(ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new Error(e.getMessage())))
                 .publishOn(scheduler);
+    }
+
+    private record Error(String error) {
     }
 }

@@ -8,6 +8,7 @@ import io.cryptorush.userservice.domain.user.UserType;
 import io.cryptorush.userservice.rest.customer.dto.*;
 import io.cryptorush.userservice.rest.customer.mapper.CustomerUserMapper;
 import io.cryptorush.userservice.rest.util.IpResolver;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -72,6 +73,7 @@ public class CustomerController {
 
     @GetMapping("customer/my/profile")
     @PreAuthorize("hasAuthority('SCOPE_CUSTOMER')")
+    @SecurityRequirement(name = "jwt")
     Mono<CustomerFullProfileDTO> getMyFullProfile(Principal principal) {
         return Mono.fromCallable(() -> {
             String login = principal.getName();
@@ -90,6 +92,7 @@ public class CustomerController {
 
     @PutMapping("customer/my/profile")
     @PreAuthorize("hasAuthority('SCOPE_CUSTOMER')")
+    @SecurityRequirement(name = "jwt")
     public Mono<CustomerFullProfileDTO> updateUser(Principal principal,
                                                    @Valid @RequestBody CustomerUpdateRequestDTO dto) {
         return Mono.fromCallable(() -> {

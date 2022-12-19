@@ -7,6 +7,11 @@ import io.cryptorush.userservice.rest.user.dto.UserCreationRequestDTO;
 import io.cryptorush.userservice.rest.user.dto.UserFullResponseDTO;
 import io.cryptorush.userservice.rest.user.dto.UserUpdateRequestDTO;
 import io.cryptorush.userservice.rest.user.mapper.SystemUserMapper;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -42,6 +47,7 @@ public class UserController {
 
     @PutMapping("user/{id}")
     @PreAuthorize("hasAuthority('SCOPE_ADMIN')")
+    @SecurityRequirement(name = "jwt")
     public Mono<UserFullResponseDTO> updateUser(@PathVariable("id") long id,
                                                 @Valid @RequestBody UserUpdateRequestDTO userUpdateRequestDTO) {
         return Mono.fromCallable(() -> {
@@ -53,6 +59,15 @@ public class UserController {
 
     @GetMapping("user/{id}")
     @PreAuthorize("hasAuthority('SCOPE_ADMIN')")
+    @SecurityRequirement(name = "jwt")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Found the user",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = UserFullResponseDTO.class))}),
+            @ApiResponse(responseCode = "400", description = "Invalid id supplied",
+                    content = @Content),
+            @ApiResponse(responseCode = "404", description = "User not found",
+                    content = @Content)})
     public Mono<UserFullResponseDTO> getUser(@PathVariable("id") long id) {
         return Mono.fromCallable(() -> {
             User user = userService.getById(id);
@@ -62,6 +77,7 @@ public class UserController {
 
     @GetMapping("me")
     @PreAuthorize("hasAuthority('SCOPE_ADMIN') OR hasAuthority('SCOPE_MANAGER')")
+    @SecurityRequirement(name = "jwt")
     public Mono<UserFullResponseDTO> getMe(Principal principal) {
         return Mono.fromCallable(() -> {
             User user = userService.getByLogin(principal.getName());
