@@ -11,12 +11,15 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class DefaultCustomerService implements CustomerService {
+
+    public final static int MAX_LIMIT = 100;
 
     private final UserRepository userRepository;
     private final UserValidator userValidator;
@@ -89,5 +92,13 @@ public class DefaultCustomerService implements CustomerService {
     public CustomerPublicProfile getCustomerPublicProfileByLogin(String login) {
         return customerRepository.findCustomerPublicProfileByLogin(login)
                 .orElseThrow(UserNotFoundException::new);
+    }
+
+    @Override
+    public List<User> getAllCustomerUsers(int offset, int limit) {
+        if (limit > MAX_LIMIT) {
+            limit = MAX_LIMIT;
+        }
+        return customerRepository.getAllCustomerUsers(offset, limit);
     }
 }

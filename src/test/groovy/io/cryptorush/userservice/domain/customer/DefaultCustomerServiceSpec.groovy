@@ -1,10 +1,7 @@
 package io.cryptorush.userservice.domain.customer
 
 import io.cryptorush.userservice.domain.geoip.GeoIpService
-import io.cryptorush.userservice.domain.user.User
-import io.cryptorush.userservice.domain.user.UserRepository
-import io.cryptorush.userservice.domain.user.UserType
-import io.cryptorush.userservice.domain.user.UserValidator
+import io.cryptorush.userservice.domain.user.*
 import io.cryptorush.userservice.domain.user.validation.UserNotFoundException
 import org.springframework.security.crypto.password.PasswordEncoder
 import reactor.core.publisher.Mono
@@ -200,5 +197,21 @@ class DefaultCustomerServiceSpec extends Specification {
         1 * customerRepository.hardDeleteByUserId(userId) >> 0
         def e = thrown(UserNotFoundException)
         e.message == "User not found"
+    }
+
+    def "get all customer users with specified offset and limit "() {
+        given:
+        def offset = 0
+        def limit = DefaultUserService.MAX_LIMIT + 1
+        customerRepository.getAllCustomerUsers(0, DefaultUserService.MAX_LIMIT) >> [new Customer(id: 1000L), new Customer(id:
+                2000L)]
+
+        when:
+        def users = service.getAllCustomerUsers(offset, limit)
+
+        then:
+        users.size() == 2
+        users[0].id == 1000L
+        users[1].id == 2000L
     }
 }

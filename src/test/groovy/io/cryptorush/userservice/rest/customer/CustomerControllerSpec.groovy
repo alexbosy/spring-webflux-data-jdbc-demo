@@ -4,7 +4,6 @@ import io.cryptorush.userservice.domain.customer.Customer
 import io.cryptorush.userservice.domain.customer.CustomerPublicProfile
 import io.cryptorush.userservice.domain.customer.CustomerService
 import io.cryptorush.userservice.domain.user.User
-import io.cryptorush.userservice.domain.user.UserService
 import io.cryptorush.userservice.domain.user.UserType
 import io.cryptorush.userservice.rest.customer.dto.CustomerCreationRequestDTO
 import io.cryptorush.userservice.rest.customer.dto.CustomerUpdateRequestDTO
@@ -20,12 +19,11 @@ import spock.lang.Specification
 class CustomerControllerSpec extends Specification {
 
     def scheduler = Schedulers.immediate()
-    def userService = Mock(UserService)
     def customerService = Mock(CustomerService)
     def ipResolver = Mock(IpResolver)
     def customerUserMapper = new CustomerUserMapperImpl()
 
-    def controller = new CustomerController(scheduler, userService, customerService, ipResolver, customerUserMapper)
+    def controller = new CustomerController(scheduler, customerService, ipResolver, customerUserMapper)
 
     def customerId = 200L
     def dateOfBirth = new Date()
@@ -58,7 +56,7 @@ class CustomerControllerSpec extends Specification {
         def result = controller.getCustomers(offset, limit).block()
 
         then:
-        1 * userService.getAllCustomerUsers(offset, limit) >> [user]
+        1 * customerService.getAllCustomerUsers(offset, limit) >> [user]
         result.size() == 1
         def customerDTO = result[0]
         customerDTO.id() == customerId

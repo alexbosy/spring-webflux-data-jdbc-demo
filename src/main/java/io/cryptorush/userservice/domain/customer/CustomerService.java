@@ -2,6 +2,8 @@ package io.cryptorush.userservice.domain.customer;
 
 import io.cryptorush.userservice.domain.user.User;
 
+import java.util.List;
+
 public interface CustomerService {
 
     User registerNewCustomer(User user);
@@ -13,4 +15,6 @@ public interface CustomerService {
     void deleteCustomerUserByUserId(long userId);
 
     CustomerPublicProfile getCustomerPublicProfileByLogin(String login);
+
+    List<User> getAllCustomerUsers(int offset, int limit);
 }

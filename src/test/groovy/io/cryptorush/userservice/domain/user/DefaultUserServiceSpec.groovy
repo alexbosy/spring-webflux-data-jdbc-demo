@@ -1,6 +1,6 @@
 package io.cryptorush.userservice.domain.user
 
-import io.cryptorush.userservice.domain.customer.Customer
+
 import io.cryptorush.userservice.domain.user.validation.EmailIsTakenExceptionField
 import io.cryptorush.userservice.domain.user.validation.InvalidUserTypeExceptionField
 import io.cryptorush.userservice.domain.user.validation.LoginIsTakenExceptionField
@@ -275,21 +275,5 @@ class DefaultUserServiceSpec extends Specification {
         users.size() == 2
         users[0].id == 100L
         users[1].id == 101L
-    }
-
-    def "get all customer users with specified offset and limit "() {
-        given:
-        def offset = 0
-        def limit = DefaultUserService.MAX_LIMIT + 1
-        userRepository.getAllCustomerUsers(0, DefaultUserService.MAX_LIMIT) >> [new Customer(id: 1000L), new Customer(id:
-                2000L)]
-
-        when:
-        def users = userService.getAllCustomerUsers(offset, limit)
-
-        then:
-        users.size() == 2
-        users[0].id == 1000L
-        users[1].id == 2000L
     }
 }

@@ -79,12 +79,4 @@ public class DefaultUserService implements UserService {
         }
         return userRepository.getAllSystemUsers(offset, limit);
     }
-
-    @Override
-    public List<User> getAllCustomerUsers(int offset, int limit) {
-        if (limit > MAX_LIMIT) {
-            limit = MAX_LIMIT;
-        }
-        return userRepository.getAllCustomerUsers(offset, limit);
-    }
 }

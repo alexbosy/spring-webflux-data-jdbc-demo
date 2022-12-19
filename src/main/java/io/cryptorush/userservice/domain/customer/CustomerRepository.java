@@ -9,6 +9,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.lang.NonNull;
 
 import javax.validation.constraints.NotNull;
+import java.util.List;
 import java.util.Optional;
 
 public interface CustomerRepository extends CrudRepository<Customer, Long> {
@@ -53,4 +54,18 @@ public interface CustomerRepository extends CrudRepository<Customer, Long> {
             AND u.type='CUSTOMER'
             """)
     Optional<CustomerPublicProfile> findCustomerPublicProfileByLogin(@NonNull @Param("pLogin") String login);
+
+    @Query("""
+            SELECT u.*,
+            cu.id as customer_id,
+            cu.country_of_residence as customer_country_of_residence,
+            cu.identity_number as customer_identity_number,
+            cu.date_of_birth as customer_date_of_birth,
+            cu.passport_number as customer_passport_number,
+            cu.registration_ip as customer_registration_ip,
+            cu.registration_country as customer_registration_country
+            FROM users u, customers cu WHERE cu.user_id = u.id
+            ORDER BY u.id OFFSET :pOffset LIMIT :pLimit
+            """)
+    List<User> getAllCustomerUsers(@Param("pOffset") int offset, @Param("pLimit") int limit);
 }

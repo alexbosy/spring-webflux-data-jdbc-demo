@@ -3,7 +3,6 @@ package io.cryptorush.userservice.rest.customer;
 import io.cryptorush.userservice.domain.customer.CustomerPublicProfile;
 import io.cryptorush.userservice.domain.customer.CustomerService;
 import io.cryptorush.userservice.domain.user.User;
-import io.cryptorush.userservice.domain.user.UserService;
 import io.cryptorush.userservice.domain.user.UserType;
 import io.cryptorush.userservice.rest.customer.dto.*;
 import io.cryptorush.userservice.rest.customer.mapper.CustomerUserMapper;
@@ -31,7 +30,6 @@ public class CustomerController {
 
     @Qualifier("rest-scheduler")
     private final Scheduler scheduler;
-    private final UserService userService;
     private final CustomerService customerService;
     private final IpResolver ipResolver;
     private final CustomerUserMapper customerUserMapper;
@@ -50,7 +48,7 @@ public class CustomerController {
     Mono<List<CustomerFullResponseDTO>> getCustomers(@RequestParam(defaultValue = "0", required = false) int offset,
                                                      @RequestParam(defaultValue = "10", required = false) int limit) {
         return Mono.fromCallable(() -> {
-            List<User> users = userService.getAllCustomerUsers(offset, limit);
+            List<User> users = customerService.getAllCustomerUsers(offset, limit);
             return users.stream().map(customerUserMapper::toFullResponseDTO).collect(Collectors.toList());
         }).publishOn(scheduler);
     }
