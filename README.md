@@ -391,7 +391,7 @@ Return all data except id, password, IP and registration country.
 
 ##### Request example:
 
-PUT /customer/my/profile
+PUT /customer/my/profile <br>
 Authorization:"Bearer ${JWT_TOKEN}"
 
 body:
@@ -429,7 +429,7 @@ Show all data except id, password, IP and registration country.
 
 ##### Request example:
 
-GET /customer/my/profile
+GET /customer/my/profile <br>
 Authorization:"Bearer ${JWT_TOKEN}"
 
 ##### Response example:
@@ -453,7 +453,7 @@ Return the current authenticated user (ADMIN or MANAGER).
 
 ##### Request example:
 
-GET /me
+GET /me <br>
 Authorization:"Bearer ${JWT_TOKEN}"
 
 ##### Response example:
