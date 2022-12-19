@@ -78,9 +78,11 @@ a valid form (use corresponding RegEx pattern).
 **Sample error responses:**
 
 HTTP/1.1 400 Bad Request
+
 ```json
 {
   "login": "Login min length is 6 chars",
+  "email": "Email is not valid",
   "name": "Name can not be empty",
   "password": "Password min length is 8 chars",
   "surname": "Surname can not be empty"
@@ -96,6 +98,7 @@ HTTP/1.1 400 Bad Request
 **Sample error responses:**
 
 HTTP/1.1 403 Forbidden
+
 ```json
 {
   "login": "Supplied login is already taken"
@@ -103,6 +106,7 @@ HTTP/1.1 403 Forbidden
 ```
 
 HTTP/1.1 403 Forbidden
+
 ```json
 {
   "email": "Supplied email is already taken"
@@ -197,6 +201,8 @@ GET /users?offset=0&limit=2
 #### 6. GET /customers?offset={:offset}&limit={:limit}
 
 Return a pageable list of customers (user type is CUSTOMER) with specified offset and limit.
+All customer data must be returned, this endpoint will be used only in
+admin application.
 
 ##### Request example:
 
