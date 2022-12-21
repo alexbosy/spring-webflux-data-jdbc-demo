@@ -116,6 +116,7 @@ class UserATSpec extends Specification {
     def "GET /user/{id}, user not found case"() {
         when: "create a new user"
         def res = testClient.post('/user', payload)
+        def createdUserId = res.data["id"]
 
         then:
         res.status == 200
@@ -131,6 +132,9 @@ class UserATSpec extends Specification {
         def res3 = testClient.get("/user/${notExistingId}", [:], ["Authorization": "Bearer ${jwt}"])
         res3.status == 404
         res3.data["error"] == "User not found"
+
+        cleanup:
+        testClient.delete("/user/${createdUserId}")
     }
 
     def "DELETE /user/{id}"() {
