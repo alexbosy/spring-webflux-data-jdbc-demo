@@ -87,6 +87,7 @@ dependencies {
 	testImplementation 'org.spockframework:spock-spring:2.3-groovy-3.0'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'io.projectreactor:reactor-test'
+	testImplementation 'org.springframework.graphql:spring-graphql-test'
 
 	acceptanceTestImplementation 'org.codehaus.groovy.modules.http-builder:http-builder:0.7.1'
 	acceptanceTestImplementation 'io.fabric8:mockwebserver:0.2.2'
