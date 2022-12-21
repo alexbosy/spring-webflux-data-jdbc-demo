@@ -473,4 +473,4 @@ Authorization:"Bearer ${JWT_TOKEN}"
 
 #### 6. Besides unit and integration tests implement at least some e2e (end to end/acceptance) tests.
 
-#### 7. Implement also another transport protocols (not HTTP REST, e.g GraphQL, gRPC, WebSocket) for any of already existing API endpoints.
+#### 7. Implement also another API protocols (not HTTP REST, e.g GraphQL, gRPC, WebSocket) for any of already existing API endpoints.
