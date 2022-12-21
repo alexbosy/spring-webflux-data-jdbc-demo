@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class UserGraphQlController {
 
-    @Qualifier("rest-scheduler")
+    @Qualifier("graphql-scheduler")
     private final Scheduler scheduler;
     private final UserService userService;
     private final UserGqlMapper userGqlMapper;

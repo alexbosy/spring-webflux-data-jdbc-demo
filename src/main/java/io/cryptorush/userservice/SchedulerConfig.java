@@ -38,6 +38,15 @@ public class SchedulerConfig {
     @Value("${scheduler.ext.queue.max.size}")
     private int schedulerExternalQueueMaxSize;
 
+    @Value("${scheduler.graphql.core.pool.size}")
+    private int schedulerGraphQlCorePoolSize;
+    @Value("${scheduler.graphql.max.pool.size}")
+    private int schedulerGraphQlMaxPoolSize;
+    @Value("${scheduler.graphql.keep.alive.time.secs}")
+    private int schedulerGraphQlKeepAliveTime;
+    @Value("${scheduler.graphql.queue.max.size}")
+    private int schedulerGraphQlQueueMaxSize;
+
     @Bean
     @Qualifier("rest-scheduler")
     public Scheduler mainScheduler() {
@@ -84,6 +93,31 @@ public class SchedulerConfig {
                 schedulerExternalKeepAliveTime,
                 TimeUnit.SECONDS,
                 queue, new CustomizableThreadFactory("external-scheduler-t-"));
+        return Schedulers.fromExecutor(poolExecutor);
+    }
+
+    @Bean
+    @Qualifier("graphql-scheduler")
+    public Scheduler graphqlCallsScheduler() {
+
+        Preconditions.checkArgument(schedulerGraphQlCorePoolSize > 0, "Missing scheduler.graphql.core.pool.size config!");
+        Preconditions.checkArgument(schedulerGraphQlMaxPoolSize > 0, "Missing scheduler.graphql.max.pool.size config!");
+        Preconditions.checkArgument(schedulerGraphQlKeepAliveTime > 0, "Missing scheduler.graphql.keep.alive.time.secs config!");
+        Preconditions.checkArgument(schedulerGraphQlQueueMaxSize > 0, "Missing scheduler.graphql.queue.max.size config!");
+
+        log.info("Creating GRAPHQL scheduler: core.pool.size={}, max.pool.size={}, keep.alive.time={}, queue" +
+                        ".max.size={}",
+                schedulerGraphQlCorePoolSize,
+                schedulerGraphQlMaxPoolSize,
+                schedulerGraphQlKeepAliveTime,
+                schedulerGraphQlQueueMaxSize);
+        BlockingQueue<Runnable> queue = new ArrayBlockingQueue<>(schedulerGraphQlQueueMaxSize);
+        ThreadPoolExecutor poolExecutor = new ThreadPoolExecutor(
+                schedulerGraphQlCorePoolSize,
+                schedulerGraphQlMaxPoolSize,
+                schedulerGraphQlKeepAliveTime,
+                TimeUnit.SECONDS,
+                queue, new CustomizableThreadFactory("graphql-scheduler-t-"));
         return Schedulers.fromExecutor(poolExecutor);
     }
 }

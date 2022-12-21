@@ -50,4 +50,6 @@ public class GraphQlExceptionHandler implements DataFetcherExceptionResolver {
         }
         return Mono.empty();
     }
+
+
 }
