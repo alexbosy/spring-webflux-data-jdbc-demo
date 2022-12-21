@@ -38,7 +38,7 @@ public class UserGraphQlController {
     }
 
     @QueryMapping
-    public Mono<UserGraphQlDTO> userById(@Argument int id) {
+    public Mono<UserGraphQlDTO> userById(@Argument long id) {
         return Mono.fromCallable(() -> {
             User user = userService.getById(id);
             return userGqlMapper.toGraphQlDTO(user);
