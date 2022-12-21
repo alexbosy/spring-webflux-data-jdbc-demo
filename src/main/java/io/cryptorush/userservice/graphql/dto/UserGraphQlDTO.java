@@ -2,7 +2,7 @@ package io.cryptorush.userservice.graphql.dto;
 
 import io.cryptorush.userservice.domain.user.UserType;
 
-public record UserGqlDTO(
+public record UserGraphQlDTO(
         long id,
         String login,
         String name,

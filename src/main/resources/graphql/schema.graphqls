@@ -1,13 +1,32 @@
+enum UserType {
+    ADMIN
+    MANAGER
+    CUSTOMER
+}
+
 type  User {
     id: ID!
     login: String!
     name: String!
     surname: String!
     email: String!
-    type: String!
+    type: UserType!
+}
+
+input SystemUserInput {
+    login: String!
+    name: String!
+    surname: String!
+    password: String!
+    email: String!
+    type: UserType!
 }
 
 type Query {
     allUsers(offset: Int!, limit: Int!): [User]
-    userById(id: Int!): User
+    userById(id: Int!): User!
+}
+
+type Mutation {
+    createUser(systemUserInput: SystemUserInput!): User!
 }
