@@ -63,6 +63,65 @@ Then in another terminal run the tests using gradle wrapper:
 1. Open API v3 scheme - http://localhost:8080/v3/api-docs
 2. Swagger UI - http://localhost:8080/swagger-ui.html
 
+# GraphQL info
+
+Embedded GraphQL client - http://localhost:8080/graphiql
+
+### Example GraphQL queries
+
+**Create new system user:**
+
+```graphql
+mutation {
+    createUser(systemUserInput: {
+        login: "graphql-login",
+        name: "some name",
+        surname: "some surname",
+        email: "some@email.com",
+        password: "some password",
+        type: ADMIN
+
+    }) {
+        id
+        login
+        name
+        surname
+        email
+        type
+    }
+}
+```
+
+**Get user by id:**
+
+```graphql
+query {
+    userById(id: 918) {
+        id
+        login
+        name
+        surname
+        email
+        type
+    }
+}
+```
+
+**Get all system users with pagination:**
+
+```graphql
+query {
+    allUsers(offset: 0, limit: 5) {
+        id
+        login
+        name
+        surname
+        email
+        type
+    }
+}
+```
+
 # Sample API requests via curl or httpie
 
 ```shell
