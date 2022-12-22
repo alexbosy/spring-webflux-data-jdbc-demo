@@ -64,14 +64,16 @@ class UserATSpec extends Specification {
         res.status == 200
 
         and: "authenticate"
-        def res2 = testClient.post('/auth', ["login": res.data["login"], "password": payload.password])
+        def res2 = testClient.post('/auth', ["login"   : res.data["login"],
+                                             "password": payload.password])
         res2.status == 200
         res2.data["token"] != null
 
         and: "find user by id"
         def createdUserId = res.data["id"]
         def jwt = res2.data["token"]
-        def res3 = testClient.get("/user/${createdUserId}", [:], ["Authorization": "Bearer ${jwt}"])
+        def res3 = testClient.get("/user/${createdUserId}", [:],
+                ["Authorization": "Bearer ${jwt}"])
         res3.status == 200
         res3.data["id"] == createdUserId
         res3.data["login"] == payload.login
@@ -93,7 +95,8 @@ class UserATSpec extends Specification {
         res.status == 200
 
         and: "authenticate"
-        def res2 = testClient.post('/auth', ["login": res.data["login"], "password": payload.password])
+        def res2 = testClient.post('/auth', ["login"   : res.data["login"],
+                                             "password": payload.password])
         res2.status == 200
         res2.data["token"] != null
 
@@ -122,14 +125,16 @@ class UserATSpec extends Specification {
         res.status == 200
 
         and: "authenticate"
-        def res2 = testClient.post('/auth', ["login": res.data["login"], "password": payload.password])
+        def res2 = testClient.post('/auth', ["login"   : res.data["login"],
+                                             "password": payload.password])
         res2.status == 200
         res2.data["token"] != null
 
         and:
         def notExistingId = 0L
         def jwt = res2.data["token"]
-        def res3 = testClient.get("/user/${notExistingId}", [:], ["Authorization": "Bearer ${jwt}"])
+        def res3 = testClient.get("/user/${notExistingId}", [:],
+                ["Authorization": "Bearer ${jwt}"])
         res3.status == 404
         res3.data["error"] == "User not found"
 
@@ -154,13 +159,15 @@ class UserATSpec extends Specification {
         result.status == 200
 
         and: "authenticate"
-        def res3 = testClient.post('/auth', ["login": result.data["login"], "password": payload.password])
+        def res3 = testClient.post('/auth', ["login"   : result.data["login"],
+                                             "password": payload.password])
         res3.status == 200
         res3.data["token"] != null
 
         and: "check this user was deleted"
         def jwt = res3.data["token"]
-        def res4 = testClient.get("/user/${createdUserId}", [:], ["Authorization": "Bearer ${jwt}"])
+        def res4 = testClient.get("/user/${createdUserId}", [:],
+                ["Authorization": "Bearer ${jwt}"])
         res4.status == 404
 
         and: "delete second user"
@@ -187,14 +194,16 @@ class UserATSpec extends Specification {
         res.status == 200
 
         and: "authenticate"
-        def auth = testClient.post('/auth', ["login": res.data["login"], "password": payload.password])
+        def auth = testClient.post('/auth', ["login"   : res.data["login"],
+                                             "password": payload.password])
         auth.status == 200
         auth.data["token"] != null
 
         and: "find user by id"
         def jwt = auth.data["token"]
         def createdUserId = res.data["id"]
-        def res2 = testClient.get("/user/${createdUserId}", [:], ["Authorization": "Bearer ${jwt}"])
+        def res2 = testClient.get("/user/${createdUserId}", [:],
+                ["Authorization": "Bearer ${jwt}"])
         res2.status == 200
         res2.data["id"] == createdUserId
         res2.data["login"] == payload.login
@@ -206,7 +215,8 @@ class UserATSpec extends Specification {
         and: "update user by id"
         def updatePayload = ["login": "new login", "name": "new name", "surname": "new surname",
                              "email": "new@email.com", "type": UserType.ADMIN.name()]
-        def res3 = testClient.put("/user/${createdUserId}", updatePayload, ["Authorization": "Bearer ${jwt}"])
+        def res3 = testClient.put("/user/${createdUserId}", updatePayload,
+                ["Authorization": "Bearer ${jwt}"])
         res3.status == 200
         res3.data["id"] == createdUserId
         res3.data["login"] == "new login"
