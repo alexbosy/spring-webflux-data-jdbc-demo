@@ -2,14 +2,15 @@
 
 This is a demo app to test the following technical stack:
 
-- Java 17+
+- Java 17
 - Spring Boot
 - Spring Web Flux
 - Spring Data JDBC
 - Reactor
 - PostgreSQL
-- Spock
+- Spock Framework
 - Springdoc OpenAPI
+- Spring GraphQL
 
 ## Test application requirements
 
@@ -125,7 +126,7 @@ Return the User object data except password.
   "login": "some-login",
   "name": "some name",
   "surname": "some surname",
-  "email": "some@email.lv",
+  "email": "some@email.com",
   "type": "ADMIN"
 }
 ```
@@ -143,7 +144,7 @@ body:
   "login": "updated login",
   "name": "updated name",
   "surname": "some surname",
-  "email": "some@email.lv",
+  "email": "some@email.com",
   "type": "ADMIN"
 }
 ```
@@ -156,7 +157,7 @@ body:
   "login": "updated login",
   "name": "updated name",
   "surname": "updated surname",
-  "email": "some@email.lv",
+  "email": "some@email.com",
   "type": "ADMIN"
 }
 ```
@@ -214,7 +215,7 @@ GET /customers?offset=0&limit=2
 [
   {
     "id": 1,
-    "countryOfResidence": "LV",
+    "countryOfResidence": "US",
     "dateOfBirth": "09-12-1997",
     "identityNumber": "101297-10111",
     "passportNumber": "LV9384938498",
@@ -228,10 +229,10 @@ GET /customers?offset=0&limit=2
   },
   {
     "id": 2,
-    "countryOfResidence": "LV",
+    "countryOfResidence": "US",
     "dateOfBirth": "03-12-1980",
     "identityNumber": "041289-15717",
-    "passportNumber": "LV3948938433",
+    "passportNumber": "US3948938433",
     "registrationCountry": "US",
     "registrationIp": "92.33.45.122",
     "userId": 27,
@@ -258,7 +259,7 @@ GET /customer/login
 {
   "id": 64,
   "login": "login",
-  "email": "email@email.lv",
+  "email": "email@email.com",
   "name": "some name",
   "surname": "some surname",
   "countryOfResidence": "US",
@@ -308,7 +309,7 @@ body:
   "email": "some@email.com",
   "password": "some password",
   "dateOfBirth": "12-12-1981",
-  "countryOfResidence": "LV",
+  "countryOfResidence": "DE",
   "identityNumber": "identity number",
   "passportNumber": "passport number"
 }
@@ -323,7 +324,7 @@ body:
   "name": "some name",
   "surname": "some surname",
   "dateOfBirth": "12-12-1981",
-  "countryOfResidence": "LV",
+  "countryOfResidence": "UK",
   "identityNumber": "identity number",
   "passportNumber": "passport number"
 }
@@ -402,7 +403,7 @@ body:
   "surname": "some surname",
   "email": "new@newemail.com",
   "dateOfBirth": "11-11-1971",
-  "countryOfResidence": "LV",
+  "countryOfResidence": "UK",
   "identityNumber": "identity number",
   "passportNumber": "passport number"
 }
@@ -417,7 +418,7 @@ body:
   "surname": "some surname",
   "email": "new@newemail.com",
   "dateOfBirth": "11-11-1971",
-  "countryOfResidence": "LV",
+  "countryOfResidence": "DE",
   "identityNumber": "identity number",
   "passportNumber": "passport number"
 }
@@ -438,9 +439,9 @@ Authorization:"Bearer ${JWT_TOKEN}"
 {
   "login": "some login",
   "name": "some name",
-  "email": "email@xxx.lv",
+  "email": "email@xxx.com",
   "surname": "some surname",
-  "countryOfResidence": "LV",
+  "countryOfResidence": "US",
   "dateOfBirth": "12-12-1981",
   "identityNumber": "identity number",
   "passportNumber": "passport number"
