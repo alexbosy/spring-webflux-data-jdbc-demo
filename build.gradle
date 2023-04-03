@@ -66,8 +66,8 @@ dependencies {
 	implementation 'org.liquibase:liquibase-core'
 	implementation 'org.bouncycastle:bcprov-ext-jdk15on:1.70'
 	implementation 'org.mapstruct:mapstruct:1.5.3.Final'
-	implementation 'io.github.resilience4j:resilience4j-spring-boot2:2.0.0'
-	implementation 'io.github.resilience4j:resilience4j-reactor:2.0.0'
+	implementation 'io.github.resilience4j:resilience4j-spring-boot2:2.0.2'
+	implementation 'io.github.resilience4j:resilience4j-reactor:2.0.2'
 	implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
 
 	implementation 'com.google.guava:guava:31.1-jre'
