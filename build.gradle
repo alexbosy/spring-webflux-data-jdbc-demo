@@ -64,7 +64,7 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server'
 	implementation 'org.springframework.boot:spring-boot-starter-graphql'
 	implementation 'org.liquibase:liquibase-core'
-	implementation 'org.bouncycastle:bcprov-ext-jdk15on:1.70'
+	implementation 'org.bouncycastle:bcprov-jdk18on:1.72'
 	implementation 'org.mapstruct:mapstruct:1.5.3.Final'
 	implementation 'io.github.resilience4j:resilience4j-spring-boot2:2.0.2'
 	implementation 'io.github.resilience4j:resilience4j-reactor:2.0.2'
