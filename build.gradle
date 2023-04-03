@@ -91,8 +91,8 @@ dependencies {
 	acceptanceTestImplementation 'org.codehaus.groovy.modules.http-builder:http-builder:0.7.1'
 	acceptanceTestImplementation 'io.fabric8:mockwebserver:0.2.2'
 
-	compileOnly 'org.projectlombok:lombok:1.18.24'
-	annotationProcessor 'org.projectlombok:lombok:1.18.24'
+	compileOnly 'org.projectlombok:lombok:1.18.26'
+	annotationProcessor 'org.projectlombok:lombok:1.18.26'
 	annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
 	annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.3.Final'
 	annotationProcessor 'org.projectlombok:lombok-mapstruct-binding:0.2.0'
