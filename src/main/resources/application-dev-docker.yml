@@ -63,3 +63,8 @@ resilience4j.circuitbreaker:
     default:
       registerHealthIndicator: true
 
+spring.graphql.graphiql.enabled: true
+spring.graphql.graphiql.path: /graphiql
+spring.graphql.schema.printer.enabled: true
+
+
