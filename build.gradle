@@ -13,7 +13,6 @@ repositories {
 	}
 }
 
-group = 'io.cryptorush'
 version = (findProperty('version') == 'unspecified') ? 'latest' : version
 
 java {
