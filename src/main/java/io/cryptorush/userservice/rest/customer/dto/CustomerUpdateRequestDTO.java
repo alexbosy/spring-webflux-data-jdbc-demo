@@ -1,9 +1,9 @@
 package io.cryptorush.userservice.rest.customer.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import jakarta.validation.constraints.*;
 import lombok.Data;
 
-import javax.validation.constraints.*;
 import java.util.Date;
 
 @Data

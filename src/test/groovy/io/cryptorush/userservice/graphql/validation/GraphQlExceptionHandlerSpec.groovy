@@ -6,11 +6,11 @@ import graphql.schema.DataFetchingEnvironment
 import graphql.schema.GraphQLEnumType
 import io.cryptorush.userservice.domain.user.validation.LoginIsTakenExceptionField
 import io.cryptorush.userservice.domain.user.validation.UserNotFoundException
+import jakarta.validation.ConstraintViolationException
 import org.hibernate.validator.internal.engine.ConstraintViolationImpl
 import org.springframework.graphql.execution.ErrorType
 import spock.lang.Specification
 
-import javax.validation.ConstraintViolationException
 
 class GraphQlExceptionHandlerSpec extends Specification {
 

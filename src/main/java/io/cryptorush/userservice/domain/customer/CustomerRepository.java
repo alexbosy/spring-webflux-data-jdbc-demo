@@ -2,13 +2,13 @@ package io.cryptorush.userservice.domain.customer;
 
 import io.cryptorush.userservice.domain.user.User;
 import io.cryptorush.userservice.domain.user.UserType;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.data.jdbc.repository.query.Modifying;
 import org.springframework.data.jdbc.repository.query.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.lang.NonNull;
 
-import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.Optional;
 

@@ -1,5 +1,5 @@
 plugins {
-	id 'org.springframework.boot' version '2.7.5'
+	id 'org.springframework.boot' version '3.0.5'
 	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
 	id 'java'
 	id 'groovy'
@@ -69,6 +69,7 @@ dependencies {
 	implementation 'io.github.resilience4j:resilience4j-spring-boot2:2.0.2'
 	implementation 'io.github.resilience4j:resilience4j-reactor:2.0.2'
 	implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
+	implementation 'org.eclipse.jetty:jetty-server:11.0.14'
 
 	implementation 'com.google.guava:guava:31.1-jre'
 	implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-yaml'
@@ -82,8 +83,8 @@ dependencies {
 	runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.11.5'
 
 	testImplementation 'org.codehaus.groovy:groovy-all:3.0.16'
-	testImplementation 'org.spockframework:spock-core:2.3-groovy-3.0'
-	testImplementation 'org.spockframework:spock-spring:2.3-groovy-3.0'
+	testImplementation 'org.spockframework:spock-core:2.4-M1-groovy-3.0'
+	testImplementation 'org.spockframework:spock-spring:2.4-M1-groovy-3.0'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'io.projectreactor:reactor-test'
 	testImplementation 'org.springframework.graphql:spring-graphql-test'

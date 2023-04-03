@@ -5,13 +5,13 @@ import graphql.GraphqlErrorBuilder;
 import graphql.schema.DataFetchingEnvironment;
 import io.cryptorush.userservice.domain.user.validation.UserNotFoundException;
 import io.cryptorush.userservice.domain.validation.BusinessFieldValidationException;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.ConstraintViolationException;
 import org.springframework.graphql.execution.DataFetcherExceptionResolver;
 import org.springframework.graphql.execution.ErrorType;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
 
-import javax.validation.ConstraintViolation;
-import javax.validation.ConstraintViolationException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;

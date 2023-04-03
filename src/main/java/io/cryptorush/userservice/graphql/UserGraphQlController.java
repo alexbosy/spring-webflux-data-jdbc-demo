@@ -5,6 +5,7 @@ import io.cryptorush.userservice.domain.user.UserService;
 import io.cryptorush.userservice.graphql.dto.SystemUserGraphQlInputDTO;
 import io.cryptorush.userservice.graphql.dto.UserGraphQlDTO;
 import io.cryptorush.userservice.graphql.mapper.UserGqlMapper;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.graphql.data.method.annotation.Argument;
@@ -14,7 +15,6 @@ import org.springframework.stereotype.Controller;
 import reactor.core.publisher.Mono;
 import reactor.core.scheduler.Scheduler;
 
-import javax.validation.Valid;
 import java.util.List;
 import java.util.stream.Collectors;
 
