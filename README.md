@@ -1,6 +1,6 @@
 # User management service
 
-This is a demo app to test the following technical stack:
+It's a demo app to test the following technical stack:
 
 - Java 17
 - Spring Boot
@@ -47,7 +47,7 @@ The service will have the 2 main entities:
 
 #### 1. POST /user - create new user.
 
-Creates a new user by supplied data, password must be stored in DB in encrypted form.
+Create a new user by supplied data, password must be stored in DB in encrypted form.
 
 ##### Request example:
 
@@ -285,8 +285,7 @@ Create a new user and related customer by supplied data.
 **The stored Customer domain object must include the following data:**
 
 1. **Registration IP address**. It must be resolved using incoming HTTP request taking into account, that our service
-   can
-   be deployed behind a reverse proxy or load balancer. This field must not be exposed to the end public users of our
+   can be deployed behind a reverse proxy or load balancer. This field must not be exposed to the end public users of our
    public application and will be accessible only for admins and managers in our administration application.
 2. **Registration country**. It must be resolved via some public external GeoIP HTTP service,
    e.g. http://reallyfreegeoip.org.
