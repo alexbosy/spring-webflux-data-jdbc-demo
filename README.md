@@ -3,7 +3,7 @@
 It's a demo app to test the following technical stack:
 
 - Java 17
-- Spring Boot
+- Spring Boot 3+
 - Spring Web Flux
 - Spring Data JDBC
 - Reactor
@@ -11,6 +11,8 @@ It's a demo app to test the following technical stack:
 - Spock Framework
 - Springdoc OpenAPI
 - Spring GraphQL
+- Spring Security with JWT auth
+- Resilience4j
 
 ## Test application requirements
 
